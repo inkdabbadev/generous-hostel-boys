@@ -1,9 +1,14 @@
-import AboutExperience from "./AboutExperience";
-import CoreCapabilities from "./CoreCapabilities";
-import HostelGenreProof from "./HostelGenreProof";
-import IntroExperience from "./IntroExperience";
-import MovieMetrics from "./MovieMetrics";
-import RegionalAudience from "./RegionalAudience";
+import {
+  AboutExperience,
+  AdaptationProof,
+  CoreCapabilities,
+  HostelGenreProof,
+  IntroExperience,
+  MarketingMediaPlan,
+  MovieMetrics,
+  RegionalAudience,
+  TitleScrollAnimation,
+} from "./components/sections";
 
 export default function Home() {
   return (
@@ -36,6 +41,9 @@ export default function Home() {
       <MovieMetrics />
       <RegionalAudience />
       <HostelGenreProof />
+      <TitleScrollAnimation />
+      <AdaptationProof />
+      <MarketingMediaPlan />
     </main>
   );
 }

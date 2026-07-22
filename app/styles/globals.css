@@ -1,5 +1,13 @@
 @import "tailwindcss";
 
+@theme inline {
+  --color-ink: #130f0c;
+  --color-ember: #b91d08;
+  --color-gold: #ffc400;
+  --font-display: Impact, "Arial Black", Haettenschweiler, sans-serif;
+}
+
+@layer base {
 :root {
   --ink: #130f0c;
   --ember: #b91d08;
@@ -39,7 +47,9 @@ main {
   min-height: 100vh;
   overflow-x: hidden;
 }
+}
 
+@layer components {
 .introExperience {
   position: relative;
   min-height: 100vh;
@@ -2170,10 +2180,10 @@ section {
   min-height: 100vh;
   display: grid;
   align-items: center;
-  padding: clamp(44px, 5vw, 82px) clamp(34px, 5.5vw, 96px);
+  padding: clamp(24px, 2.8vw, 40px) clamp(34px, 5.5vw, 96px);
   background:
-    linear-gradient(90deg, rgba(68, 8, 3, 0.12), rgba(19, 15, 12, 0.2)),
-    var(--ember);
+    linear-gradient(90deg, rgba(68, 8, 3, 0.2), rgba(19, 15, 12, 0.24)),
+    url("/background.png") center / 100% 100% no-repeat;
   color: white;
   overflow: hidden;
   user-select: none;
@@ -2195,7 +2205,7 @@ section {
   width: min(1540px, 100%);
   margin: 0 auto;
   display: grid;
-  gap: clamp(26px, 4vw, 54px);
+  gap: clamp(12px, 1.45vw, 20px);
 }
 
 .hostelGenreCopy h2 {
@@ -2204,8 +2214,8 @@ section {
   gap: 0.02em;
   color: rgba(69, 8, 3, 0.62);
   font-family: Impact, "Arial Black", Haettenschweiler, sans-serif;
-  font-size: clamp(3.5rem, 7.1vw, 8.8rem);
-  line-height: 0.86;
+  font-size: clamp(3.1rem, 5.25vw, 6.45rem);
+  line-height: 0.88;
   letter-spacing: 0;
   text-transform: uppercase;
 }
@@ -2215,10 +2225,10 @@ section {
 }
 
 .hostelGenreCopy p {
-  margin: clamp(14px, 1.8vw, 24px) 0 0;
+  margin: clamp(8px, 1vw, 14px) 0 0;
   color: var(--gold);
   font-family: Impact, "Arial Black", Haettenschweiler, sans-serif;
-  font-size: clamp(1.8rem, 3.6vw, 4.6rem);
+  font-size: clamp(1.72rem, 2.85vw, 3.5rem);
   line-height: 0.9;
   letter-spacing: 0;
   text-transform: uppercase;
@@ -2227,7 +2237,8 @@ section {
 
 .hostelProofBay {
   position: relative;
-  min-height: clamp(260px, 30vw, 440px);
+  height: min(56vh, 540px);
+  min-height: 440px;
   display: block;
   padding: 0;
   background: transparent;
@@ -2236,7 +2247,7 @@ section {
 .hostelPrimaryProof {
   position: relative;
   z-index: 1;
-  width: min(760px, 64vw);
+  width: min(760px, 50vw);
   display: block;
   margin: 0;
   padding: 0;
@@ -2244,14 +2255,14 @@ section {
   background: transparent;
   color: var(--gold);
   cursor: pointer;
-  transform: rotate(-3.5deg);
+  transform: none;
   transform-origin: left center;
   transition: transform 220ms ease, filter 220ms ease;
 }
 
 .hostelPrimaryProof:hover,
 .hostelPrimaryProof:focus-visible {
-  transform: rotate(-2deg) translateY(-6px) scale(1.015);
+  transform: translateY(-6px) scale(1.015);
   filter: drop-shadow(0 18px 0 rgba(74, 11, 2, 0.45));
 }
 
@@ -2264,7 +2275,6 @@ section {
   display: block;
   width: 100%;
   height: auto;
-  box-shadow: 0 16px 0 rgba(19, 15, 12, 0.8);
 }
 
 .hostelPrimaryProof span {
@@ -2283,16 +2293,631 @@ section {
   position: absolute;
   z-index: 2;
   right: 0;
-  top: clamp(16px, 3vw, 46px);
-  width: min(720px, 54vw);
+  top: 50%;
+  width: min(680px, 42vw);
+  display: grid;
+  gap: clamp(5px, 0.48vw, 8px);
   transform-origin: right center;
+  translate: 0 -50%;
+  overflow: visible;
 }
 
-.hostelViewsProof img {
+.hostelViewShot {
+  position: relative;
+  overflow: visible;
+}
+
+.hostelViewShot::before {
+  content: "";
+  position: absolute;
+  inset: -8px -10px;
+  z-index: -1;
+  background: radial-gradient(ellipse at 18% 50%, rgba(255, 196, 0, 0.16), transparent 42%);
+  opacity: 0;
+  transform: scaleX(0.88);
+  animation: viewShotGlow 760ms ease both;
+}
+
+.hostelViewShot:nth-child(2)::before {
+  animation-delay: 120ms;
+}
+
+.hostelViewShot:nth-child(3)::before {
+  animation-delay: 240ms;
+}
+
+.hostelViewShot:nth-child(4)::before {
+  animation-delay: 360ms;
+}
+
+.hostelViewShot img {
   display: block;
   width: 100%;
   height: auto;
-  box-shadow: 0 14px 0 rgba(19, 15, 12, 0.76);
+  filter: drop-shadow(0 10px 14px rgba(0, 0, 0, 0.18));
+}
+
+.hostelRevealSweep {
+  position: absolute;
+  inset: -6px 0;
+  pointer-events: none;
+  background: linear-gradient(90deg, transparent, rgba(255, 196, 0, 0.24), transparent);
+  mix-blend-mode: screen;
+  transform-origin: left center;
+}
+
+@keyframes viewShotGlow {
+  0% {
+    opacity: 0;
+    transform: scaleX(0.88);
+  }
+
+  38% {
+    opacity: 1;
+    transform: scaleX(1);
+  }
+
+  100% {
+    opacity: 0;
+    transform: scaleX(1.08);
+  }
+}
+
+.titleScrollPin {
+  position: relative;
+  min-height: 100vh;
+  background:
+    linear-gradient(90deg, rgba(11, 6, 4, 0.86), rgba(126, 19, 7, 0.5)),
+    url("/background.png") center / 100% 100% no-repeat;
+}
+
+.titleScrollExperience {
+  position: sticky;
+  top: 0;
+  min-height: 100vh;
+  display: grid;
+  grid-template-columns: minmax(320px, 0.82fr) minmax(380px, 1fr);
+  align-items: center;
+  gap: clamp(28px, 5vw, 82px);
+  padding: clamp(44px, 5vw, 82px) clamp(34px, 5.5vw, 96px);
+  background:
+    linear-gradient(90deg, rgba(11, 6, 4, 0.86), rgba(126, 19, 7, 0.5)),
+    url("/background.png") center / 100% 100% no-repeat;
+  color: white;
+  overflow: hidden;
+  outline: none;
+  user-select: none;
+}
+
+.adaptationProof {
+  position: relative;
+  min-height: 100vh;
+  display: grid;
+  align-items: center;
+  padding: clamp(28px, 3.2vw, 48px) clamp(34px, 5.5vw, 96px);
+  background:
+    linear-gradient(90deg, rgba(8, 4, 2, 0.9), rgba(80, 13, 7, 0.56)),
+    url("/background.png") center / 100% 100% no-repeat;
+  color: white;
+  overflow: hidden;
+  user-select: none;
+}
+
+.adaptationProofShell {
+  width: min(1540px, 100%);
+  margin: 0 auto;
+  display: grid;
+  gap: clamp(16px, 2vw, 26px);
+}
+
+.adaptationProofHeader {
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(280px, 0.42fr);
+  align-items: end;
+  gap: clamp(18px, 3vw, 42px);
+}
+
+.adaptationProofHeader h2 {
+  margin: 0;
+  color: var(--gold);
+  font-family: Impact, "Arial Black", Haettenschweiler, sans-serif;
+  font-size: clamp(2.8rem, 4.8vw, 5.8rem);
+  line-height: 0.88;
+  letter-spacing: 0;
+  text-transform: uppercase;
+  filter: drop-shadow(0 8px 0 rgba(74, 11, 2, 0.42));
+  text-wrap: balance;
+}
+
+.adaptationProofHeader p {
+  margin: 0;
+  color: rgba(255, 255, 255, 0.78);
+  font-size: clamp(0.92rem, 1.05vw, 1.08rem);
+  font-weight: 800;
+  line-height: 1.42;
+}
+
+.adaptationVisualStage {
+  position: relative;
+  overflow: hidden;
+  height: min(58vh, 610px);
+  min-height: 440px;
+  background: rgba(19, 15, 12, 0.24);
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.34);
+}
+
+.adaptationVisualStage img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+
+.adaptationVisualStage::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at 50% 48%, rgba(19, 15, 12, 0.72), transparent 28%),
+    linear-gradient(90deg, rgba(19, 15, 12, 0.2), transparent 30%, rgba(19, 15, 12, 0.18)),
+    linear-gradient(180deg, transparent 62%, rgba(19, 15, 12, 0.64));
+  pointer-events: none;
+}
+
+.adaptationCenterInsight {
+  position: absolute;
+  left: 50%;
+  top: 48%;
+  z-index: 2;
+  width: min(760px, 66%);
+  display: grid;
+  gap: 12px;
+  padding: clamp(18px, 2vw, 28px);
+  translate: -50% -50%;
+  background: rgba(19, 15, 12, 0.72);
+  backdrop-filter: blur(8px);
+  box-shadow: 0 18px 44px rgba(0, 0, 0, 0.32);
+}
+
+.adaptationCenterInsight span {
+  width: fit-content;
+  color: var(--gold);
+  font-family: Impact, "Arial Black", Haettenschweiler, sans-serif;
+  font-size: clamp(2.15rem, 3.45vw, 4.35rem);
+  line-height: 0.88;
+  letter-spacing: 0;
+  text-transform: uppercase;
+}
+
+.adaptationCenterInsight p {
+  margin: 0;
+  color: rgba(255, 255, 255, 0.9);
+  font-size: clamp(0.92rem, 1.16vw, 1.16rem);
+  font-weight: 800;
+  line-height: 1.42;
+}
+
+.adaptationSignalRail {
+  position: absolute;
+  left: clamp(18px, 2vw, 32px);
+  right: clamp(18px, 2vw, 32px);
+  bottom: clamp(16px, 2vw, 28px);
+  z-index: 2;
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: clamp(8px, 1vw, 14px);
+}
+
+.adaptationSignalRail button {
+  min-height: 52px;
+  display: grid;
+  place-items: center;
+  padding: 10px;
+  border: 1px solid rgba(255, 196, 0, 0.58);
+  background: rgba(19, 15, 12, 0.64);
+  color: var(--gold);
+  font-size: clamp(0.78rem, 1vw, 1.04rem);
+  font-weight: 1000;
+  text-align: center;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background 180ms ease, border-color 180ms ease, transform 180ms ease;
+}
+
+.adaptationSignalRail button:hover,
+.adaptationSignalRail button:focus-visible,
+.adaptationSignalRail button.isActive {
+  border-color: var(--gold);
+  background: rgba(255, 196, 0, 0.16);
+  transform: translateY(-4px);
+}
+
+.adaptationSignalRail button:focus-visible {
+  outline: 3px solid var(--gold);
+  outline-offset: 4px;
+}
+
+.mediaPlan {
+  position: relative;
+  min-height: 100vh;
+  min-height: 100svh;
+  display: grid;
+  align-items: center;
+  padding: clamp(28px, 3vw, 48px) clamp(32px, 4.8vw, 86px);
+  background:
+    linear-gradient(115deg, rgba(19, 15, 12, 0.9), rgba(171, 24, 8, 0.8) 52%, rgba(52, 8, 4, 0.94)),
+    url("/background.png") center / 100% 100% no-repeat;
+  color: white;
+  overflow: hidden;
+  user-select: none;
+}
+
+.mediaPlan::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(90deg, rgba(255, 196, 0, 0.08) 1px, transparent 1px),
+    linear-gradient(180deg, rgba(255, 196, 0, 0.06) 1px, transparent 1px);
+  background-size: 52px 52px;
+  mask-image: radial-gradient(circle at 50% 50%, black, transparent 72%);
+  pointer-events: none;
+}
+
+.mediaPlanShell {
+  position: relative;
+  z-index: 1;
+  width: min(1720px, 100%);
+  margin: 0 auto;
+  display: grid;
+  gap: clamp(14px, 1.8vw, 24px);
+}
+
+.mediaPlanHeader {
+  display: grid;
+  grid-template-columns: minmax(360px, 0.78fr) minmax(620px, 1fr);
+  align-items: end;
+  gap: clamp(22px, 3vw, 46px);
+}
+
+.mediaPlanHeader > div:first-child {
+  display: grid;
+  gap: 8px;
+}
+
+.mediaPlanHeader span {
+  width: fit-content;
+  color: var(--gold);
+  font-size: clamp(0.78rem, 0.92vw, 0.98rem);
+  font-weight: 1000;
+  text-transform: uppercase;
+}
+
+.mediaPlanHeader h2 {
+  margin: 0;
+  color: var(--gold);
+  font-family: Impact, "Arial Black", Haettenschweiler, sans-serif;
+  font-size: clamp(3.4rem, 5.5vw, 6.4rem);
+  line-height: 0.86;
+  letter-spacing: 0;
+  text-transform: uppercase;
+  filter: drop-shadow(0 10px 0 rgba(74, 11, 2, 0.48));
+}
+
+.mediaPlanStats {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.mediaPlanStats div {
+  min-height: 66px;
+  display: grid;
+  align-content: center;
+  gap: 4px;
+  padding: 10px 12px;
+  border: 1px solid rgba(255, 196, 0, 0.58);
+  background: rgba(19, 15, 12, 0.48);
+  box-shadow: 0 6px 0 rgba(74, 11, 2, 0.44);
+}
+
+.mediaPlanStats strong {
+  color: white;
+  font-family: Impact, "Arial Black", Haettenschweiler, sans-serif;
+  font-size: clamp(1.45rem, 2vw, 2.25rem);
+  line-height: 0.9;
+  text-transform: uppercase;
+}
+
+.mediaPlanStats span {
+  color: rgba(255, 255, 255, 0.72);
+  font-size: clamp(0.58rem, 0.68vw, 0.74rem);
+  line-height: 1.12;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.mediaPlanTables {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(12px, 1.5vw, 20px);
+}
+
+.mediaPlanTable {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+  border: 1px solid rgba(255, 196, 0, 0.58);
+  background: rgba(19, 15, 12, 0.5);
+  box-shadow: 0 12px 0 rgba(74, 11, 2, 0.46);
+}
+
+.mediaPlanTable th,
+.mediaPlanTable td {
+  padding: 5px 7px;
+  border-bottom: 1px solid rgba(255, 196, 0, 0.18);
+  border-right: 1px solid rgba(255, 196, 0, 0.14);
+  vertical-align: middle;
+  line-height: 1.08;
+}
+
+.mediaPlanTable th {
+  position: sticky;
+  top: 0;
+  background: rgba(255, 196, 0, 0.18);
+  color: var(--gold);
+  font-size: clamp(0.58rem, 0.62vw, 0.7rem);
+  font-weight: 1000;
+  text-align: left;
+  text-transform: uppercase;
+}
+
+.mediaPlanTable td {
+  color: rgba(255, 255, 255, 0.86);
+  font-size: clamp(0.56rem, 0.62vw, 0.72rem);
+  font-weight: 800;
+}
+
+.mediaPlanTable tr:last-child td {
+  border-bottom: 0;
+}
+
+.mediaPlanTable th:nth-child(1),
+.mediaPlanTable td:nth-child(1) {
+  width: 38px;
+  color: var(--gold);
+  text-align: center;
+}
+
+.mediaPlanTable th:nth-child(2),
+.mediaPlanTable td:nth-child(2) {
+  width: 40%;
+}
+
+.mediaPlanTable th:nth-child(3),
+.mediaPlanTable td:nth-child(3) {
+  width: 24%;
+}
+
+.mediaPlanTable th:nth-child(4),
+.mediaPlanTable td:nth-child(4) {
+  width: 21%;
+  color: white;
+}
+
+.mediaPlanTable th:nth-child(5),
+.mediaPlanTable td:nth-child(5) {
+  width: 48px;
+  color: var(--gold);
+  text-align: center;
+}
+
+.mediaPlanTable tbody tr:nth-child(even) {
+  background: rgba(255, 196, 0, 0.045);
+}
+
+.mediaPlanTable tbody tr:hover {
+  background: rgba(255, 196, 0, 0.13);
+}
+
+.titleScrollCopy {
+  position: relative;
+  z-index: 2;
+  display: grid;
+  align-content: center;
+  gap: clamp(14px, 1.8vw, 24px);
+}
+
+.titleScrollCopyState {
+  display: grid;
+  gap: clamp(14px, 1.8vw, 24px);
+}
+
+.titleScrollCopy span {
+  width: fit-content;
+  padding: 9px 13px;
+  border: 1px solid rgba(255, 196, 0, 0.5);
+  background: rgba(19, 15, 12, 0.32);
+  color: var(--gold);
+  font-size: clamp(0.78rem, 0.9vw, 0.98rem);
+  font-weight: 1000;
+  text-transform: uppercase;
+}
+
+.titleScrollCopy h2 {
+  max-width: 760px;
+  margin: 0;
+  color: var(--gold);
+  font-family: Impact, "Arial Black", Haettenschweiler, sans-serif;
+  font-size: clamp(3.5rem, 5.9vw, 7.6rem);
+  line-height: 0.88;
+  letter-spacing: 0;
+  text-transform: uppercase;
+  filter: drop-shadow(0 10px 0 rgba(74, 11, 2, 0.42));
+  text-wrap: balance;
+}
+
+.titleScrollCopy p {
+  max-width: 470px;
+  margin: 0;
+  color: rgba(255, 255, 255, 0.78);
+  font-size: clamp(1rem, 1.25vw, 1.25rem);
+  font-weight: 800;
+  line-height: 1.45;
+}
+
+.titleScrollPosterPanel {
+  min-height: calc(100vh - clamp(88px, 10vw, 164px));
+  display: grid;
+  align-items: center;
+  justify-items: end;
+}
+
+.titleScrollPosterFrame {
+  position: relative;
+  width: min(100%, calc((100vh - 8rem) * 0.8));
+  aspect-ratio: 4 / 5;
+  overflow: hidden;
+}
+
+.titleScrollPosterImage {
+  object-fit: contain;
+  filter: drop-shadow(0 28px 36px rgb(80 0 0 / 0.28));
+}
+
+.posterTitleMark {
+  position: absolute;
+  left: 50%;
+  top: 13%;
+  z-index: 10;
+  width: 58%;
+  transform: translateX(-50%) rotate(-2deg);
+  filter: drop-shadow(0 18px 18px rgb(0 0 0 / 0.22));
+}
+
+.posterTitleHostelWrap {
+  position: relative;
+  margin-left: -4%;
+}
+
+.titleHostel {
+  position: relative;
+  z-index: 10;
+  width: 100%;
+  height: auto;
+  opacity: var(--hostel-opacity);
+  will-change: opacity;
+}
+
+.titleHostelCut {
+  position: absolute;
+  inset: 0;
+  z-index: 10;
+  width: 100%;
+  height: auto;
+  opacity: var(--hostel-cut-opacity);
+  will-change: opacity;
+}
+
+.titleBoys {
+  position: relative;
+  z-index: 40;
+  width: 74%;
+  height: auto;
+  margin-top: -14%;
+  margin-left: 22%;
+  opacity: var(--boys-opacity);
+  transition: opacity 500ms ease;
+  will-change: opacity;
+}
+
+.titleCampaSmall {
+  position: absolute;
+  left: 17%;
+  top: -18%;
+  z-index: 20;
+  width: 24%;
+  height: auto;
+  opacity: var(--small-campa-opacity);
+  clip-path: inset(0 var(--small-campa-clip) 0 0);
+  transform: rotate(13deg);
+  transform-origin: center;
+  transition:
+    clip-path 500ms cubic-bezier(0.16, 1, 0.3, 1),
+    opacity 180ms linear;
+  will-change: clip-path, opacity;
+}
+
+.titleCampaBig {
+  position: absolute;
+  left: 7%;
+  top: -18%;
+  z-index: 30;
+  width: 82%;
+  height: auto;
+  opacity: var(--big-campa-opacity);
+  clip-path: inset(0 var(--big-campa-clip) 0 0);
+  transition:
+    clip-path 500ms cubic-bezier(0.16, 1, 0.3, 1),
+    opacity 180ms linear;
+  will-change: clip-path, opacity;
+}
+
+[data-stage="1"] .titleHostel {
+  animation: titleHostelDropClash 500ms cubic-bezier(0.2, 0.9, 0.18, 1) both;
+}
+
+[data-stage="1"] .titleBoys {
+  animation: titleBoysRiseClash 500ms cubic-bezier(0.2, 0.9, 0.18, 1) both;
+}
+
+@keyframes titleHostelDropClash {
+  0% {
+    opacity: 1;
+    transform: translate3d(0, -170%, 0) rotate(-1deg);
+  }
+
+  68% {
+    transform: translate3d(0, 8%, 0) rotate(1deg);
+  }
+
+  78% {
+    transform: translate3d(-1.5%, -3%, 0) rotate(-1deg);
+  }
+
+  88% {
+    transform: translate3d(1%, 1.5%, 0) rotate(0.6deg);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) rotate(0deg);
+  }
+}
+
+@keyframes titleBoysRiseClash {
+  0% {
+    opacity: 1;
+    transform: translate3d(0, 170%, 0) rotate(1deg);
+  }
+
+  68% {
+    transform: translate3d(0, -8%, 0) rotate(-1deg);
+  }
+
+  78% {
+    transform: translate3d(1.5%, 3%, 0) rotate(1deg);
+  }
+
+  88% {
+    transform: translate3d(-1%, -1.5%, 0) rotate(-0.6deg);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) rotate(0deg);
+  }
 }
 
 @keyframes movieMetricIn {
@@ -2908,7 +3533,7 @@ section {
 
   .hostelPrimaryProof {
     width: 100%;
-    transform: rotate(-2deg);
+    transform: none;
   }
 
   .hostelViewsProof {
@@ -2917,6 +3542,85 @@ section {
     top: auto;
     width: 100%;
     margin-top: 20px;
+  }
+
+  .titleScrollExperience {
+    grid-template-columns: 1fr;
+    gap: 28px;
+    padding: 54px 22px;
+  }
+
+  .titleScrollCopy h2 {
+    font-size: clamp(3.5rem, 15vw, 6rem);
+  }
+
+  .titleScrollPosterPanel {
+    min-height: auto;
+    justify-items: center;
+  }
+
+  .titleScrollPosterFrame {
+    width: min(100%, calc((72vh - 3rem) * 0.8));
+  }
+
+  .adaptationProof {
+    padding: 54px 22px;
+  }
+
+  .adaptationProofHeader {
+    grid-template-columns: 1fr;
+  }
+
+  .adaptationProofHeader h2 {
+    font-size: clamp(3.2rem, 14vw, 5.8rem);
+  }
+
+  .adaptationSignalRail {
+    position: relative;
+    left: auto;
+    right: auto;
+    bottom: auto;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    margin-top: 12px;
+  }
+
+  .adaptationSignalRail button:last-child {
+    grid-column: 1 / -1;
+  }
+
+  .adaptationCenterInsight {
+    position: relative;
+    left: auto;
+    top: auto;
+    width: 100%;
+    margin-top: 12px;
+    translate: none;
+  }
+
+  .adaptationCenterInsight span {
+    font-size: clamp(2.2rem, 11vw, 4rem);
+  }
+
+  .mediaPlan {
+    padding: 48px 16px;
+    overflow: visible;
+  }
+
+  .mediaPlanHeader,
+  .mediaPlanTables {
+    grid-template-columns: 1fr;
+  }
+
+  .mediaPlanStats {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .mediaPlanHeader h2 {
+    font-size: clamp(3rem, 15vw, 5.2rem);
+  }
+
+  .mediaPlanTable td {
+    font-size: 0.64rem;
   }
 }
 
@@ -2928,4 +3632,5 @@ section {
     animation-iteration-count: 1 !important;
     scroll-behavior: auto !important;
   }
+}
 }

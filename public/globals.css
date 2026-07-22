@@ -1,0 +1,153 @@
+@import "tailwindcss";
+
+:root {
+  --background: #dc2626;
+  --foreground: #ffffff;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  margin: 0;
+}
+
+html {
+  background: var(--background);
+}
+
+body {
+  overflow-x: hidden;
+  overflow-y: hidden;
+}
+
+.poster-frame {
+  aspect-ratio: 4 / 5;
+  overflow: hidden;
+  width: min(100%, calc((55vh - 3rem) * 0.8));
+}
+
+.poster-title-mark {
+  transform: translateX(-50%) rotate(-2deg);
+  filter: drop-shadow(0 18px 18px rgb(0 0 0 / 0.22));
+}
+
+.title-hostel {
+  opacity: var(--hostel-opacity);
+  will-change: opacity;
+}
+
+.title-hostel-cut {
+  opacity: var(--hostel-cut-opacity);
+  will-change: opacity;
+}
+
+.title-boys {
+  opacity: var(--boys-opacity);
+  transition: opacity 500ms ease;
+  will-change: opacity;
+}
+
+[data-stage="1"] .title-hostel {
+  animation: hostel-drop-clash 500ms cubic-bezier(0.2, 0.9, 0.18, 1) both;
+}
+
+[data-stage="1"] .title-boys {
+  animation: boys-rise-clash 500ms cubic-bezier(0.2, 0.9, 0.18, 1) both;
+}
+
+.title-campa-small {
+  opacity: var(--small-campa-opacity);
+  clip-path: inset(0 var(--small-campa-clip) 0 0);
+  transform: rotate(13deg);
+  transform-origin: center;
+  transition:
+    clip-path 500ms cubic-bezier(0.16, 1, 0.3, 1),
+    opacity 180ms linear;
+  will-change: clip-path, opacity;
+}
+
+.title-campa-big {
+  opacity: var(--big-campa-opacity);
+  clip-path: inset(0 var(--big-campa-clip) 0 0);
+  transition:
+    clip-path 500ms cubic-bezier(0.16, 1, 0.3, 1),
+    opacity 180ms linear;
+  will-change: clip-path, opacity;
+}
+
+.poster-image {
+  filter: drop-shadow(0 28px 36px rgb(80 0 0 / 0.28));
+}
+
+@keyframes hostel-drop-clash {
+  0% {
+    opacity: 1;
+    transform: translate3d(0, -170%, 0) rotate(-1deg);
+  }
+
+  68% {
+    transform: translate3d(0, 8%, 0) rotate(1deg);
+  }
+
+  78% {
+    transform: translate3d(-1.5%, -3%, 0) rotate(-1deg);
+  }
+
+  88% {
+    transform: translate3d(1%, 1.5%, 0) rotate(0.6deg);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) rotate(0deg);
+  }
+}
+
+@keyframes boys-rise-clash {
+  0% {
+    opacity: 1;
+    transform: translate3d(0, 170%, 0) rotate(1deg);
+  }
+
+  68% {
+    transform: translate3d(0, -8%, 0) rotate(-1deg);
+  }
+
+  78% {
+    transform: translate3d(1.5%, 3%, 0) rotate(1deg);
+  }
+
+  88% {
+    transform: translate3d(-1%, -1.5%, 0) rotate(-0.6deg);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) rotate(0deg);
+  }
+}
+
+@media (min-width: 768px) {
+  .poster-frame {
+    width: min(100%, calc((100vh - 6rem) * 0.8));
+  }
+}
+
+@media (min-width: 1024px) {
+  .poster-frame {
+    width: min(100%, calc((100vh - 8rem) * 0.8));
+  }
+}
+
+@media (max-width: 767px) {
+  .poster-panel {
+    justify-content: center;
+  }
+}

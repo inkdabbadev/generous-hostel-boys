@@ -3,7 +3,7 @@
 import { motion } from "framer-motion";
 import { MapPin, Target, TrendingUp, Users } from "lucide-react";
 import { useMemo, useState } from "react";
-import { audienceMarkets, type AudienceMarket } from "./regionalAudienceData";
+import { audienceMarkets, type AudienceMarket } from "../../data/regionalAudienceData";
 
 const ageGoldPalette = ["#fff2a6", "#ffd95c", "#ffc400", "#d99a00", "#8f5f00"];
 
