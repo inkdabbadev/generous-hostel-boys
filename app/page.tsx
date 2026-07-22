@@ -1,9 +1,15 @@
 import AboutExperience from "./AboutExperience";
 import CoreCapabilities from "./CoreCapabilities";
+import HostelGenreProof from "./HostelGenreProof";
+import IntroExperience from "./IntroExperience";
+import MovieMetrics from "./MovieMetrics";
+import RegionalAudience from "./RegionalAudience";
 
 export default function Home() {
   return (
     <main>
+      <IntroExperience />
+
       <section className="hero">
         <div className="heroImage" aria-hidden="true" />
         <div className="heroShade" aria-hidden="true" />
@@ -27,6 +33,9 @@ export default function Home() {
 
       <AboutExperience />
       <CoreCapabilities />
+      <MovieMetrics />
+      <RegionalAudience />
+      <HostelGenreProof />
     </main>
   );
 }
