@@ -1,6 +1,5 @@
 "use client";
 
-import { BarChart3, X } from "lucide-react";
 import type { CSSProperties } from "react";
 import { useEffect, useRef, useState } from "react";
 
@@ -8,83 +7,66 @@ const movies = [
   {
     title: "Love Today",
     image: "lovetoday.jpg",
-    year: "2022",
-    rating: "8.1 / 10",
-    boxOffice: "Rs. 105 Crore",
-    budget: "Rs. 5 Crore",
-    run: "100+ Days",
+    footfall: "6.5M+",
   },
   {
     title: "Youth",
     image: "youth.jpg",
-    year: "2002",
-    rating: "6.5 / 10",
-    boxOffice: "~Rs. 15-20 Crore",
-    budget: "~Rs. 4-5 Crore",
-    run: "100+ Days",
+    footfall: "4.5M+",
   },
   {
     title: "Dragon",
     image: "dragon.jpeg",
-    year: "2025",
-    rating: "8.0 / 10",
-    boxOffice: "Rs. 150 Crore",
-    budget: "Rs. 37 Crore",
-    run: "50+ Days",
+    footfall: "9M+",
   },
   {
     title: "K.G.F: Chapter 1",
     image: "kgf1.jpeg",
-    year: "2018",
-    rating: "8.2 / 10",
-    boxOffice: "Rs. 250 Crore",
-    budget: "Rs. 80 Crore",
-    run: "100+ Days",
-  },
-  {
-    title: "K.G.F: Chapter 2",
-    image: "kgf2.jpeg",
-    year: "2022",
-    rating: "8.3 / 10",
-    boxOffice: "Rs. 1,200-1,250 Crore",
-    budget: "Rs. 100 Crore",
-    run: "100+ Days",
+    footfall: "35M+",
   },
   {
     title: "Kantara",
     image: "kantara.jpeg",
-    year: "2022",
-    rating: "8.2 / 10",
-    boxOffice: "Rs. 400-450 Crore",
-    budget: "Rs. 16 Crore",
-    run: "100+ Days",
+    footfall: "10M+",
   },
   {
     title: "Premalu",
     image: "Premalu.jpeg",
-    year: "2024",
-    rating: "7.8 / 10",
-    boxOffice: "Rs. 135+ Crore",
-    budget: "Rs. 3-5 Crore",
-    run: "100+ Days",
+    footfall: "5M+",
   },
   {
     title: "Manjummel Boys",
     image: "Manjummel Boys.jpeg",
-    year: "2024",
-    rating: "8.3 / 10",
-    boxOffice: "Rs. 240+ Crore",
-    budget: "Rs. 20 Crore",
-    run: "75+ Days",
+    footfall: "11.5M+",
+  },
+  {
+    title: "K.G.F: Chapter 2",
+    image: "kgf2.jpeg",
+    footfall: "53M+",
   },
 ];
 
-type MovieMetric = (typeof movies)[number];
+type Movie = (typeof movies)[number];
+
+function splitTitleLines(title: string) {
+  if (title.startsWith("K.G.F:")) {
+    return ["K.G.F", title.replace("K.G.F:", "").trim()];
+  }
+
+  const words = title.split(" ");
+
+  if (words.length <= 1) {
+    return [title];
+  }
+
+  const midpoint = Math.ceil(words.length / 2);
+  return [words.slice(0, midpoint).join(" "), words.slice(midpoint).join(" ")];
+}
 
 export default function MovieMetrics() {
   const sectionRef = useRef<HTMLElement>(null);
   const [isVisible, setIsVisible] = useState(false);
-  const [selectedMovie, setSelectedMovie] = useState<MovieMetric | null>(null);
+  const [selectedMovie, setSelectedMovie] = useState<Movie | null>(null);
 
   useEffect(() => {
     const section = sectionRef.current;
@@ -106,131 +88,105 @@ export default function MovieMetrics() {
   }, []);
 
   useEffect(() => {
-    if (!selectedMovie) {
-      return;
-    }
+    document.body.style.overflow = selectedMovie ? "hidden" : "";
 
-    const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "Escape") {
-        setSelectedMovie(null);
-      }
+    return () => {
+      document.body.style.overflow = "";
     };
-
-    document.addEventListener("keydown", handleKeyDown);
-
-    return () => document.removeEventListener("keydown", handleKeyDown);
   }, [selectedMovie]);
 
   return (
     <section
       className={isVisible ? "metricsExperience isVisible" : "metricsExperience"}
-      aria-labelledby="metrics-heading"
+      aria-label="Recent hit metrics"
       ref={sectionRef}
     >
       <div className="metricsShell">
-        <div className="metricsHeader">
-          <span>
-            <BarChart3 aria-hidden="true" size={20} strokeWidth={2.4} />
-            Research board
-          </span>
-          <h2 id="metrics-heading">Recent Hit Metrics</h2>
-        </div>
+        <header className="metricsHeader">
+          <img
+            alt="Recent hit metrics"
+            className="metricsTitleAsset"
+            draggable={false}
+            src="/moviemetrics/recent.svg"
+          />
+        </header>
 
         <div className="movieMetricGrid">
           {movies.map((movie, index) => (
-            <article
-              className="movieMetricCard"
+            <button
+              aria-label={movie.title}
+              className="movieMetricPosterCard"
               key={movie.title}
               onClick={() => setSelectedMovie(movie)}
-              onKeyDown={(event) => {
-                if (event.key === "Enter" || event.key === " ") {
-                  event.preventDefault();
-                  setSelectedMovie(movie);
-                }
-              }}
-              role="button"
-              tabIndex={0}
               style={{ "--i": index } as CSSProperties & Record<"--i", number>}
+              type="button"
             >
-              <div className="movieMetricPoster">
-                <img
-                  alt={`${movie.title} poster`}
-                  draggable={false}
-                  src={`/moviemetrics/${encodeURIComponent(movie.image)}`}
-                />
-              </div>
-              <div className="movieCardTop">
-                <span>{movie.year}</span>
-                <strong>{movie.rating}</strong>
-              </div>
-              <h3>{movie.title}</h3>
-              <dl>
-                <div>
-                  <dt>Worldwide Box Office</dt>
-                  <dd>{movie.boxOffice}</dd>
-                </div>
-                <div>
-                  <dt>Estimated Budget</dt>
-                  <dd>{movie.budget}</dd>
-                </div>
-                <div>
-                  <dt>Theatrical Run</dt>
-                  <dd>{movie.run}</dd>
-                </div>
-              </dl>
-            </article>
+              <img
+                alt={`${movie.title} poster`}
+                draggable={false}
+                src={`/moviemetrics/${encodeURIComponent(movie.image)}`}
+              />
+            </button>
           ))}
         </div>
       </div>
-
       {selectedMovie ? (
         <div
-          className="movieMetricOverlay"
+          className="movieMetricPaperOverlay"
+          aria-modal="true"
+          role="dialog"
           onClick={() => setSelectedMovie(null)}
-          role="presentation"
         >
-          <article
-            aria-label={`${selectedMovie.title} expanded metrics`}
-            className="movieMetricExpanded"
-            onClick={(event) => event.stopPropagation()}
+          <button
+            aria-label="Close movie metric paper"
+            className="movieMetricPaperClose"
+            onClick={() => setSelectedMovie(null)}
+            type="button"
           >
-            <button
-              aria-label="Close expanded movie metrics"
-              className="movieMetricClose"
-              onClick={() => setSelectedMovie(null)}
-              type="button"
-            >
-              <X aria-hidden="true" size={24} strokeWidth={2.8} />
-            </button>
-            <div className="movieMetricExpandedPoster">
-              <img
-                alt={`${selectedMovie.title} poster`}
-                draggable={false}
-                src={`/moviemetrics/${encodeURIComponent(selectedMovie.image)}`}
-              />
-            </div>
-            <div className="movieMetricExpandedCopy">
-              <div className="movieMetricExpandedTop">
-                <span>{selectedMovie.year}</span>
-                <strong>{selectedMovie.rating}</strong>
+            x
+          </button>
+          <div className="movieMetricPaperSheet" onClick={(event) => event.stopPropagation()}>
+            <img
+              alt=""
+              aria-hidden="true"
+              className="movieMetricPaperImage"
+              draggable={false}
+              src="/moviemetrics/paper.png"
+            />
+            <div className="movieMetricPaperCopy">
+              <h3>
+                {splitTitleLines(selectedMovie.title).map((line, index) => (
+                  <span key={line} className={`movieMetricTitleLine movieMetricTitleLine${index + 1}`}>
+                    {line}
+                  </span>
+                ))}
+              </h3>
+              <div className="movieMetricPaperStats" aria-label={`${selectedMovie.title} metrics`}>
+                <span>
+                  <strong>{selectedMovie.footfall}</strong>
+                  Footfall
+                </span>
+                <span>
+                  <strong>10M+</strong>
+                  Box Office
+                </span>
+                <span>
+                  <strong>10M+</strong>
+                  Ad Spend
+                </span>
+                <span>
+                  <strong>10M+</strong>
+                  Theatrical Run
+                </span>
               </div>
-              <h3>{selectedMovie.title}</h3>
-              <dl>
-                <div>
-                  <dt>Worldwide Box Office</dt>
-                  <dd>{selectedMovie.boxOffice}</dd>
-                </div>
-                <div>
-                  <dt>Estimated Budget</dt>
-                  <dd>{selectedMovie.budget}</dd>
-                </div>
-                <div>
-                  <dt>Theatrical Run</dt>
-                  <dd>{selectedMovie.run}</dd>
-                </div>
-              </dl>
             </div>
-          </article>
+            <img
+              alt={`${selectedMovie.title} poster`}
+              className="movieMetricPaperPoster"
+              draggable={false}
+              src={`/moviemetrics/${encodeURIComponent(selectedMovie.image)}`}
+            />
+          </div>
         </div>
       ) : null}
     </section>

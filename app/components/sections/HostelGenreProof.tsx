@@ -1,135 +1,270 @@
 "use client";
 
-import { AnimatePresence, motion } from "framer-motion";
-import { useState } from "react";
+import { motion } from "framer-motion";
+import { useEffect, useRef, useState } from "react";
 
-const viewProofImages = [
-  {
-    alt: "Hostel genre video views proof",
-    src: "/hostelgenre/v1.png",
-  },
-  {
-    alt: "Additional hostel genre audience proof",
-    src: "/hostelgenre/v2.png",
-  },
-  {
-    alt: "Third hostel genre audience proof",
-    src: "/hostelgenre/v3.png",
-  },
-  {
-    alt: "Fourth hostel genre audience proof",
-    src: "/hostelgenre/v4.png",
-  },
+const maxHostelPhase = 3;
+
+const leftProofImages = [
+  { alt: "Hostel genre proof one", src: "/hostelgenre/v1.png" },
+  { alt: "Hostel genre proof two", src: "/hostelgenre/v2.png" },
+  { alt: "Hostel genre proof three", src: "/hostelgenre/v3.png" },
 ];
 
-const proofEase = [0.16, 1, 0.3, 1] as const;
+const rightProofImages = [
+  { alt: "Hostel genre proof four", src: "/hostelgenre/v4.png" },
+  { alt: "Hostel genre proof five", src: "/hostelgenre/v5.png" },
+  { alt: "Hostel genre proof six", src: "/hostelgenre/v6.png" },
+  { alt: "Hostel genre proof seven", src: "/hostelgenre/v7.png" },
+];
+
+const finalProofImages = [...leftProofImages, ...rightProofImages];
 
 export default function HostelGenreProof() {
-  const [showViews, setShowViews] = useState(false);
+  const sectionRef = useRef<HTMLElement>(null);
+  const phaseRef = useRef(0);
+  const isSteppingRef = useRef(false);
+  const [phase, setPhase] = useState(0);
+
+  useEffect(() => {
+    const setStepPhase = (nextPhase: number) => {
+      const clampedPhase = Math.min(Math.max(nextPhase, 0), maxHostelPhase);
+      phaseRef.current = clampedPhase;
+      setPhase(clampedPhase);
+    };
+
+    const lockHostelView = () => {
+      const section = sectionRef.current;
+
+      if (!section) {
+        return;
+      }
+
+      window.scrollTo({
+        top: section.offsetTop,
+        behavior: "auto",
+      });
+    };
+
+    const getHostelRect = () => {
+      const section = sectionRef.current;
+
+      if (!section) {
+        return null;
+      }
+
+      return section.getBoundingClientRect();
+    };
+
+    const hostelIsPinned = () => {
+      const rect = getHostelRect();
+
+      if (!rect) {
+        return false;
+      }
+
+      return rect.top <= 2 && rect.bottom >= window.innerHeight - 2;
+    };
+
+    const hostelIsInLockZone = () => {
+      const rect = getHostelRect();
+
+      if (!rect) {
+        return false;
+      }
+
+      return rect.top <= window.innerHeight * 0.45 && rect.bottom >= window.innerHeight * 0.55;
+    };
+
+    const stepPhase = (direction: 1 | -1) => {
+      if (isSteppingRef.current) {
+        return;
+      }
+
+      isSteppingRef.current = true;
+      lockHostelView();
+      setStepPhase(phaseRef.current + direction);
+
+      window.setTimeout(() => {
+        isSteppingRef.current = false;
+      }, 760);
+    };
+
+    const onSectionJumpIntent = (event: Event) => {
+      const customEvent = event as CustomEvent<{
+        direction: 1 | -1;
+        section: HTMLElement;
+      }>;
+
+      if (customEvent.detail.section !== sectionRef.current || !hostelIsPinned()) {
+        return;
+      }
+
+      const { direction } = customEvent.detail;
+      const canStepForward = direction === 1 && phaseRef.current < maxHostelPhase;
+      const canStepBackward = direction === -1 && phaseRef.current > 0;
+
+      if (!canStepForward && !canStepBackward) {
+        return;
+      }
+
+      customEvent.preventDefault();
+      stepPhase(direction);
+    };
+
+    const onWheel = (event: WheelEvent) => {
+      if (!hostelIsInLockZone() || Math.abs(event.deltaY) < 8) {
+        return;
+      }
+
+      const isForward = event.deltaY > 0;
+      const canStepForward = isForward && phaseRef.current < maxHostelPhase;
+      const canStepBackward = !isForward && phaseRef.current > 0;
+
+      if (!hostelIsPinned() && (canStepForward || canStepBackward)) {
+        event.preventDefault();
+        lockHostelView();
+        if (isForward && phaseRef.current === 0) {
+          setStepPhase(1);
+        }
+        return;
+      }
+
+      if (canStepForward || canStepBackward) {
+        event.preventDefault();
+        stepPhase(isForward ? 1 : -1);
+      }
+    };
+
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (!hostelIsInLockZone()) {
+        return;
+      }
+
+      const forwardKeys = ["ArrowDown", "PageDown", " ", "Spacebar"];
+      const backwardKeys = ["ArrowUp", "PageUp"];
+      const isForward = forwardKeys.includes(event.key) || forwardKeys.includes(event.code);
+      const isBackward = backwardKeys.includes(event.key) || backwardKeys.includes(event.code);
+      const canStepForward = isForward && phaseRef.current < maxHostelPhase;
+      const canStepBackward = isBackward && phaseRef.current > 0;
+
+      if (!hostelIsPinned() && (canStepForward || canStepBackward)) {
+        event.preventDefault();
+        event.stopPropagation();
+        lockHostelView();
+        if (isForward && phaseRef.current === 0) {
+          setStepPhase(1);
+        }
+        return;
+      }
+
+      if (canStepForward || canStepBackward) {
+        event.preventDefault();
+        event.stopPropagation();
+        stepPhase(canStepForward ? 1 : -1);
+      }
+    };
+
+    window.addEventListener("wheel", onWheel, { passive: false });
+    window.addEventListener("section-jump:intent", onSectionJumpIntent);
+    document.addEventListener("keydown", onKeyDown, { capture: true });
+
+    return () => {
+      window.removeEventListener("wheel", onWheel);
+      window.removeEventListener("section-jump:intent", onSectionJumpIntent);
+      document.removeEventListener("keydown", onKeyDown, { capture: true });
+    };
+  }, []);
 
   return (
-    <section className="hostelGenreProof" aria-labelledby="hostel-genre-title">
+    <section className="hostelGenreProof" aria-labelledby="hostel-genre-title" ref={sectionRef}>
       <div className="hostelGenreShell">
-        <motion.div
-          className="hostelGenreCopy"
-          initial={{ opacity: 0, y: 28 }}
-          transition={{ duration: 0.72, ease: [0.2, 0.9, 0.25, 1] }}
-          viewport={{ once: false, amount: 0.42 }}
-          whileInView={{ opacity: 1, y: 0 }}
-        >
+        <div className="hostelGenreCopy">
           <h2 id="hostel-genre-title">
             <span>TN audience already</span>
-            <span>love hostel as a genre</span>
+            <span>
+              love hostel as a{" "}
+              <em>genre</em>
+            </span>
           </h2>
-          <p>Yes even we couldn&apos;t believe it!</p>
-        </motion.div>
+        </div>
 
         <motion.div
           className="hostelProofBay"
-          initial={{ opacity: 0, y: 34, scale: 0.96 }}
-          transition={{ delay: 0.12, duration: 0.72, ease: [0.2, 0.9, 0.25, 1] }}
-          viewport={{ once: false, amount: 0.35 }}
-          whileInView={{ opacity: 1, y: 0, scale: 1 }}
+          animate={{ opacity: phase >= 1 ? 1 : 0 }}
+          transition={{ duration: 0.32, ease: [0.2, 0.8, 0.2, 1] }}
         >
-          <button
-            aria-label="Show hostel genre views proof"
-            className="hostelPrimaryProof"
-            onClick={() => setShowViews(true)}
-            type="button"
-          >
-            <img
-              alt="Alumbunaties hostel genre proof"
-              draggable={false}
-              src="/hostelgenre/primary.png"
-            />
-            <span>Click to reveal views proof</span>
-          </button>
-
-          <AnimatePresence>
-            {showViews ? (
-              <motion.div
-                animate={{ opacity: 1, x: 0 }}
-                className="hostelViewsProof"
-                exit={{ opacity: 0, x: 90 }}
-                initial={{ opacity: 0, x: 150 }}
-                transition={{ duration: 0.58, ease: [0.2, 0.9, 0.25, 1] }}
-              >
-                {viewProofImages.map((image, index) => (
-                  <motion.div
-                    animate="visible"
-                    className="hostelViewShot"
-                    initial={{
-                      opacity: 0,
-                    }}
-                    key={image.src}
-                    transition={{
-                      delay: 0.05 + index * 0.12,
-                      duration: 0.56,
-                    }}
-                    variants={{
-                      hidden: { opacity: 0 },
-                      visible: { opacity: 1 },
-                    }}
-                  >
-                    <motion.img
-                      animate={{
-                        filter:
-                          "blur(0px) drop-shadow(0 12px 16px rgba(0, 0, 0, 0.2))",
-                        opacity: 1,
-                        scale: [0.88, 1.08, 0.985, 1],
-                        x: [150, -20, 8, 0],
-                        y: [18, -8, 3, 0],
-                      }}
-                      alt={image.alt}
-                      draggable={false}
-                      initial={{
-                        filter:
-                          "blur(10px) drop-shadow(0 24px 32px rgba(0, 0, 0, 0.24))",
-                        opacity: 0,
-                      }}
-                      src={image.src}
-                      transition={{
-                        delay: 0.04 + index * 0.12,
-                        duration: 0.76,
-                        ease: proofEase,
-                      }}
-                    />
-                  </motion.div>
-                ))}
-                <motion.span
-                  animate={{ opacity: [0, 1, 0], scaleX: [0.2, 1, 1], x: ["-10%", "110%", "120%"] }}
-                  aria-hidden="true"
-                  className="hostelRevealSweep"
-                  initial={{ opacity: 0 }}
-                    transition={{
-                    delay: 0.28,
-                    duration: 1.05,
-                    ease: [0.2, 0.8, 0.2, 1],
-                    }}
+          {phase >= 1 ? (
+            <motion.div
+              aria-hidden="true"
+              className="hostelPrimaryProof"
+              animate={{ opacity: 1, rotate: 0, scale: 1, y: 0 }}
+              initial={{ opacity: 0, rotate: -8, scale: 0.86, y: -260 }}
+              transition={{ duration: 0.86, ease: [0.16, 1, 0.3, 1] }}
+            >
+              <span className="hostelTvStage" aria-hidden="true">
+                <span className="hostelTvDarkScreen" />
+                <motion.img
+                  animate={{
+                    clipPath:
+                      phase >= 2 ? "circle(78% at 50% 50%)" : "circle(0% at 50% 50%)",
+                    filter:
+                      phase >= 2
+                        ? "brightness(0.96) contrast(1.04) saturate(0.96)"
+                        : "brightness(1.8) contrast(1.25) saturate(0.2)",
+                    opacity: phase >= 2 ? 1 : 0,
+                    scale: phase >= 2 ? 1.02 : 0.08,
+                  }}
+                  className="hostelTvScreen"
+                  alt=""
+                  draggable={false}
+                  initial={false}
+                  src="/hostelgenre/primary.png"
+                  transition={{ duration: 0.42, ease: [0.16, 1, 0.3, 1] }}
                 />
-              </motion.div>
-            ) : null}
-          </AnimatePresence>
+                <motion.span
+                  animate={{
+                    opacity: phase >= 2 ? [0, 1, 0] : 0,
+                    scaleX: phase >= 2 ? [0.06, 1, 0.8] : 0.06,
+                  }}
+                  className="hostelTvPowerFlash"
+                  transition={{ duration: 0.28, ease: [0.16, 1, 0.3, 1] }}
+                />
+                <img
+                  className="hostelTvFrame"
+                  alt=""
+                  draggable={false}
+                  src="/hostelgenre/tv.png"
+                />
+              </span>
+            </motion.div>
+          ) : null}
+          {phase >= 3 ? (
+            <div className="hostelEdgeProofs" aria-hidden="true">
+              {finalProofImages.map((image, index) => (
+                <motion.img
+                  animate={{
+                    opacity: 1,
+                    rotate: [0, index % 2 === 0 ? -8 : 8, index % 2 === 0 ? -1.5 : 1.5],
+                    scale: [0.18, 1.22, 0.96, 1],
+                    x: 0,
+                    y: 0,
+                  }}
+                  alt={image.alt}
+                  className={`hostelEdgeProofImage hostelEdgeProofImage${index + 1}`}
+                  draggable={false}
+                  initial={{ opacity: 0, rotate: 0, scale: 0.18, x: "0vw", y: "0vh" }}
+                  key={image.src}
+                  src={image.src}
+                  transition={{
+                    delay: index * 0.08,
+                    duration: 0.72,
+                    ease: [0.16, 1, 0.3, 1],
+                  }}
+                />
+              ))}
+            </div>
+          ) : null}
         </motion.div>
       </div>
     </section>

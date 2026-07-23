@@ -1,3 +1,7 @@
+"use client";
+
+import { motion } from "framer-motion";
+
 const mediaPlanRows = [
   {
     no: 1,
@@ -65,36 +69,102 @@ const mediaPlanRows = [
   },
 ];
 
+export const mediaPlanRowsData = mediaPlanRows;
+
+const mediaImpactCards = [
+  {
+    label: "Different",
+    value: "34",
+    title: "Touch Points",
+    copy: "Bus stands, hoardings, malls, metro, transit, airport, LED walls, auto, rail and city media.",
+  },
+  {
+    label: "Sustained",
+    value: "30",
+    title: "Days of Promotion",
+    copy: "A release-window burst designed to stay visible before, during and after the theatrical push.",
+  },
+  {
+    label: "Core Market",
+    value: "Tamil",
+    title: "Core TN Youth",
+    copy: "Built around Tamil Nadu's youth-heavy audience routes, public spaces and daily commute moments.",
+  },
+];
+
+export default function MarketingMediaPlan() {
+  return (
+    <motion.section
+      className="mediaPlan"
+      aria-label="Marketing media plan highlights"
+      initial="hidden"
+      viewport={{ once: false, amount: 0.4 }}
+      whileInView="show"
+    >
+      <div className="mediaPlanShell">
+        <div className="mediaPlanImpactGrid" aria-label="Marketing media plan highlights">
+          {mediaImpactCards.map((card, index) => (
+            <motion.article
+              className="mediaPlanImpactCard"
+              key={card.title}
+              transition={{
+                delay: index * 0.18,
+                duration: 0.72,
+                ease: [0.16, 1, 0.3, 1],
+              }}
+              variants={{
+                hidden: { opacity: 0, y: 54, scale: 0.96, filter: "blur(14px)" },
+                show: { opacity: 1, y: 0, scale: 1, filter: "blur(0px)" },
+              }}
+            >
+              <motion.strong
+                transition={{ delay: 0.22 + index * 0.18, duration: 0.64, ease: [0.18, 1.25, 0.28, 1] }}
+                variants={{
+                  hidden: { opacity: 0, y: 34, scale: 0.82 },
+                  show: { opacity: 1, y: 0, scale: 1 },
+                }}
+              >
+                {card.value}
+              </motion.strong>
+              <motion.h3
+                transition={{ delay: 0.34 + index * 0.18, duration: 0.48, ease: [0.16, 1, 0.3, 1] }}
+                variants={{
+                  hidden: { opacity: 0, clipPath: "inset(0% 100% 0% 0%)" },
+                  show: { opacity: 1, clipPath: "inset(0% 0% 0% 0%)" },
+                }}
+              >
+                {card.title}
+              </motion.h3>
+              <motion.p
+                transition={{ delay: 0.46 + index * 0.18, duration: 0.46, ease: [0.16, 1, 0.3, 1] }}
+                variants={{
+                  hidden: { opacity: 0, y: 18 },
+                  show: { opacity: 1, y: 0 },
+                }}
+              >
+                {card.copy}
+              </motion.p>
+            </motion.article>
+          ))}
+        </div>
+      </div>
+    </motion.section>
+  );
+}
+
 const splitIndex = Math.ceil(mediaPlanRows.length / 2);
 const mediaPlanColumns = [
   mediaPlanRows.slice(0, splitIndex),
   mediaPlanRows.slice(splitIndex),
 ];
 
-const summaryStats = [
-  { label: "Total line items", value: "34" },
-  { label: "Longest burst", value: "30 days" },
-  { label: "Core market", value: "Tamil Nadu" },
-  { label: "Primary channels", value: "LED / OOH / Transit" },
-];
-
-export default function MarketingMediaPlan() {
+export function MarketingMediaPlanTable() {
   return (
-    <section className="mediaPlan" aria-labelledby="media-plan-title">
-      <div className="mediaPlanShell">
-        <header className="mediaPlanHeader">
-          <div>
-            <span>Outdoor and transit burst</span>
-            <h2 id="media-plan-title">TN release visibility plan</h2>
-          </div>
-          <div className="mediaPlanStats" aria-label="Media plan summary">
-            {summaryStats.map((stat) => (
-              <div key={stat.label}>
-                <strong>{stat.value}</strong>
-                <span>{stat.label}</span>
-              </div>
-            ))}
-          </div>
+    <section className="mediaPlan mediaPlanDetail" aria-labelledby="media-plan-table-title">
+      <div className="mediaPlanShell mediaPlanDetailShell">
+        <header className="mediaPlanTableHeader">
+          <span>Touchpoint detail</span>
+          <h2 id="media-plan-table-title">Visibility Plan Breakdown</h2>
         </header>
 
         <div className="mediaPlanTables">

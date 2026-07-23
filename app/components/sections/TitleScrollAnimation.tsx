@@ -80,7 +80,7 @@ const stageCopy = [
 ];
 
 export default function TitleScrollAnimation() {
-  const sectionRef = useRef<HTMLDivElement>(null);
+  const sectionRef = useRef<HTMLElement>(null);
   const [stage, setStage] = useState(0);
   const isActiveRef = useRef(false);
   const isAnimatingRef = useRef(false);
@@ -147,7 +147,27 @@ export default function TitleScrollAnimation() {
     };
 
     const lockSectionToViewport = () => {
-      sectionRef.current?.scrollIntoView({ block: "start" });
+      const section = sectionRef.current;
+
+      if (!section) {
+        return;
+      }
+
+      window.scrollTo({
+        top: section.offsetTop,
+        behavior: "auto",
+      });
+    };
+
+    const titleSectionIsPinned = () => {
+      const section = sectionRef.current;
+
+      if (!section) {
+        return false;
+      }
+
+      const rect = section.getBoundingClientRect();
+      return rect.top <= 2 && rect.bottom >= window.innerHeight - 2;
     };
 
     const handleWheel = (event: WheelEvent) => {
@@ -206,15 +226,41 @@ export default function TitleScrollAnimation() {
       moveStage(direction);
     };
 
+    const handleSectionJumpIntent = (event: Event) => {
+      const customEvent = event as CustomEvent<{
+        direction: 1 | -1;
+        section: HTMLElement;
+      }>;
+
+      if (customEvent.detail.section !== sectionRef.current || !titleSectionIsPinned()) {
+        return;
+      }
+
+      const { direction } = customEvent.detail;
+      const canMove =
+        (direction === 1 && stageRef.current < stages.length - 1) ||
+        (direction === -1 && stageRef.current > 0);
+
+      if (!canMove && !isAnimatingRef.current) {
+        return;
+      }
+
+      customEvent.preventDefault();
+      lockSectionToViewport();
+      moveStage(direction);
+    };
+
     window.addEventListener("wheel", handleWheel, { passive: false });
     window.addEventListener("touchstart", handleTouchStart, { passive: true });
     window.addEventListener("touchmove", handleTouchMove, { passive: false });
+    window.addEventListener("section-jump:intent", handleSectionJumpIntent);
     window.addEventListener("keydown", handleKeyDown);
 
     return () => {
       window.removeEventListener("wheel", handleWheel);
       window.removeEventListener("touchstart", handleTouchStart);
       window.removeEventListener("touchmove", handleTouchMove);
+      window.removeEventListener("section-jump:intent", handleSectionJumpIntent);
       window.removeEventListener("keydown", handleKeyDown);
     };
   }, []);
@@ -224,8 +270,8 @@ export default function TitleScrollAnimation() {
   };
 
   return (
-    <div className="titleScrollPin" ref={sectionRef}>
-      <section
+    <section className="titleScrollPin" ref={sectionRef}>
+      <div
         aria-label="Campa Boyz title transition"
         className="titleScrollExperience"
         data-stage={stage}
@@ -313,7 +359,7 @@ export default function TitleScrollAnimation() {
             </div>
           </div>
         </div>
-      </section>
-    </div>
+      </div>
+    </section>
   );
 }

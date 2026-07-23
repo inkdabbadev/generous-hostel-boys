@@ -1,19 +1,36 @@
 import {
   AboutExperience,
   AdaptationProof,
+  ActualAskIntro,
+  BathroomExperience,
+  CommonThread,
   CoreCapabilities,
+  GridSlideExperience,
   HostelGenreProof,
   IntroExperience,
   MarketingMediaPlan,
+  MarketingMediaPlanTable,
   MovieMetrics,
+  Noticeboard,
+  Noticeboard2,
+  Noticeboard3,
+  PosterScroll,
   RegionalAudience,
+  SponsorshipExperience,
   TitleScrollAnimation,
+  WhyThisFilm,
 } from "./components/sections";
+import SectionJumpNavigation from "./components/SectionJumpNavigation";
 
 export default function Home() {
   return (
     <main>
+      <SectionJumpNavigation />
       <IntroExperience />
+      <SponsorshipExperience />
+      <PosterScroll />
+      <BathroomExperience />
+      <GridSlideExperience />
 
       <section className="hero">
         <div className="heroImage" aria-hidden="true" />
@@ -38,12 +55,19 @@ export default function Home() {
 
       <AboutExperience />
       <CoreCapabilities />
-      <MovieMetrics />
       <RegionalAudience />
       <HostelGenreProof />
+      <MovieMetrics />
+      <CommonThread />
+      <WhyThisFilm />
+      <Noticeboard />
+      <Noticeboard2 />
+      <Noticeboard3 />
       <TitleScrollAnimation />
       <AdaptationProof />
+      <ActualAskIntro />
       <MarketingMediaPlan />
+      <MarketingMediaPlanTable />
     </main>
   );
 }
