@@ -6514,9 +6514,9 @@ body {
 
 .premiumAssetLever {
   position: absolute;
-  right: clamp(-40px, -3.2vw, -28px);
+  right: clamp(-70px, -3.2vw, -28px);
   top: 50%;
-  bottom: auto;
+  bottom: 50;
   z-index: 6;
   scale: 0.72;
   translate: 0 -50%;

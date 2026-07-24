@@ -51,7 +51,7 @@ export const historyLayout = {
   },
 } satisfies Record<string, CSSProperties>;
 
-export const stickyNotes = [
+export const stickyNotes: HistoryStickyNote[] = [
   {
     alt: "Online",
     delay: 2.35,
@@ -98,7 +98,7 @@ export const stickyNotes = [
     src: "/history/sticky3.png",
     style: historyLayout.stickyOfflineBottom,
   },
-] satisfies HistoryStickyNote[];
+];
 
 export const onlineCards = [
   {
