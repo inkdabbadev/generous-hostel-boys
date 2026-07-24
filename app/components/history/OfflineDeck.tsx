@@ -5,10 +5,16 @@ import {
   motion,
   MotionValue,
   useReducedMotion,
-  useScroll,
   useTransform,
 } from "framer-motion";
-import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import React, {
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import {
   ArrowRight,
   Armchair,
@@ -25,10 +31,13 @@ import {
   Users,
 } from "lucide-react";
 
+const OFFLINE_FORWARD_KEYS = ["ArrowDown", "PageDown", " ", "Spacebar"];
+const OFFLINE_BACKWARD_KEYS = ["ArrowUp", "PageUp"];
+
 /* ==================================================================
-   OFFLINE — scroll-stacking sub-deck for HistorySection's Offline panel.
+   OFFLINE â€” scroll-stacking sub-deck for HistorySection's Offline panel.
    Reuses the panel's existing chrome (title + close button), so this
-   renders only the scrollport + stacked slides — no header/nav/footer
+   renders only the scrollport + stacked slides â€” no header/nav/footer
    of its own. Typography maps onto the site's existing --font-figtree
    instead of loading Archivo/Inter.
    ================================================================== */
@@ -39,12 +48,17 @@ const RED = "#E23B2E";
 const CSS = `
 .tnd, .tnd *, .tnd *::before, .tnd *::after { box-sizing: border-box; }
 .tnd {
-  --ink:#2A0505; --maroon:#4A0A0A; --maroon-2:#5C1010;
-  --red:#C5121B; --ember:#E23B2E; --amber:#FFC53D; --gold:#FFE08A;
-  --paper:#FFFFFF; --muted:#F0C9C9; --dim:#C89A9A;
-  --stack-h: clamp(460px, 66vh, 720px);
+  --ink:#3A0500; --maroon:#780900; --maroon-2:#A71505;
+  --red:#D50000; --ember:#F02A12; --amber:#FFC400; --gold:#FFE08A;
+  --paper:#FFFFFF; --muted:#FFE1D9; --dim:#FFC7BA;
+  --slide-frame-inset: 0px;
+  --stack-h: calc(100% - (var(--slide-frame-inset) * 2));
   color:var(--paper);
   font-family:var(--font-figtree), sans-serif;
+  width:100%;
+  height:100%;
+  display:grid;
+  place-items:center;
 }
 .tnd h1,.tnd h2,.tnd h3 { font-family:var(--font-figtree), sans-serif; }
 .tnd p { margin:0; }
@@ -53,173 +67,340 @@ const CSS = `
 
 /* ---- scrollport / track ------------------------------------------ */
 .tnd-scrollport {
-  position:relative; height:var(--stack-h);
-  overflow-x:hidden; overflow-y:auto;
-  border-radius:clamp(18px, 1.6vw, 28px);
-  scroll-snap-type:y mandatory;
+  position:relative;
+  width:calc(100% - (var(--slide-frame-inset) * 2));
+  height:var(--stack-h);
+  overflow:hidden;
+  border-radius:0;
   overscroll-behavior:contain;
   scrollbar-width:none;
+  contain:layout paint;
 }
 .tnd-scrollport::-webkit-scrollbar { display:none; }
-.tnd-track { position:relative; }
 
 .tnd-slide {
-  position:sticky; top:0; height:var(--stack-h); overflow:hidden;
-  scroll-snap-align:start;
-  scroll-snap-stop:always;
-  border-radius:clamp(18px, 1.6vw, 28px);
-  border:1px solid rgba(255,197,61,.2);
-  background:radial-gradient(125% 95% at 10% 0%,
-    var(--maroon-2) 0%, var(--maroon) 45%, #370606 100%);
-  box-shadow:0 -14px 70px rgba(0,0,0,.5), inset 0 1px 0 rgba(255,224,138,.12);
+  position:absolute; inset:0; height:100%; overflow:hidden;
+  border-radius:0;
+  border:0;
+  background:url("/background.png") center / 100% 100% no-repeat;
+  backface-visibility:hidden;
+  contain:layout paint;
+  transform:translate3d(0,0,0);
+  will-change:transform;
+}
+.tnd-slide::before {
+  content:"";
+  position:absolute;
+  inset:0;
+  z-index:40;
+  pointer-events:none;
+  box-shadow:inset 0 0 0 3px rgba(255,196,0,.52);
 }
 /* diagonal ribbon watermark */
 .tnd-slide::after { content:''; position:absolute; inset:0; pointer-events:none;
-  background:repeating-linear-gradient(115deg,
-    rgba(255,197,61,.05) 0 2px, transparent 2px 46px); }
+  display:none; }
+.tnd-fitOuter { position:relative; width:100%; height:100%; overflow:hidden; }
+.tnd-fitInner { height:100%; transform-origin:top center; will-change:transform; }
 .tnd-count { position:absolute; right:22px; top:20px; z-index:30;
-  font-family:var(--font-figtree), sans-serif; font-size:11px; font-weight:700;
+  font-family:var(--font-figtree), sans-serif; font-size:12px; font-weight:1000;
   font-variant-numeric:tabular-nums; letter-spacing:.2em;
-  color:rgba(255,224,138,.5); }
+  color:rgba(255,196,0,.82); text-shadow:0 4px 0 rgba(91,0,0,.28); }
 
-.tnd-pane { position:relative; z-index:2; height:100%; padding:26px 22px;
+.tnd-pane { position:relative; z-index:2; height:100%; padding:30px 30px 42px;
   display:flex; flex-direction:column; }
-@media (min-width:768px){ .tnd-pane { padding:38px 44px; } }
+@media (min-width:768px){ .tnd-pane { padding:42px 64px 58px; } }
 .tnd-mid { justify-content:center; }
 
 /* ---- type ---------------------------------------------------------- */
-.tnd-eyebrow { font-family:var(--font-figtree), sans-serif; font-size:10px; font-weight:700;
-  text-transform:uppercase; letter-spacing:.28em; color:var(--amber); }
-.tnd-h1 { margin:14px 0 0; font-size:clamp(32px,6.8vw,76px); font-weight:900;
-  line-height:.94; letter-spacing:-.03em; color:var(--paper); }
+.tnd-eyebrow { width:max-content; max-width:100%; padding:7px 13px;
+  border:2px solid var(--amber); box-shadow:0 6px 0 rgba(93,0,0,.36);
+  font-family:var(--font-figtree), sans-serif; font-size:clamp(9px,.82vw,12px); font-weight:1000;
+  text-transform:uppercase; letter-spacing:.18em; color:var(--amber); background:rgba(80,0,0,.16); }
+.tnd-h1 { margin:18px 0 0; font-size:clamp(52px,8.4vw,136px); font-weight:1000;
+  line-height:.78; letter-spacing:0; color:var(--paper);
+  text-transform:uppercase; filter:drop-shadow(0 11px 0 rgba(91,0,0,.36)); }
 .tnd-h1 em { font-style:normal; color:var(--amber);
-  text-shadow:0 0 46px rgba(255,197,61,.4); }
-.tnd-h2 { margin:8px 0 0; font-size:clamp(20px,2.8vw,32px); font-weight:800;
-  line-height:1.1; letter-spacing:-.015em; color:var(--paper); }
-.tnd-h3 { margin:8px 0 0; font-size:clamp(22px,2.6vw,32px); font-weight:800;
-  line-height:1.05; color:var(--paper); }
+  text-shadow:0 10px 0 rgba(91,0,0,.34); }
+.tnd-h2 { margin:14px 0 0; font-size:clamp(34px,5.6vw,96px); font-weight:1000;
+  line-height:.86; letter-spacing:0; color:var(--paper); text-transform:uppercase;
+  filter:drop-shadow(0 9px 0 rgba(91,0,0,.34)); }
+.tnd-h3 { margin:10px 0 0; font-size:clamp(34px,4.4vw,76px); font-weight:1000;
+  line-height:.88; color:var(--amber); text-transform:uppercase;
+  text-shadow:0 8px 0 rgba(91,0,0,.3); }
 .tnd-eyeline { margin:2px 0 0; font-family:var(--font-figtree), sans-serif; font-size:15px;
-  font-weight:600; color:var(--gold); }
-.tnd-lead { margin:16px 0 0; max-width:34rem; font-size:14px;
-  line-height:1.6; color:var(--muted); }
-.tnd-sub { margin:5px 0 0; font-size:12px; color:var(--dim); }
+  font-weight:1000; color:var(--paper); text-transform:uppercase; }
+.tnd-lead { margin:18px 0 0; max-width:42rem; font-size:clamp(14px,1.2vw,19px);
+  font-weight:800; line-height:1.28; color:var(--paper); }
+.tnd-sub { margin:6px 0 0; font-size:clamp(12px,.9vw,15px); font-weight:800; color:var(--gold); }
 .tnd-note { margin:16px 0 0; font-size:11px; color:var(--dim); }
 
 /* ---- buttons -------------------------------------------------------- */
 .tnd-cta { display:inline-flex; align-items:center; gap:9px; margin-top:22px;
-  padding:13px 26px; border:0; border-radius:99px; cursor:pointer;
+  padding:13px 24px; border:0; border-radius:4px; cursor:pointer;
   background:var(--amber); color:#3A0707;
-  font-family:var(--font-figtree), sans-serif; font-size:13px; font-weight:800;
-  box-shadow:0 0 34px rgba(255,197,61,.34);
+  font-family:var(--font-figtree), sans-serif; font-size:13px; font-weight:1000;
+  text-transform:uppercase; box-shadow:0 8px 0 rgba(92,0,0,.34);
   transition:transform .2s, box-shadow .2s; }
-.tnd-cta:hover { transform:scale(1.035); box-shadow:0 0 48px rgba(255,197,61,.52); }
+.tnd-cta:hover { transform:translateY(-2px); box-shadow:0 10px 0 rgba(92,0,0,.34); }
 .tnd-cta:active { transform:scale(.97); }
 .tnd-cta svg { transition:transform .2s; }
 .tnd-cta:hover svg { transform:translateX(4px); }
 .tnd-cta.ghost { background:transparent; color:var(--amber);
-  border:1px solid rgba(255,197,61,.5); box-shadow:none; }
-.tnd-cta.ghost:hover { background:rgba(255,197,61,.13); box-shadow:none; }
+  border:2px solid rgba(255,196,0,.92); box-shadow:0 7px 0 rgba(92,0,0,.32); }
+.tnd-cta.ghost:hover { background:rgba(255,196,0,.13); }
 
 /* ---- tabs ------------------------------------------------------------ */
 .tnd-tabs { display:flex; gap:8px; margin-top:18px; overflow-x:auto;
   padding-bottom:8px; scrollbar-width:none; flex:0 0 auto; }
 .tnd-tabs::-webkit-scrollbar { display:none; }
 .tnd-tab { flex:0 0 auto; white-space:nowrap; cursor:pointer;
-  padding:8px 16px; border-radius:99px; font-family:var(--font-figtree), sans-serif;
-  font-size:12px; font-weight:600; transition:all .28s;
-  border:1px solid rgba(255,255,255,.16);
-  background:rgba(0,0,0,.2); color:var(--muted); }
-.tnd-tab:hover { border-color:rgba(255,197,61,.45); color:var(--paper); }
+  padding:9px 15px; border-radius:4px; font-family:var(--font-figtree), sans-serif;
+  font-size:12px; font-weight:1000; transition:all .28s; text-transform:uppercase;
+  border:2px solid rgba(255,196,0,.36);
+  background:rgba(90,0,0,.32); color:var(--paper); }
+.tnd-tab:hover { border-color:rgba(255,196,0,.92); color:var(--amber); }
 .tnd-tab[aria-selected="true"] { background:var(--amber); color:#3A0707;
-  border-color:var(--amber); box-shadow:0 0 22px rgba(255,197,61,.35); }
+  border-color:var(--amber); box-shadow:0 7px 0 rgba(92,0,0,.28); }
 
 /* ---- data -------------------------------------------------------------- */
 .tnd-aud { display:grid; grid-template-columns:repeat(3,1fr); gap:10px;
-  margin-top:18px; padding:14px; border-radius:16px;
-  border:1px solid rgba(255,197,61,.24); background:rgba(255,197,61,.07); }
+  margin-top:18px; padding:14px; border-radius:4px;
+  border:2px solid rgba(255,196,0,.55); background:rgba(120,0,0,.34);
+  box-shadow:0 8px 0 rgba(90,0,0,.24); }
 .tnd-aud svg { color:var(--amber); }
 .tnd-aud .v { margin-top:6px; font-family:var(--font-figtree), sans-serif;
-  font-size:clamp(16px,2vw,22px); font-weight:800; color:var(--amber); line-height:1; }
-.tnd-aud .k { margin-top:4px; font-size:10px; line-height:1.3; color:var(--muted); }
+  font-size:clamp(18px,2.2vw,30px); font-weight:1000; color:var(--amber); line-height:1; }
+.tnd-aud .k { margin-top:4px; font-size:10px; font-weight:900; line-height:1.3; color:var(--paper); text-transform:uppercase; }
 
 .tnd-grid { display:grid; gap:10px; margin-top:14px;
   grid-template-columns:repeat(auto-fit,minmax(100px,1fr)); }
-.tnd-stat { padding:13px; border-radius:14px;
-  border:1px solid rgba(255,255,255,.11); background:rgba(0,0,0,.22); }
+.tnd-stat { padding:13px; border-radius:4px;
+  border:2px solid rgba(255,196,0,.34); background:rgba(105,0,0,.42); }
 .tnd-stat .v { font-family:var(--font-figtree), sans-serif; font-size:clamp(19px,2.4vw,27px);
-  font-weight:800; color:var(--paper); line-height:1; }
-.tnd-stat .k { margin-top:6px; font-size:10px; line-height:1.35; color:var(--muted); }
+  font-weight:1000; color:var(--amber); line-height:1; }
+.tnd-stat .k { margin-top:6px; font-size:10px; font-weight:900; line-height:1.35; color:var(--paper); text-transform:uppercase; }
 
 .tnd-chips { display:flex; flex-wrap:wrap; gap:7px; margin-top:14px; }
-.tnd-chip { padding:5px 12px; border-radius:99px; font-size:11px;
-  border:1px solid rgba(255,197,61,.34); background:rgba(255,197,61,.09);
-  color:var(--gold); }
+.tnd-chip { padding:6px 12px; border-radius:4px; font-size:11px; font-weight:1000;
+  border:2px solid rgba(255,196,0,.5); background:rgba(255,196,0,.1);
+  color:var(--paper); text-transform:uppercase; }
 
 /* ---- hero --------------------------------------------------------------- */
-.tnd-hero-stats { display:grid; grid-template-columns:repeat(2,1fr);
-  gap:16px; margin-top:30px; }
-@media (min-width:640px){ .tnd-hero-stats { grid-template-columns:repeat(4,1fr); gap:22px; } }
-.tnd-hero-stats .v { font-family:var(--font-figtree), sans-serif; font-size:clamp(24px,3.6vw,38px);
-  font-weight:900; color:var(--amber); line-height:1; }
-.tnd-hero-stats .k { margin-top:7px; font-size:11px; line-height:1.35; color:var(--muted); }
+.tnd-hero {
+  position:relative;
+  height:100%;
+  width:min(1640px, 100%);
+  margin:0 auto;
+  display:flex;
+  align-items:flex-start;
+  justify-content:center;
+  flex-direction:column;
+  padding-bottom:clamp(112px, 18vh, 178px);
+}
+.tnd-hero-copy {
+  position:relative;
+  z-index:2;
+  max-width:min(920px, 72vw);
+  transform:translateY(clamp(-82px, -8.5vh, -48px));
+}
+.tnd-hero-copy::before {
+  display:none;
+}
+.tnd-hero .tnd-h1 {
+  margin-top:0;
+  font-size:clamp(62px, 8vw, 142px);
+}
+.tnd-hero .tnd-lead {
+  max-width:48rem;
+  font-size:clamp(17px, 1.45vw, 25px);
+  font-weight:650;
+  line-height:1.22;
+}
+.tnd-hero-stats {
+  position:absolute;
+  left:0;
+  right:0;
+  bottom:clamp(54px, 9vh, 104px);
+  display:grid;
+  grid-template-columns:repeat(4, minmax(0, 1fr));
+  gap:clamp(22px, 4vw, 88px);
+  align-items:end;
+  padding-top:clamp(18px, 2vh, 28px);
+  border-top:0;
+}
+.tnd-hero-card {
+  position:relative;
+  min-height:0;
+  display:grid;
+  align-content:start;
+  gap:clamp(8px, .8vw, 12px);
+  padding:0;
+  overflow:visible;
+  border:0;
+  background:transparent;
+  box-shadow:none;
+  clip-path:none;
+}
+.tnd-hero-card::before {
+  display:none;
+}
+.tnd-hero-card::after {
+  display:none;
+}
+.tnd-hero-icon {
+  display:none;
+}
+.tnd-hero-stats .v {
+  position:relative;
+  z-index:1;
+  font-family:var(--font-figtree), sans-serif;
+  font-size:clamp(38px, 4.4vw, 76px);
+  font-weight:1000;
+  color:var(--amber);
+  line-height:.88;
+  letter-spacing:0;
+  text-shadow:0 6px 0 rgba(91,0,0,.38);
+}
+.tnd-hero-stats .k {
+  position:relative;
+  z-index:1;
+  margin-top:clamp(10px, 1.2vw, 16px);
+  max-width:14rem;
+  color:rgba(255,255,255,.76);
+  font-size:clamp(13px, 1.08vw, 18px);
+  font-weight:900;
+  line-height:1.2;
+  text-transform:none;
+}
+.tnd-hero-actions {
+  display:flex;
+  align-items:center;
+  gap:18px;
+  margin-top:clamp(24px, 3.4vh, 44px);
+}
+.tnd-hero-cta {
+  min-height:clamp(54px, 5.2vh, 68px);
+  padding:clamp(17px, 1.35vw, 22px) clamp(30px, 2.7vw, 48px);
+  font-size:clamp(15px, 1.05vw, 19px);
+}
+.tnd-hero-tag {
+  color:var(--gold);
+  font-size:clamp(12px, .9vw, 15px);
+  font-weight:1000;
+  line-height:1;
+  text-transform:uppercase;
+  opacity:.9;
+}
+.tnd-card1Pane {
+  padding:0;
+  justify-content:stretch;
+  background:#d50000;
+}
+.tnd-card1Asset {
+  position:absolute;
+  display:block;
+  user-select:none;
+  pointer-events:none;
+  will-change:transform, opacity, filter;
+}
+.tnd-card1Bg {
+  inset:0;
+  width:100%;
+  height:100%;
+  object-fit:cover;
+}
+.tnd-card1Top {
+  left:clamp(72px, 7.1vw, 138px);
+  top:clamp(104px, 14.4vh, 178px);
+  width:min(50.5vw, 850px);
+  max-width:calc(100% - 12vw);
+}
+.tnd-card1Bottom {
+  left:50%;
+  bottom:clamp(40px, 5.9vh, 76px);
+  width:min(75vw, 1430px);
+  translate:-50% 0;
+}
 
 /* ---- split -------------------------------------------------------------- */
-.tnd-split { display:grid; gap:20px; margin-top:14px; min-height:0; flex:1;
+.tnd-split { display:grid; gap:24px; margin-top:16px; min-height:0; flex:1;
   grid-template-columns:1fr; align-items:center; }
-@media (min-width:1024px){ .tnd-split { grid-template-columns:1fr 1fr; gap:36px; } }
+@media (min-width:1024px){ .tnd-split { grid-template-columns:1.08fr .92fr; gap:42px; } }
 .tnd-scroll { min-height:0; overflow-y:auto; padding-right:6px; scrollbar-width:none; }
 .tnd-scroll::-webkit-scrollbar { display:none; }
-.tnd-mapwrap { position:relative; width:100%; max-width:260px; margin:0 auto;
-  aspect-ratio:400/520; display:none; }
-@media (min-width:1024px){ .tnd-mapwrap { display:block; } }
+.tnd-networkSlide { padding-top:clamp(34px, 5vh, 70px); }
+.tnd-networkSlide > div:first-child { max-width:min(1120px, 82vw) !important; }
+.tnd-networkSlide .tnd-h2 { font-size:clamp(54px,7.2vw,124px); max-width:1120px; }
+.tnd-networkSlide .tnd-tabs { margin-top:clamp(20px, 3vh, 42px); gap:clamp(10px, 1vw, 18px); }
+.tnd-networkSlide .tnd-tab { min-height:48px; padding:12px 22px; font-size:clamp(12px, .9vw, 16px); }
+.tnd-networkStatsOnly { grid-template-columns:minmax(560px, 940px); align-content:end; justify-content:end; margin-top:auto; }
+.tnd-networkStatsOnly .tnd-scroll { width:min(940px, 100%); justify-self:end; align-self:end; overflow:visible; }
+.tnd-networkStatsOnly .tnd-h3 { font-size:clamp(48px,6vw,112px); }
+.tnd-networkStatsOnly .tnd-aud { gap:16px; padding:20px; }
+.tnd-networkStatsOnly .tnd-grid { grid-template-columns:repeat(auto-fit,minmax(170px,1fr)); gap:14px; }
+.tnd-networkStatsOnly .tnd-stat { min-height:98px; padding:18px; }
+.tnd-networkStatsOnly .tnd-lead { max-width:760px !important; font-size:clamp(15px,1.2vw,21px) !important; }
+.tnd-mapwrap { position:relative; width:100%; max-width:min(430px, 36vw); margin:0 auto;
+  aspect-ratio:400/520; display:block; filter:drop-shadow(0 20px 0 rgba(83,0,0,.24)); }
 
 /* ---- journey -------------------------------------------------------------- */
-.tnd-journey { position:relative; margin-top:36px; overflow-x:auto;
+.tnd-journey { position:relative; margin-top:44px; overflow-x:auto;
   padding-bottom:14px; scrollbar-width:none; }
 .tnd-journey::-webkit-scrollbar { display:none; }
 .tnd-journey-inner { position:relative; display:flex; min-width:560px;
   align-items:flex-start; justify-content:space-between; gap:8px; }
 @media (min-width:768px){ .tnd-journey-inner { min-width:0; } }
 .tnd-line { position:absolute; left:0; right:0; top:25px; height:1px;
-  background:rgba(255,197,61,.24); }
+  background:rgba(255,196,0,.72); box-shadow:0 0 18px rgba(255,196,0,.28); }
 .tnd-spark { position:absolute; top:22px; width:7px; height:7px; border-radius:99px;
   background:var(--amber); box-shadow:0 0 14px 4px rgba(255,197,61,.7); }
 .tnd-stage { position:relative; z-index:2; display:flex; flex:1;
   flex-direction:column; align-items:center; gap:10px;
   text-align:center; min-width:88px; }
-.tnd-ring { display:flex; width:50px; height:50px; align-items:center;
-  justify-content:center; border-radius:99px; background:var(--ink);
-  border:1px solid rgba(255,197,61,.32); }
-.tnd-ring svg { color:var(--amber); }
-.tnd-stage-lbl { font-family:var(--font-figtree), sans-serif; font-size:10px; font-weight:600;
-  text-transform:uppercase; letter-spacing:.1em; color:var(--muted); }
+.tnd-ring { display:flex; width:62px; height:62px; align-items:center;
+  justify-content:center; border-radius:4px; background:var(--amber);
+  border:2px solid rgba(255,255,255,.55); box-shadow:0 8px 0 rgba(84,0,0,.3); }
+.tnd-ring svg { color:#4A0500; }
+.tnd-stage-lbl { font-family:var(--font-figtree), sans-serif; font-size:12px; font-weight:1000;
+  text-transform:uppercase; letter-spacing:.04em; color:var(--paper); }
 
 /* ---- impact ------------------------------------------------------------------ */
-.tnd-glow { position:absolute; left:50%; top:-40px; width:400px; height:400px;
+.tnd-glow { position:absolute; left:50%; top:-40px; width:460px; height:460px;
   transform:translateX(-50%); border-radius:99px; pointer-events:none;
-  background:radial-gradient(circle, rgba(197,18,27,.55), transparent 68%);
-  filter:blur(90px); }
+  background:radial-gradient(circle, rgba(255,196,0,.18), transparent 68%);
+  filter:blur(70px); }
 .tnd-impact-h { margin:0; font-family:var(--font-figtree), sans-serif;
-  font-size:clamp(21px,3.6vw,42px); font-weight:900; line-height:1.06;
-  letter-spacing:-.02em; color:var(--paper); }
+  font-size:clamp(38px,5.8vw,108px); font-weight:1000; line-height:.86;
+  letter-spacing:0; color:var(--paper); text-transform:uppercase;
+  filter:drop-shadow(0 9px 0 rgba(91,0,0,.34)); }
 .tnd-impact-h em { font-style:normal; color:var(--amber); }
 .tnd-cards { display:grid; grid-template-columns:repeat(2,1fr);
-  gap:10px; margin-top:26px; }
+  gap:14px; margin-top:28px; }
 @media (min-width:1024px){ .tnd-cards { grid-template-columns:repeat(4,1fr); } }
-.tnd-card { padding:16px; border-radius:16px; text-align:left;
-  border:1px solid rgba(255,255,255,.12); background:rgba(0,0,0,.22); }
+.tnd-card { min-height:120px; padding:18px; border-radius:4px; text-align:left;
+  border:2px solid rgba(255,196,0,.55); background:rgba(105,0,0,.42);
+  box-shadow:0 9px 0 rgba(83,0,0,.28); }
 .tnd-card .v { font-family:var(--font-figtree), sans-serif; font-size:clamp(20px,2.4vw,26px);
-  font-weight:800; color:var(--amber); line-height:1; }
-.tnd-card .k { margin-top:6px; font-size:11px; line-height:1.35; color:var(--muted); }
+  font-weight:1000; color:var(--amber); line-height:1; }
+.tnd-card .k { margin-top:8px; font-size:12px; font-weight:900; line-height:1.2; color:var(--paper); text-transform:uppercase; }
 .tnd-totals { display:grid; grid-template-columns:repeat(3,1fr); gap:14px;
-  margin:16px auto 0; max-width:560px; padding:18px; text-align:left;
-  border-radius:18px; border:1px solid rgba(255,197,61,.26);
-  background:rgba(255,197,61,.07); }
+  margin:18px auto 0; max-width:680px; padding:18px; text-align:left;
+  border-radius:4px; border:2px solid rgba(255,196,0,.62);
+  background:rgba(255,196,0,.1); box-shadow:0 9px 0 rgba(83,0,0,.24); }
 .tnd-totals svg { color:var(--amber); }
 .tnd-totals .v { margin-top:7px; font-family:var(--font-figtree), sans-serif;
-  font-size:clamp(16px,2.1vw,22px); font-weight:800; color:var(--amber); line-height:1; }
-.tnd-totals .k { margin-top:4px; font-size:10px; color:var(--muted); }
-
+  font-size:clamp(18px,2.1vw,26px); font-weight:1000; color:var(--amber); line-height:1; }
+.tnd-totals .k { margin-top:5px; font-size:10px; font-weight:900; color:var(--paper); text-transform:uppercase; }
+.tnd-fullImageSlide { position:absolute; inset:0; z-index:2; overflow:hidden; }
+.tnd-fullImageSlide img {
+  display:block;
+  width:auto;
+  height:100%;
+  max-width:100%;
+  max-height:100%;
+  object-fit:contain;
+  object-position:center;
+}
 @media (prefers-reduced-motion: reduce){
   .tnd *, .tnd *::before, .tnd *::after {
     animation-duration:.001ms !important; transition-duration:.001ms !important; }
@@ -243,7 +424,7 @@ const campaignData = {
     trafficSignalLEDs: 35, metroTrains: 1,
     reach: 9_900_000, impressions: 42_800_000, avgFrequency: 4.3,
     title: "Chennai Takeover", subtitle: "Every stage of the daily commute",
-    copy: "Chennai sees the campaign at every stage of the commute — from arterial roads and junctions to shelters and metro travel.",
+    copy: "Chennai sees the campaign at every stage of the commute â€” from arterial roads and junctions to shelters and metro travel.",
   },
   restOfTamilNadu: {
     premiumHoardings: 26, hoardings: 40, busShelters: 80,
@@ -598,63 +779,48 @@ function Stat({ value, suffix, label, active }: {
 }
 
 /* ================================================================== */
-/* SLIDE 01 — HERO                                                    */
+/* SLIDE 01 â€” HERO                                                    */
 /* ================================================================== */
 
-function SlideHero({ active, onExplore }: { active: boolean; onExplore: () => void }) {
-  const reduce = useReducedMotion();
-  const stats = [
-    { v: campaignData.totals.touchpoints, s: "+", k: "Static & Digital Touchpoints" },
-    { v: campaignData.totals.districts, k: "Districts Covered" },
-    { v: campaignData.totals.airports, k: "Major Airports" },
-    { v: campaignData.totals.metroTrains, k: "Fully Branded Metro Train" },
-  ];
-
+function SlideHero({ active }: { active: boolean; onExplore: () => void }) {
   return (
-    <div className="tnd-pane tnd-mid">
-      <div style={{
-        position: "absolute", right: "-6%", top: 0,
-        height: "130%", width: "72%", opacity: 0.22, pointerEvents: "none",
-      }}>
-        <svg viewBox="0 0 400 520" style={{ height: "100%", width: "100%" }}>
-          <motion.path
-            d={TN_PATH} fill="none" stroke={AMBER} strokeWidth="1.3"
-            initial={reduce ? false : { pathLength: 0 }}
-            animate={{ pathLength: 1 }}
-            transition={{ duration: 2.4, ease: "easeInOut" }}
-          />
-        </svg>
-      </div>
-
-      <div style={{ position: "relative", maxWidth: 900 }}>
-        <p className="tnd-eyebrow">Outdoor &amp; Transit Media Plan · Tamil Nadu</p>
-        <h1 className="tnd-h1">
-          TAMIL NADU,
-          <br />
-          <em>COVERED</em>
-        </h1>
-        <p className="tnd-lead">
-          One connected outdoor and transit media network across the state.
-        </p>
-        <button className="tnd-cta" onClick={onExplore} type="button">
-          Explore the Network <ArrowRight size={16} />
-        </button>
-
-        <div className="tnd-hero-stats">
-          {stats.map((s) => (
-            <div key={s.k}>
-              <div className="v"><Num value={s.v} suffix={s.s} active={active} /></div>
-              <p className="k">{s.k}</p>
-            </div>
-          ))}
-        </div>
-      </div>
+    <div className="tnd-pane tnd-card1Pane">
+      <motion.img
+        alt=""
+        animate={active ? { opacity: 1, scale: 1 } : { opacity: 0.9, scale: 1.015 }}
+        aria-hidden="true"
+        className="tnd-card1Asset tnd-card1Bg"
+        draggable={false}
+        initial={{ opacity: 0, scale: 1.04 }}
+        src="/history/offline/card1/card1-bg.png"
+        transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
+      />
+      <motion.img
+        alt=""
+        animate={active ? { opacity: 1, x: 0, y: 0, filter: "blur(0px)" } : { opacity: 0.72, x: -12, y: 8 }}
+        aria-hidden="true"
+        className="tnd-card1Asset tnd-card1Top"
+        draggable={false}
+        initial={{ opacity: 0, x: -54, y: 18, filter: "blur(7px)" }}
+        src="/history/offline/card1/top-line.svg"
+        transition={{ duration: 0.74, delay: 0.12, ease: [0.16, 1, 0.3, 1] }}
+      />
+      <motion.img
+        alt=""
+        animate={active ? { opacity: 1, y: 0, filter: "blur(0px)" } : { opacity: 0.74, y: 14 }}
+        aria-hidden="true"
+        className="tnd-card1Asset tnd-card1Bottom"
+        draggable={false}
+        initial={{ opacity: 0, y: 36, filter: "blur(8px)" }}
+        src="/history/offline/card1/b-line.svg"
+        transition={{ duration: 0.78, delay: 0.28, ease: [0.16, 1, 0.3, 1] }}
+      />
     </div>
   );
 }
 
 /* ================================================================== */
-/* SLIDE 02 — NETWORK                                                 */
+/* SLIDE 02 â€” NETWORK                                                 */
 /* ================================================================== */
 
 const MODES = [
@@ -668,7 +834,6 @@ type ModeId = (typeof MODES)[number]["id"];
 
 function SlideNetwork({ active }: { active: boolean }) {
   const [mode, setMode] = useState<ModeId>("statewide");
-  const [hovered, setHovered] = useState<string | null>(null);
   const tabRefs = useRef<(HTMLButtonElement | null)[]>([]);
 
   const onKey = (e: React.KeyboardEvent, i: number) => {
@@ -679,63 +844,11 @@ function SlideNetwork({ active }: { active: boolean }) {
     tabRefs.current[n]?.focus();
   };
 
-  const restIds = campaignData.restOfTamilNadu.cities.map((c) => c.toLowerCase());
-  const airIds = campaignData.airports.cities.map((c) => c.toLowerCase());
-
-  const markers: MarkerProps[] = useMemo(() => {
-    const l: MarkerProps[] = [];
-    if (mode === "statewide") {
-      statewideDots.forEach((d, i) =>
-        l.push({ id: `d${i}`, x: d.x, y: d.y, size: "sm", tone: "red", delay: i * 0.05 })
-      );
-      campaignData.statewide.majorCities.forEach((c, i) =>
-        l.push({
-          id: c, x: cities[c].x, y: cities[c].y, size: "lg", tone: "amber",
-          label: cities[c].label, audience: "Bus stand LED screens", delay: 0.3 + i * 0.08,
-        })
-      );
-    } else if (mode === "chennai") {
-      Object.entries(cities).forEach(([k, c]) => {
-        if (k !== "chennai") l.push({ id: k, x: c.x, y: c.y, size: "sm", tone: "red", active: false });
-      });
-      l.push({
-        id: "chennai", x: cities.chennai.x, y: cities.chennai.y,
-        size: "lg", tone: "amber", label: "Chennai",
-        audience: "Roads, shelters, signals & metro",
-      });
-    } else if (mode === "restOfTN") {
-      Object.entries(cities).forEach(([k, c]) => {
-        const on = restIds.includes(k);
-        l.push({
-          id: k, x: c.x, y: c.y, size: on ? "lg" : "sm", tone: on ? "amber" : "red",
-          active: on, label: on ? c.label : undefined, audience: on ? c.audience : undefined,
-        });
-      });
-    } else {
-      Object.entries(cities).forEach(([k, c]) => {
-        const on = airIds.includes(k);
-        l.push({
-          id: k, x: c.x, y: c.y, size: on ? "lg" : "sm", tone: on ? "amber" : "red",
-          active: on, label: on ? `${c.label} Airport` : undefined,
-          audience: on ? campaignData.airports.hoverCopy : undefined,
-        });
-      });
-    }
-    return l;
-  }, [mode, restIds, airIds]);
-
-  const hov = markers.find((m) => m.id === hovered && m.label);
-  const camScale = mode === "chennai" ? 1.12 : mode === "airports" ? 1.02 : 1;
-  const chain = ["coimbatore", "tiruppur", "erode", "salem", "trichy", "madurai"];
-  const pairs: [string, string][] = [
-    ["chennai", "coimbatore"], ["chennai", "trichy"], ["coimbatore", "trichy"],
-  ];
-
   return (
-    <div className="tnd-pane">
+    <div className="tnd-pane tnd-networkSlide">
       <div style={{ maxWidth: 620 }}>
         <p className="tnd-eyebrow">The Network</p>
-        <h2 className="tnd-h2">One map. Four ways to look at it.</h2>
+        <h2 className="tnd-h2">Four ways to look at it.</h2>
       </div>
 
       <div className="tnd-tabs" role="tablist" aria-label="Campaign view">
@@ -747,7 +860,7 @@ function SlideNetwork({ active }: { active: boolean }) {
             aria-selected={mode === m.id}
             tabIndex={mode === m.id ? 0 : -1}
             onKeyDown={(e) => onKey(e, i)}
-            onClick={() => { setMode(m.id); setHovered(null); }}
+            onClick={() => setMode(m.id)}
             className="tnd-tab"
             type="button"
           >
@@ -756,60 +869,7 @@ function SlideNetwork({ active }: { active: boolean }) {
         ))}
       </div>
 
-      <div className="tnd-split">
-        <motion.div
-          className="tnd-mapwrap"
-          animate={{ scale: camScale }}
-          transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
-          style={{
-            transformOrigin:
-              mode === "chennai"
-                ? `${xPct(cities.chennai.x)}% ${yPct(cities.chennai.y)}%`
-                : "50% 50%",
-          }}
-        >
-          <svg
-            viewBox="0 0 400 520"
-            style={{ position: "absolute", inset: 0, width: "100%", height: "100%" }}
-            aria-hidden="true"
-          >
-            <defs>
-              <radialGradient id="tndGlow" cx="50%" cy="45%" r="65%">
-                <stop offset="0%" stopColor="#6B1414" />
-                <stop offset="100%" stopColor="#3A0707" />
-              </radialGradient>
-              <linearGradient id="tndFill" x1="0" y1="0" x2="1" y2="1">
-                <stop offset="0%" stopColor="#7A1A1A" />
-                <stop offset="100%" stopColor="#590F0F" />
-              </linearGradient>
-            </defs>
-            <ellipse cx="200" cy="260" rx="190" ry="230" fill="url(#tndGlow)" opacity=".65" />
-            <path d={TN_PATH} fill="url(#tndFill)" stroke="rgba(255,197,61,.42)" strokeWidth="1.5" />
-            <path d={TN_PATH} fill="none" stroke={AMBER} strokeOpacity=".1" strokeWidth="7" />
-
-            {mode === "restOfTN" &&
-              chain.slice(0, -1).map((c, i) => (
-                <RouteLine key={c} a={cities[c]} b={cities[chain[i + 1]]} delay={i * 0.3} />
-              ))}
-            {mode === "airports" &&
-              pairs.map(([a, b], i) => (
-                <FlightPath key={a + b} a={cities[a]} b={cities[b]} delay={i * 0.6} />
-              ))}
-          </svg>
-
-          {markers.map((m) => (
-            <Marker key={m.id} {...m} animate={active} onHover={setHovered} />
-          ))}
-
-          {mode === "chennai" && <ChennaiBubble />}
-
-          <AnimatePresence>
-            {hov && hov.label && (
-              <Tooltip m={{ x: hov.x, y: hov.y, label: hov.label, audience: hov.audience }} />
-            )}
-          </AnimatePresence>
-        </motion.div>
-
+      <div className="tnd-split tnd-networkStatsOnly">
         <div className="tnd-scroll">
           <AnimatePresence mode="wait">
             <motion.div
@@ -911,7 +971,7 @@ function ModePanel({ mode, active }: { mode: ModeId; active: boolean }) {
 }
 
 /* ================================================================== */
-/* SLIDE 03 — JOURNEY                                                 */
+/* SLIDE 03 â€” JOURNEY                                                 */
 /* ================================================================== */
 
 function SlideJourney({ active }: { active: boolean }) {
@@ -931,7 +991,7 @@ function SlideJourney({ active }: { active: boolean }) {
         <p className="tnd-eyebrow">The Journey</p>
         <h2 className="tnd-h2">One Campaign. Every Part of the Journey.</h2>
         <p className="tnd-lead">
-          Not one advertisement in one location — a connected media network
+          Not one advertisement in one location â€” a connected media network
           accompanying audiences throughout their daily movement.
         </p>
       </div>
@@ -951,7 +1011,7 @@ function SlideJourney({ active }: { active: boolean }) {
               key={label}
               className="tnd-stage"
               initial={{ opacity: 0, y: 12 }}
-              animate={active ? { opacity: 1, y: 0 } : { opacity: 0.35, y: 6 }}
+              animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: i * 0.08 }}
             >
               <span className="tnd-ring"><Icon size={20} /></span>
@@ -965,7 +1025,7 @@ function SlideJourney({ active }: { active: boolean }) {
 }
 
 /* ================================================================== */
-/* SLIDE 04 — IMPACT                                                  */
+/* SLIDE 04 â€” IMPACT                                                  */
 /* ================================================================== */
 
 function SlideImpact({ active }: { active: boolean }) {
@@ -996,7 +1056,7 @@ function SlideImpact({ active }: { active: boolean }) {
               key={c.k}
               className="tnd-card"
               initial={{ opacity: 0, y: 20 }}
-              animate={active ? { opacity: 1, y: 0 } : { opacity: 0.35, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: i * 0.08 }}
             >
               <p className="v">{c.v}</p>
@@ -1034,6 +1094,79 @@ function SlideImpact({ active }: { active: boolean }) {
   );
 }
 
+function SlideFullImage() {
+  return (
+    <div className="tnd-fullImageSlide">
+      <img alt="" aria-hidden="true" draggable={false} src="/history/offline/C1.png" />
+    </div>
+  );
+}
+
+/* ================================================================== */
+/* FIT-TO-HEIGHT                                                      */
+/* Slide content can be taller than the popup on some screens. Rather */
+/* than let it get clipped by .tnd-slide's overflow:hidden, measure   */
+/* it against the actual available height and scale it down (never   */
+/* up) so it always renders fully inside the popup's existing size.   */
+/* ================================================================== */
+
+function FitSlide({ children }: { children: React.ReactNode }) {
+  const outerRef = useRef<HTMLDivElement>(null);
+  const innerRef = useRef<HTMLDivElement>(null);
+  const [scale, setScale] = useState(1);
+
+  useLayoutEffect(() => {
+    const outer = outerRef.current;
+    const inner = innerRef.current;
+    if (!outer || !inner) return;
+
+    let raf = 0;
+
+    const measure = () => {
+      const availableHeight = outer.clientHeight;
+      inner.style.height = "auto";
+      const contentHeight = inner.scrollHeight;
+      inner.style.height = "100%";
+      const next =
+        availableHeight > 0 && contentHeight > availableHeight
+          ? availableHeight / contentHeight
+          : 1;
+      setScale((prev) => (Math.abs(prev - next) > 0.004 ? next : prev));
+    };
+
+    const scheduleMeasure = () => {
+      if (raf) cancelAnimationFrame(raf);
+      raf = requestAnimationFrame(measure);
+    };
+
+    measure();
+
+    const resizeObserver = new ResizeObserver(scheduleMeasure);
+    resizeObserver.observe(outer);
+
+    const mutationObserver = new MutationObserver(scheduleMeasure);
+    mutationObserver.observe(inner, { childList: true, subtree: true });
+
+    return () => {
+      if (raf) cancelAnimationFrame(raf);
+      resizeObserver.disconnect();
+      mutationObserver.disconnect();
+    };
+  }, []);
+
+  return (
+    <div className="tnd-fitOuter" ref={outerRef}>
+      <div
+        className="tnd-fitInner"
+        ref={innerRef}
+        style={scale < 1 ? { transform: `scale(${scale})` } : undefined}
+      >
+        {children}
+      </div>
+    </div>
+  );
+}
+
 /* ================================================================== */
 /* STACKING SHELL                                                     */
 /* ================================================================== */
@@ -1049,6 +1182,7 @@ const SLIDES: SlideDef[] = [
   { id: "network", label: "The Network", render: (a) => <SlideNetwork active={a} /> },
   { id: "journey", label: "The Journey", render: (a) => <SlideJourney active={a} /> },
   { id: "impact", label: "The Impact", render: (a) => <SlideImpact active={a} /> },
+  { id: "c1-image", label: "C1", render: () => <SlideFullImage /> },
 ];
 
 function StackSlide({
@@ -1067,13 +1201,10 @@ function StackSlide({
   const leave = (index + 1) * band;
   const gone = Math.min(1, leave + band * 0.55);
 
-  // arrive from below → pin → recede as the next slide covers it
+  // arrive from below â†’ pin â†’ recede as the next slide covers it
   const y = useTransform(progress, [enter, settle, leave, gone], [46, 0, 0, -18]);
   const scale = useTransform(progress, [enter, settle, leave, gone], [1, 1, 1, 0.94]);
   const opacity = useTransform(progress, [enter, settle, leave, gone], [1, 1, 1, 0.45]);
-  const blur = useTransform(progress, [leave, gone], [0, 4]);
-  const filter = useTransform(blur, (b) => `blur(${b}px)`);
-
   useEffect(() => {
     const unsub = progress.on("change", (v) => {
       const on = v >= enter - band * 0.3 && v < leave;
@@ -1086,7 +1217,7 @@ function StackSlide({
     <motion.section
       className="tnd-slide"
       aria-label={`Slide ${index + 1} of ${total}: ${slide.label}`}
-      style={reduce ? { zIndex: index + 1 } : { y, scale, opacity, filter, zIndex: index + 1 }}
+      style={reduce ? { zIndex: index + 1 } : { y, scale, opacity, zIndex: index + 1 }}
     >
       <span className="tnd-count">
         {String(index + 1).padStart(2, "0")} / {String(total).padStart(2, "0")}
@@ -1102,47 +1233,80 @@ function StackSlide({
 
 export default function OfflineDeck() {
   const rootRef = useRef<HTMLDivElement>(null);
-  const scrollportRef = useRef<HTMLDivElement>(null);
-  const trackRef = useRef<HTMLDivElement>(null);
+  const [currentIndex, setCurrentIndex] = useState(0);
   const currentRef = useRef(0);
   const stepLockRef = useRef(false);
   const stepLockTimeoutRef = useRef<number | null>(null);
   const reduce = useReducedMotion();
 
-  const { scrollYProgress } = useScroll({
-    target: trackRef,
-    container: scrollportRef,
-    offset: ["start start", "end end"],
-  });
-
   const goTo = useCallback((i: number) => {
-    const port = scrollportRef.current;
-    if (!port) return;
     const clamped = Math.max(0, Math.min(SLIDES.length - 1, i));
     currentRef.current = clamped;
-    port.scrollTo({
-      top: port.clientHeight * clamped,
-      behavior: reduce ? "auto" : "smooth",
-    });
-  }, [reduce]);
-
-  // Keep currentRef in sync with any scroll the intent handler below didn't
-  // itself trigger (e.g. touch swipes, which the site's wheel/keydown
-  // hijacker doesn't intercept).
-  useEffect(() => {
-    const port = scrollportRef.current;
-    if (!port) return;
-    const onScroll = () => {
-      if (port.clientHeight === 0) return;
-      currentRef.current = Math.round(port.scrollTop / port.clientHeight);
-    };
-    port.addEventListener("scroll", onScroll, { passive: true });
-    return () => port.removeEventListener("scroll", onScroll);
+    setCurrentIndex(clamped);
   }, []);
+
+  const getCurrentIndex = useCallback(() => {
+    return currentRef.current;
+  }, []);
+
+  const stepTo = useCallback((direction: 1 | -1) => {
+    if (stepLockRef.current) return;
+
+    const current = getCurrentIndex();
+    const next = Math.max(0, Math.min(SLIDES.length - 1, current + direction));
+
+    if (next === current) {
+      return;
+    }
+
+    stepLockRef.current = true;
+    goTo(next);
+    stepLockTimeoutRef.current = window.setTimeout(() => {
+      stepLockRef.current = false;
+      stepLockTimeoutRef.current = null;
+    }, 560);
+  }, [getCurrentIndex, goTo]);
+
+  useEffect(() => {
+    const onWheel = (event: WheelEvent) => {
+      const direction = event.deltaY > 0 ? 1 : event.deltaY < 0 ? -1 : 0;
+
+      if (direction === 0) return;
+
+      event.preventDefault();
+      event.stopPropagation();
+      event.stopImmediatePropagation();
+      stepTo(direction);
+    };
+
+    const onKeyDown = (event: KeyboardEvent) => {
+      const isForwardKey =
+        OFFLINE_FORWARD_KEYS.includes(event.key) || OFFLINE_FORWARD_KEYS.includes(event.code);
+      const isBackwardKey =
+        OFFLINE_BACKWARD_KEYS.includes(event.key) || OFFLINE_BACKWARD_KEYS.includes(event.code);
+
+      if (!isForwardKey && !isBackwardKey) return;
+
+      event.preventDefault();
+      event.stopPropagation();
+      event.stopImmediatePropagation();
+      stepTo(isForwardKey ? 1 : -1);
+    };
+
+    window.addEventListener("wheel", onWheel, { passive: false, capture: true });
+    window.addEventListener("keydown", onKeyDown, { capture: true });
+    document.addEventListener("keydown", onKeyDown, { capture: true });
+
+    return () => {
+      window.removeEventListener("wheel", onWheel, { capture: true });
+      window.removeEventListener("keydown", onKeyDown, { capture: true });
+      document.removeEventListener("keydown", onKeyDown, { capture: true });
+    };
+  }, [stepTo]);
 
   // The site hijacks wheel/arrow input to jump between whole <section>s.
   // While this deck is open, claim that input for itself so scrolling and
-  // arrow keys step through its own slides instead of moving the page —
+  // arrow keys step through its own slides instead of moving the page â€”
   // the same "section-jump:intent" escape hatch other sections use.
   useEffect(() => {
     const ownSection = rootRef.current?.closest("section");
@@ -1150,15 +1314,7 @@ export default function OfflineDeck() {
       const detail = (event as CustomEvent<{ direction: 1 | -1; section: HTMLElement }>).detail;
       if (ownSection && detail.section !== ownSection) return;
       event.preventDefault();
-
-      if (stepLockRef.current) return;
-
-      stepLockRef.current = true;
-      goTo(currentRef.current + detail.direction);
-      stepLockTimeoutRef.current = window.setTimeout(() => {
-        stepLockRef.current = false;
-        stepLockTimeoutRef.current = null;
-      }, 650);
+      stepTo(detail.direction);
     };
     window.addEventListener("section-jump:intent", onIntent);
     return () => {
@@ -1167,28 +1323,35 @@ export default function OfflineDeck() {
         window.clearTimeout(stepLockTimeoutRef.current);
       }
     };
-  }, [goTo]);
+  }, [stepTo]);
 
   return (
-    <div className="tnd" ref={rootRef}>
+    <div
+      className="tnd"
+      ref={rootRef}
+      style={{
+        "--slide-frame-inset": "0px",
+      } as React.CSSProperties}
+    >
       <style>{CSS}</style>
-      <div className="tnd-scrollport" ref={scrollportRef}>
-        <div
-          className="tnd-track"
-          ref={trackRef}
-          style={{ height: `calc(var(--stack-h) * ${SLIDES.length})` }}
-        >
-          {SLIDES.map((s, i) => (
-            <StackSlide
-              key={s.id}
-              slide={s}
-              index={i}
-              total={SLIDES.length}
-              progress={scrollYProgress}
-              goTo={goTo}
-            />
+      <div className="tnd-scrollport">
+        <AnimatePresence initial={false}>
+          {SLIDES.slice(0, currentIndex + 1).map((slide, index) => (
+            <motion.section
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              aria-hidden={index !== currentIndex}
+              aria-label={`Slide ${index + 1} of ${SLIDES.length}: ${slide.label}`}
+              className="tnd-slide"
+              exit={reduce ? { opacity: 1 } : { opacity: 1, scale: 1, y: "100%" }}
+              initial={index === 0 || reduce ? { opacity: 1, y: 0 } : { opacity: 1, scale: 1, y: "100%" }}
+              key={slide.id}
+              style={{ zIndex: index + 1 }}
+              transition={{ duration: reduce ? 0 : 0.52, ease: [0.16, 1, 0.3, 1] }}
+            >
+              <FitSlide>{slide.render(index === currentIndex, goTo)}</FitSlide>
+            </motion.section>
           ))}
-        </div>
+        </AnimatePresence>
       </div>
     </div>
   );

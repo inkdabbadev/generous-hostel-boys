@@ -8,6 +8,8 @@ const topWords = ["What", "happens"];
 const bottomWords = ["If", "you", "give", "us"];
 const maxAskPhase = 1;
 const clockTransition = { duration: 1.25, ease: [0.16, 1, 0.3, 1] } as const;
+const headlineLineTransition = { duration: 0.86, ease: [0.16, 1, 0.3, 1] } as const;
+const headlineWordTransition = { duration: 0.72, ease: [0.16, 1, 0.3, 1] } as const;
 
 const clockStyle = {
   left: "50%",
@@ -272,40 +274,43 @@ export default function ActualAskIntro() {
     <motion.section
       aria-label="Actual ask intro"
       className="actualAskIntro"
-      initial="hidden"
       ref={sectionRef}
-      viewport={{ once: false, amount: 0.46 }}
-      whileInView="show"
     >
       <div className="actualAskIntroShell">
         <h2>
           <motion.span
             className="actualAskLine actualAskLineWhite"
+            initial="hidden"
+            viewport={{ once: false, amount: 0.82 }}
             variants={{
-              hidden: {},
-              show: { transition: { staggerChildren: 0.09, delayChildren: 0.1 } },
+              hidden: { opacity: 0, x: -42, y: 8 },
+              show: {
+                opacity: 1,
+                x: 0,
+                y: 0,
+                transition: {
+                  ...headlineLineTransition,
+                  staggerChildren: 0.055,
+                  delayChildren: 0.18,
+                },
+              },
             }}
+            whileInView="show"
           >
             {topWords.map((word) => (
               <motion.span
                 className="actualAskWord"
                 key={word}
-                transition={{ duration: 0.58, ease: [0.16, 1, 0.3, 1] }}
+                transition={headlineWordTransition}
                 variants={{
                   hidden: {
                     opacity: 0,
-                    x: "-115vw",
-                    y: 0,
-                    scale: 0.9,
-                    rotateZ: -2,
-                    filter: "blur(8px)",
+                    y: 28,
+                    filter: "blur(5px)",
                   },
                   show: {
                     opacity: 1,
-                    x: 0,
                     y: 0,
-                    scale: 1,
-                    rotateZ: 0,
                     filter: "blur(0px)",
                   },
                 }}
@@ -316,34 +321,37 @@ export default function ActualAskIntro() {
           </motion.span>
           <motion.span
             className="actualAskLine actualAskLineGold"
+            initial="hidden"
+            viewport={{ once: false, amount: 0.82 }}
             variants={{
-              hidden: {},
-              show: { transition: { staggerChildren: 0.075, delayChildren: 0.34 } },
+              hidden: { opacity: 0, x: 42, y: 8 },
+              show: {
+                opacity: 1,
+                x: 0,
+                y: 0,
+                transition: {
+                  ...headlineLineTransition,
+                  staggerChildren: 0.05,
+                  delayChildren: 0.38,
+                },
+              },
             }}
+            whileInView="show"
           >
             {bottomWords.map((word, index) => (
               <motion.span
                 className="actualAskWord"
                 key={word}
-                transition={{
-                  duration: 0.64,
-                  ease: [0.14, 1.25, 0.28, 1],
-                }}
+                transition={headlineWordTransition}
                 variants={{
                   hidden: {
                     opacity: 0,
-                    x: "115vw",
-                    y: 0,
-                    scale: 0.78,
-                    rotateZ: index % 2 === 0 ? -3 : 3,
-                    filter: "blur(16px)",
+                    y: index % 2 === 0 ? 30 : 22,
+                    filter: "blur(6px)",
                   },
                   show: {
                     opacity: 1,
-                    x: 0,
                     y: 0,
-                    scale: [1, 1.08, 1],
-                    rotateZ: 0,
                     filter: "blur(0px)",
                   },
                 }}

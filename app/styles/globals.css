@@ -22,6 +22,16 @@
 html,
 body {
   min-height: 100%;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+html::-webkit-scrollbar,
+body::-webkit-scrollbar,
+*::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+  display: none;
 }
 
 body {
@@ -2890,6 +2900,14 @@ section {
 .audienceDonut {
   position: relative;
   width: clamp(104px, 7.6vw, 132px);
+  display: grid;
+  justify-items: center;
+  gap: clamp(6px, 0.6vw, 10px);
+}
+
+.audienceDonutRing {
+  position: relative;
+  width: 100%;
   aspect-ratio: 1;
 }
 
@@ -2920,10 +2938,18 @@ section {
 }
 
 .audienceDonutCore span {
+  display: none;
+}
+
+.audienceDonutLabel {
+  display: block;
   color: white;
-  font-size: 0.62rem;
+  font-size: clamp(0.92rem, 1vw, 1.34rem);
   font-weight: 1000;
+  line-height: 1;
+  letter-spacing: 0.04em;
   text-transform: uppercase;
+  text-align: center;
 }
 
 .audienceAgeBlock ul {
@@ -3768,6 +3794,7 @@ section {
   justify-content: center;
   gap: 0.24em;
   perspective: 900px;
+  will-change: transform, opacity;
 }
 
 .actualAskLineWhite {
@@ -3783,7 +3810,7 @@ section {
 .actualAskWord {
   display: inline-block;
   transform-origin: center bottom;
-  will-change: transform, opacity, filter, clip-path;
+  will-change: transform, opacity, filter;
 }
 
 .actualAskClockWrap {
@@ -4190,6 +4217,10 @@ section {
   font-family: var(--font-figtree), sans-serif;
   overflow: hidden;
   user-select: none;
+  backface-visibility: hidden;
+  contain: layout paint;
+  transform: translate3d(0, 0, 0);
+  will-change: transform, opacity;
   box-shadow:
     0 42px 96px rgba(35, 0, 0, 0.52),
     inset 0 0 0 1px rgba(255, 255, 255, 0.04),
@@ -4235,9 +4266,11 @@ section {
 }
 
 .historyOfflinePanel {
-  display: grid;
-  align-items: center;
-  padding: clamp(26px, 3vh, 42px) clamp(28px, 3vw, 56px);
+  display: block;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  box-shadow: none;
 }
 
 .historyOfflinePanel::before {
@@ -4246,12 +4279,13 @@ section {
 
 .historyOfflinePanel > .tnd {
   width: 100%;
+  height: 100%;
   min-height: 0;
 }
 
 .historyOfflinePanel .tnd-scrollport,
 .historyOfflinePanel .tnd-slide {
-  border-radius: clamp(14px, 1.2vw, 24px);
+  border-radius: 0;
 }
 
 .historyOfflinePanel .historyOnlineClose {
@@ -4259,6 +4293,8 @@ section {
 }
 
 .historyOnlineCard {
+  --online-shine-x: 50%;
+  --online-shine-y: 42%;
   position: relative;
   display: grid;
   place-items: center;
@@ -4269,7 +4305,10 @@ section {
   background: transparent;
   appearance: none;
   isolation: isolate;
+  perspective: 900px;
   filter: drop-shadow(0 18px 12px rgba(80, 0, 0, 0.18));
+  transform-style: preserve-3d;
+  transition: filter 220ms ease;
 }
 
 .historyOnlineCard:not(:disabled) {
@@ -4283,6 +4322,93 @@ section {
 .historyOnlineCard:focus-visible {
   outline: 3px solid rgba(255, 199, 0, 0.92);
   outline-offset: 8px;
+}
+
+.historyOnlineCard::before {
+  content: "";
+  position: absolute;
+  inset: 10% 6% 0;
+  z-index: -1;
+  border-radius: 999px;
+  background: radial-gradient(circle, rgba(255, 199, 0, 0.42), transparent 64%);
+  filter: blur(22px);
+  opacity: 0;
+  transform: translateY(18px) scale(0.86);
+  transition:
+    opacity 230ms ease,
+    transform 230ms ease;
+}
+
+.historyOnlineCardPlane {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 100%;
+  min-height: 100%;
+  line-height: 0;
+  transform-style: preserve-3d;
+  will-change: transform;
+}
+
+.historyOnlineCardPlane::before {
+  content: "";
+  position: absolute;
+  inset: 13% 12% 16%;
+  z-index: 3;
+  border-radius: 12px;
+  background:
+    radial-gradient(
+      circle at var(--online-shine-x) var(--online-shine-y),
+      rgba(255, 255, 255, 0.34),
+      rgba(255, 255, 255, 0.08) 18%,
+      transparent 42%
+    ),
+    linear-gradient(118deg, transparent 28%, rgba(255, 255, 255, 0.2) 46%, transparent 66%);
+  mix-blend-mode: screen;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateZ(24px) skewX(-8deg) translateX(-12%);
+  transition:
+    opacity 180ms ease,
+    transform 360ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.historyOnlineCardPlane::after {
+  content: "";
+  position: absolute;
+  inset: 13% 13% 9%;
+  z-index: -1;
+  border-radius: 28px;
+  background: rgba(70, 0, 0, 0.42);
+  filter: blur(18px);
+  opacity: 0.22;
+  transform: translate3d(0, 18px, -30px) scale(0.94);
+  transition:
+    opacity 220ms ease,
+    transform 220ms ease;
+}
+
+.historyOnlineCard:not(:disabled):hover,
+.historyOnlineCard:not(:disabled):focus-visible {
+  filter: drop-shadow(0 34px 22px rgba(63, 0, 0, 0.22));
+}
+
+.historyOnlineCard:not(:disabled):hover::before,
+.historyOnlineCard:not(:disabled):focus-visible::before {
+  opacity: 0.62;
+  transform: translateY(28px) scale(1.05);
+}
+
+.historyOnlineCard:not(:disabled):hover .historyOnlineCardPlane::before,
+.historyOnlineCard:not(:disabled):focus-visible .historyOnlineCardPlane::before {
+  opacity: 0.38;
+  transform: translateZ(24px) skewX(-8deg) translateX(8%);
+}
+
+.historyOnlineCard:not(:disabled):hover .historyOnlineCardPlane::after,
+.historyOnlineCard:not(:disabled):focus-visible .historyOnlineCardPlane::after {
+  opacity: 0.42;
+  transform: translate3d(0, 32px, -36px) scale(1.02);
 }
 
 .historyOnlineOverview {
@@ -4329,17 +4455,27 @@ section {
   height: auto;
   pointer-events: none;
   user-select: none;
+  transform: translateZ(16px);
+  transform-origin: center;
+  transition:
+    filter 220ms ease,
+    transform 220ms ease;
+}
+
+.historyOnlineCard:not(:disabled):hover .historyOnlinePaper,
+.historyOnlineCard:not(:disabled):focus-visible .historyOnlinePaper {
+  filter: saturate(1.08) contrast(1.04);
+  transform: translateZ(28px) scale(1.018);
 }
 
 .historyOnlineCardText {
   position: absolute;
-  left: 7%;
-  right: 7%;
-  top: 50%;
-  z-index: 2;
+  left: 50%;
+  top: 49%;
+  z-index: 4;
   display: grid;
   justify-items: center;
-  translate: 0 -43%;
+  width: 86%;
   color: #e60000;
   font-family: var(--font-figtree), sans-serif;
   font-weight: 1000;
@@ -4349,6 +4485,17 @@ section {
   text-transform: uppercase;
   pointer-events: none;
   user-select: none;
+  transform: translate3d(-50%, -43%, 46px);
+  transform-origin: center;
+  transition:
+    filter 200ms ease,
+    transform 200ms ease;
+}
+
+.historyOnlineCard:not(:disabled):hover .historyOnlineCardText,
+.historyOnlineCard:not(:disabled):focus-visible .historyOnlineCardText {
+  filter: drop-shadow(0 8px 0 rgba(120, 0, 0, 0.12));
+  transform: translate3d(-50%, -43%, 54px) scale(1.035);
 }
 
 .historyOnlineCardText strong {
@@ -4543,6 +4690,7 @@ section {
   align-content: start;
   gap: clamp(36px, 4vw, 70px);
   padding-top: clamp(12px, 1.8vh, 24px);
+  contain: layout paint;
 }
 
 .historyIdeaCard {
@@ -4558,18 +4706,19 @@ section {
   font: inherit;
   text-align: left;
   box-shadow:
-    0 24px 0 rgba(105, 0, 0, 0.22),
-    0 38px 58px rgba(45, 0, 0, 0.32);
-  transition:
-    filter 180ms ease,
-    transform 180ms ease;
+    0 18px 0 rgba(105, 0, 0, 0.2),
+    0 26px 34px rgba(45, 0, 0, 0.24);
+  backface-visibility: hidden;
+  contain: layout paint;
+  transform: translate3d(0, 0, 0);
+  transition: transform 160ms ease;
+  will-change: transform;
 }
 
 .historyIdeaCard:hover,
 .historyIdeaCard:focus-visible {
   outline: 0;
-  filter: saturate(1.14) brightness(1.07);
-  transform: translateY(-8px) scale(1.02);
+  transform: translate3d(0, -6px, 0);
 }
 
 .historyIdeaCard img {
@@ -4605,7 +4754,7 @@ section {
   text-transform: uppercase;
   white-space: pre-line;
   overflow-wrap: anywhere;
-  filter: drop-shadow(0 5px 0 rgba(125, 0, 0, 0.32));
+  text-shadow: 0 5px 0 rgba(125, 0, 0, 0.26);
 }
 
 .historyIdeasDetailPanel {
@@ -4624,6 +4773,7 @@ section {
 
 .historyIdeasDetailPanel .historyOnlineInner {
   grid-template-rows: 1fr;
+  contain: layout paint;
 }
 
 .historyIdeaDetail {
@@ -4640,6 +4790,9 @@ section {
   row-gap: clamp(14px, 2vh, 26px);
   overflow: hidden;
   padding: clamp(58px, 8vh, 96px) clamp(54px, 5vw, 110px) clamp(46px, 6vh, 82px);
+  backface-visibility: hidden;
+  contain: layout paint;
+  transform: translate3d(0, 0, 0);
 }
 
 .historyIdeaDetailBack {
@@ -4659,7 +4812,7 @@ section {
   text-align: left;
   text-transform: uppercase;
   white-space: pre-line;
-  filter: drop-shadow(0 12px 0 rgba(70, 0, 0, 0.38));
+  text-shadow: 0 10px 0 rgba(70, 0, 0, 0.34);
 }
 
 .historyIdeaDetailImage {
@@ -4672,7 +4825,10 @@ section {
   border-radius: clamp(16px, 1.6vw, 28px);
   box-shadow:
     0 0 0 1px rgba(255, 255, 255, 0.12),
-    0 34px 62px rgba(56, 0, 0, 0.44);
+    0 22px 38px rgba(56, 0, 0, 0.34);
+  backface-visibility: hidden;
+  transform: translate3d(0, 0, 0);
+  will-change: transform;
   pointer-events: none;
   user-select: none;
 }
@@ -4697,7 +4853,7 @@ section {
   font-weight: 1000;
   line-height: 0.92;
   letter-spacing: 0;
-  filter: drop-shadow(0 10px 0 rgba(67, 0, 0, 0.36));
+  text-shadow: 0 8px 0 rgba(67, 0, 0, 0.32);
 }
 
 .historyIdeaDetailCopy span {
@@ -6348,11 +6504,7 @@ body {
 }
 
 .premiumAssetSlot {
-  background:
-    radial-gradient(circle at 50% 32%, rgba(255, 196, 0, 0.1), transparent 38%),
-    linear-gradient(135deg, rgba(190, 22, 8, 0.9), rgba(118, 10, 5, 0.88)),
-    url("/background.png") center / cover no-repeat,
-    #b91d08;
+  background: #b91d08 url("/background.png") center / cover no-repeat;
 }
 
 .premiumSlotIntro {
@@ -6416,6 +6568,7 @@ body {
   text-transform: uppercase;
   text-shadow: 0 9px 0 rgba(89, 0, 0, 0.22);
   translate: -50% 0;
+  animation: premiumSlotHeadingReveal 560ms cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
 .premiumAssetScene h2 span {
@@ -6442,9 +6595,27 @@ body {
   white-space: nowrap;
 }
 
+.premiumAssetScene h2.isImpressions span {
+  color: white;
+}
+
+.premiumAssetScene h2.isImpressions strong {
+  color: #ffc400;
+  font: inherit;
+  white-space: nowrap;
+}
+
+.premiumAssetScene h2.isUserContent span {
+  color: #ffc400;
+}
+
+.premiumAssetScene h2.isUserContent strong {
+  color: white;
+}
+
 .premiumAssetMachine {
-  --premium-reel-vertical-inset: 6.94%;
-  --premium-reel-horizontal-inset: 11.89%;
+  --premium-reel-vertical-inset: 4.04%;
+  --premium-reel-horizontal-inset: 11.49%;
   position: absolute;
   left: 50%;
   top: 58%;
@@ -6461,6 +6632,8 @@ body {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 3.8%;
+  -webkit-mask: url("/slot/slot/Asset%2084.svg") center / 100% 100% no-repeat;
+  mask: url("/slot/slot/Asset%2084.svg") center / 100% 100% no-repeat;
 }
 
 .premiumAssetReel {
@@ -6468,6 +6641,30 @@ body {
   min-width: 0;
   overflow: hidden;
   background: transparent;
+}
+
+.premiumAssetReel:nth-child(1) {
+  --asset-x: 20%;
+  --asset-y: 0%;
+  --asset-reel-scale: 1;
+}
+
+.premiumAssetReel:nth-child(2) {
+  --asset-x: 10%;
+  --asset-y: 0%;
+  --asset-reel-scale: 1;
+}
+
+.premiumAssetReel:nth-child(3) {
+  --asset-x: -5%;
+  --asset-y: 0%;
+  --asset-reel-scale: 1.1;
+}
+
+.premiumAssetReel:nth-child(4) {
+  --asset-x: -15%;
+  --asset-y: 0%;
+  --asset-reel-scale: 1;
 }
 
 .premiumAssetStrip {
@@ -6482,11 +6679,16 @@ body {
   animation: premiumAssetRoll 900ms cubic-bezier(0.2, 0.64, 0.25, 1) var(--asset-delay) both;
 }
 
+.premiumAssetStrip.isSpinning.isReverse {
+  animation-name: premiumAssetRollReverse;
+}
+
 .premiumAssetCell {
   width: 100%;
   height: 100%;
   display: grid;
   place-items: center;
+  overflow: hidden;
 }
 
 .premiumAssetStrip .premiumAssetCell {
@@ -6495,10 +6697,66 @@ body {
 
 .premiumAssetCell img {
   display: block;
-  width: 68%;
-  height: 68%;
+  width: auto;
+  height: 50%;
+  max-width: 72%;
+  max-height: 50%;
+  place-self: center;
   object-fit: contain;
+  object-position: center;
+  transform: translate(var(--asset-x), var(--asset-y)) scale(var(--asset-image-scale, var(--asset-reel-scale)));
+  transform-origin: center;
 }
+
+.premiumAssetCell img[src$="/9%20CR/Asset%2010.svg"],
+.premiumAssetCell img[src$="/5%20CR/Asset%2017.svg"],
+.premiumAssetCell img[src$="/10%20CR/Asset%2064.svg"],
+.premiumAssetCell img[src$="/20%20CR/Asset%2072.svg"],
+.premiumAssetCell img[src$="/3%20CR/Asset%2077.svg"] {
+  --asset-image-scale: 1.08;
+}
+
+.premiumAssetCell img[src$="/60%20days/Asset%203.svg"],
+.premiumAssetCell img[src$="/9%20CR/Asset%208.svg"],
+.premiumAssetCell img[src$="/5%20CR/Asset%2013.svg"],
+.premiumAssetCell img[src$="/20x/Asset%2022.svg"],
+.premiumAssetCell img[src$="/3%20CR/Asset%2075.svg"],
+.premiumAssetCell img[src$="/8K+/Asset%2053.svg"],
+.premiumAssetCell img[src$="/Infinity/Asset%2082.svg"] {
+  --asset-image-scale: 1.1;
+}
+
+.premiumAssetCell img[src$="/8K+/Asset%2057.svg"],
+.premiumAssetCell img[src$="/8K+/Asset%2056.svg"] {
+  --asset-image-scale: 0.82;
+}
+
+/* Optical SVG normalization: compensate for artwork padding inside each file. */
+.premiumAssetCell img[src$="/60%20days/Asset%203.svg"] { --asset-image-scale: 1.22; }
+.premiumAssetCell img[src$="/60%20days/Asset%204.svg"] { --asset-image-scale: 1.1; }
+
+.premiumAssetCell img[src$="/9%20CR/Asset%208.svg"] { --asset-image-scale: 1.55; }
+.premiumAssetCell img[src$="/9%20CR/Asset%2010.svg"] { --asset-image-scale: 1.08; }
+
+.premiumAssetCell img[src$="/5%20CR/Asset%2013.svg"] { --asset-image-scale: 1.34; }
+.premiumAssetCell img[src$="/5%20CR/Asset%2017.svg"] { --asset-image-scale: 1.08; }
+
+.premiumAssetCell img[src$="/10%20CR/Asset%2064.svg"] { --asset-image-scale: 1.08; }
+
+.premiumAssetCell img[src$="/20x/Asset%2022.svg"] { --asset-image-scale: 1.68; }
+
+.premiumAssetCell img[src$="/20%20CR/Asset%2072.svg"] { --asset-image-scale: 1.08; }
+
+.premiumAssetCell img[src$="/3%20CR/Asset%2077.svg"] { --asset-image-scale: 1.08; }
+.premiumAssetCell img[src$="/3%20CR/Asset%2075.svg"] { --asset-image-scale: 1.34; }
+
+.premiumAssetCell img[src$="/10%20Lakhs/Asset%2043.svg"] { --asset-image-scale: 1.3; }
+
+.premiumAssetCell img[src$="/8K+/Asset%2053.svg"] { --asset-image-scale: 1.2; }
+.premiumAssetCell img[src$="/8K+/Asset%2057.svg"],
+.premiumAssetCell img[src$="/8K+/Asset%2056.svg"] { --asset-image-scale: 0.82; }
+
+.premiumAssetCell img[src$="/Infinity/Asset%2082.svg"] { --asset-image-scale: 1.4; }
 
 .premiumAssetOverlay {
   position: absolute;
@@ -6514,8 +6772,8 @@ body {
 
 .premiumAssetLever {
   position: absolute;
-  right: clamp(-70px, -3.2vw, -28px);
-  top: 50%;
+  right: clamp(-140px, -2.6vw, -28px);
+  top: 20%;
   bottom: 50;
   z-index: 6;
   scale: 0.72;
@@ -6527,14 +6785,9 @@ body {
   height: auto;
   aspect-ratio: 1;
   border-radius: 50%;
-  border-color: rgba(255, 232, 145, 0.88);
-  background:
-    linear-gradient(90deg, #895600 0%, #f6b817 18%, #fff0a4 42%, #d98b00 68%, #704000 100%);
-  box-shadow:
-    0 18px 26px rgba(78, 35, 0, 0.46),
-    inset 0 3px 4px rgba(255, 255, 255, 0.66),
-    inset 0 -14px 20px rgba(113, 54, 0, 0.42),
-    0 0 18px rgba(255, 190, 38, 0.24);
+  border-color: transparent;
+  background: transparent;
+  box-shadow: none;
 }
 
 .premiumAssetLever .premiumSlotLeverArm {
@@ -6550,6 +6803,33 @@ body {
   0% { transform: translateY(0); filter: blur(0); }
   42% { filter: blur(7px); }
   100% { transform: translateY(-90.909%); filter: blur(0); }
+}
+
+@keyframes premiumAssetRollReverse {
+  0% { transform: translateY(-90.909%); filter: blur(0); }
+  42% { filter: blur(7px); }
+  100% { transform: translateY(0); filter: blur(0); }
+}
+
+@keyframes premiumSlotHeadingReveal {
+  0% {
+    opacity: 0;
+    clip-path: polygon(12% 0, 88% 0, 82% 100%, 18% 100%);
+    transform: translateY(-22px) scale(0.92);
+    filter: blur(7px);
+  }
+  62% {
+    opacity: 1;
+    clip-path: polygon(0 0, 100% 0, 97% 100%, 3% 100%);
+    transform: translateY(3px) scale(1.025);
+    filter: blur(0);
+  }
+  100% {
+    opacity: 1;
+    clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+    transform: translateY(0) scale(1);
+    filter: blur(0);
+  }
 }
 
 @keyframes premiumSlotIntroIn {
@@ -6580,5 +6860,95 @@ body {
     top: 50%;
     bottom: auto;
     scale: 0.48;
+  }
+}
+
+/* Attached, straight slot lever */
+.premiumAssetLever {
+  right: -9%;
+  top: 20%;
+  width: 13%;
+  height: 112%;
+  scale: 1;
+  translate: 0 -50%;
+  overflow: visible;
+  z-index: 1;
+}
+
+.premiumAssetLever::before {
+  content: "";
+  position: absolute;
+  left: -8%;
+  bottom: 19%;
+  z-index: 1;
+  width: 72%;
+  height: clamp(8px, 0.75vw, 12px);
+  border-radius: 999px;
+  background: linear-gradient(180deg, #f7ce69, #bd8507 48%, #754401);
+  box-shadow:
+    inset 0 2px 2px rgba(255, 255, 255, 0.55),
+    0 5px 8px rgba(80, 33, 0, 0.36);
+}
+
+.premiumAssetLever .premiumSlotLeverTrack {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  aspect-ratio: auto;
+  border: 0;
+  border-radius: 0;
+  translate: none;
+}
+
+.premiumAssetLever .premiumSlotLeverArm {
+  left: 55%;
+  bottom: 20%;
+  width: clamp(7px, 0.72vw, 11px);
+  height: 58%;
+  transform: translateX(-50%);
+  transform-origin: bottom center;
+}
+
+.premiumAssetLever .premiumSlotLeverKnob {
+  left: 55%;
+  bottom: 78%;
+  width: clamp(38px, 4.2vw, 62px);
+  translate: -50% 50%;
+}
+
+.premiumAssetLever.isPulled .premiumSlotLeverArm {
+  animation: premiumAssetLeverStraightPull 760ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+
+.premiumAssetLever.isPulled .premiumSlotLeverKnob {
+  animation: premiumAssetLeverKnobDown 760ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+
+@keyframes premiumAssetLeverStraightPull {
+  0%, 100% {
+    bottom: 20%;
+    height: 58%;
+    transform: translateX(-50%);
+  }
+  42%, 62% {
+    bottom: 20%;
+    height: 20%;
+    transform: translateX(-50%);
+  }
+}
+
+@keyframes premiumAssetLeverKnobDown {
+  0%, 100% { bottom: 78%; }
+  42%, 62% { bottom: 40%; }
+}
+
+@media (max-width: 700px) {
+  .premiumAssetLever {
+    right: -4.5%;
+    top: 50%;
+    width: 14%;
+    height: 108%;
+    scale: 1;
   }
 }

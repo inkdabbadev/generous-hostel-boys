@@ -90,34 +90,38 @@ function DonutChart({ market }: { market: AudienceMarket }) {
 
   return (
     <div className="audienceDonut" aria-label={`${market.shortTitle} age audience chart`}>
-      <svg viewBox="0 0 120 120" role="img">
-        <circle cx="60" cy="60" fill="none" r="43" stroke="rgba(255,196,0,0.14)" strokeWidth="5" />
-        {segments.map((segment) => (
-          <motion.circle
-            animate={{
-              opacity: 1,
-              strokeDasharray: `${Math.max(segment.value - 1.15, 0.1)} ${100 - Math.max(segment.value - 1.15, 0.1)}`,
-            }}
-            cx="60"
-            cy="60"
-            fill="none"
-            initial={{ opacity: 0, strokeDasharray: `0 100` }}
-            key={`${market.id}-${segment.label}`}
-            pathLength={100}
-            r="42"
-            stroke={segment.color}
-            strokeDashoffset={-segment.offset}
-            strokeLinecap="butt"
-            strokeWidth="6"
-            transform="rotate(-90 60 60)"
-            transition={{ duration: 0.8, ease: [0.2, 0.9, 0.25, 1] }}
-          />
-        ))}
-      </svg>
-      <div className="audienceDonutCore">
-        <Users aria-hidden="true" size={24} strokeWidth={2.6} />
-        <span>Age</span>
+      <div className="audienceDonutRing">
+        <svg viewBox="0 0 120 120" role="img">
+          <circle cx="60" cy="60" fill="none" r="43" stroke="rgba(255,196,0,0.14)" strokeWidth="5" />
+          {segments.map((segment) => (
+            <motion.circle
+              animate={{
+                opacity: 1,
+                strokeDasharray: `${Math.max(segment.value - 1.15, 0.1)} ${100 - Math.max(segment.value - 1.15, 0.1)}`,
+              }}
+              cx="60"
+              cy="60"
+              fill="none"
+              initial={{ opacity: 0, strokeDasharray: `0 100` }}
+              key={`${market.id}-${segment.label}`}
+              pathLength={100}
+              r="42"
+              stroke={segment.color}
+              strokeDashoffset={-segment.offset}
+              strokeLinecap="butt"
+              strokeWidth="6"
+              transform="rotate(-90 60 60)"
+              transition={{ duration: 0.8, ease: [0.2, 0.9, 0.25, 1] }}
+            />
+          ))}
+        </svg>
+        <div className="audienceDonutCore">
+          <Users aria-hidden="true" size={24} strokeWidth={2.6} />
+        </div>
       </div>
+      <strong className="audienceDonutLabel" aria-hidden="true">
+        <span>Age</span>
+      </strong>
     </div>
   );
 }

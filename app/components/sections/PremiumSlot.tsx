@@ -12,6 +12,34 @@ const stageReelAssets = [
     "/slot/9%20CR/Currency.svg",
     "/slot/9%20CR/Icon.svg",
   ],
+  [
+    "/slot/5%20CR/Asset%2013.svg",
+    "/slot/5%20CR/Asset%2016.svg",
+    "/slot/5%20CR/Asset%2017.svg",
+    "/slot/5%20CR/Asset%2018.svg",
+    "/slot/5%20CR/Asset%2046.svg",
+  ],
+  [
+    "/slot/10%20CR/Asset%2059.svg",
+    "/slot/10%20CR/Asset%2060.svg",
+    "/slot/10%20CR/Asset%2062.svg",
+    "/slot/10%20CR/Asset%2063.svg",
+    "/slot/10%20CR/Asset%2064.svg",
+    "/slot/10%20CR/Asset%2065.svg",
+    "/slot/10%20CR/Layer_1%20(2).svg",
+  ],
+  [20, 21, 22, 23, 24, 25].map((asset) => `/slot/20x/Asset%20${asset}.svg`),
+  [66, 67, 68, 69, 70, 71, 72].map((asset) => `/slot/20%20CR/Asset%20${asset}.svg`),
+  [73, 74, 75, 76, 77, 78].map((asset) => `/slot/3%20CR/Asset%20${asset}.svg`),
+  [40, 42, 43, 44, 45, 60].map((asset) => `/slot/10%20Lakhs/Asset%20${asset}.svg`),
+  [46, 48, 49, 50, 51, 52].map((asset) => `/slot/240+/Asset%20${asset}.svg`),
+  [53, 54, 56, 57, 58].map((asset) => `/slot/8K+/Asset%20${asset}.svg`),
+  [
+    "/slot/Infinity/Asset%2080.svg",
+    "/slot/Infinity/Asset%2081.svg",
+    "/slot/Infinity/Asset%2082.svg",
+    "/slot/Infinity/Icon%20(3).svg",
+  ],
 ] as const;
 
 const stageFinalAssets = [
@@ -26,6 +54,60 @@ const stageFinalAssets = [
     "/slot/9%20CR/Asset%2011.svg",
     "/slot/9%20CR/Asset%2010.svg",
     "/slot/9%20CR/Asset%209.svg",
+  ],
+  [
+    "/slot/5%20CR/Asset%2013.svg",
+    "/slot/5%20CR/Asset%2018.svg",
+    "/slot/5%20CR/Asset%2017.svg",
+    "/slot/5%20CR/Asset%2016.svg",
+  ],
+  [
+    "/slot/10%20CR/Asset%2065.svg",
+    "/slot/10%20CR/Asset%2063.svg",
+    "/slot/10%20CR/Asset%2064.svg",
+    "/slot/10%20CR/Asset%2062.svg",
+  ],
+  [
+    "/slot/20x/Asset%2022.svg",
+    "/slot/20x/Asset%2025.svg",
+    "/slot/20x/Asset%2024.svg",
+    "/slot/20x/Asset%2023.svg",
+  ],
+  [
+    "/slot/20%20CR/Asset%2070.svg",
+    "/slot/20%20CR/Asset%2071.svg",
+    "/slot/20%20CR/Asset%2072.svg",
+    "/slot/20%20CR/Asset%2069.svg",
+  ],
+  [
+    "/slot/3%20CR/Asset%2078.svg",
+    "/slot/3%20CR/Asset%2077.svg",
+    "/slot/3%20CR/Asset%2076.svg",
+    "/slot/3%20CR/Asset%2075.svg",
+  ],
+  [
+    "/slot/10%20Lakhs/Asset%2045.svg",
+    "/slot/10%20Lakhs/Asset%2044.svg",
+    "/slot/10%20Lakhs/Asset%2043.svg",
+    "/slot/10%20Lakhs/Asset%2042.svg",
+  ],
+  [
+    "/slot/240+/Asset%2052.svg",
+    "/slot/240+/Asset%2051.svg",
+    "/slot/240+/Asset%2050.svg",
+    "/slot/240+/Asset%2049.svg",
+  ],
+  [
+    "/slot/8K+/Asset%2053.svg",
+    "/slot/8K+/Asset%2058.svg",
+    "/slot/8K+/Asset%2057.svg",
+    "/slot/8K+/Asset%2056.svg",
+  ],
+  [
+    "/slot/Infinity/Asset%2082.svg",
+    "/slot/Infinity/Asset%2080.svg",
+    "/slot/Infinity/Asset%2082.svg",
+    "/slot/Infinity/Asset%2080.svg",
   ],
 ] as const;
 
@@ -42,20 +124,24 @@ function randomAsset(pool: readonly string[]) {
 
 export default function PremiumSlot() {
   const [machineReady, setMachineReady] = useState(false);
-  const [stage, setStage] = useState<0 | 1>(0);
+  const [stage, setStage] = useState<0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10>(0);
   const [current, setCurrent] = useState(initialAssets);
   const [spinAssets, setSpinAssets] = useState<string[][]>([]);
   const [spinning, setSpinning] = useState(false);
+  const [rollDirection, setRollDirection] = useState<1 | -1>(1);
   const [spinKey, setSpinKey] = useState(0);
   const sectionRef = useRef<HTMLElement>(null);
-  const stageRef = useRef<0 | 1>(0);
+  const stageRef = useRef<0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10>(0);
   const hasSpunRef = useRef(false);
   const introStartedRef = useRef(false);
   const spinInputLockUntilRef = useRef(0);
   const introTimeoutRef = useRef<number | null>(null);
   const spinTimeoutRef = useRef<number | null>(null);
 
-  const spin = useCallback((targetStage: 0 | 1 = stageRef.current) => {
+  const spin = useCallback((
+    targetStage: 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 = stageRef.current,
+    direction: 1 | -1 = 1,
+  ) => {
     if (!machineReady || hasSpunRef.current) return;
 
     const pool = stageReelAssets[targetStage];
@@ -65,11 +151,13 @@ export default function PremiumSlot() {
     hasSpunRef.current = true;
     spinInputLockUntilRef.current = performance.now() + 1700;
     setSpinning(true);
+    setRollDirection(direction);
     setSpinAssets(
-      finals.map((finalAsset) => [
-        ...Array.from({ length: 10 }, () => randomAsset(pool)),
-        finalAsset,
-      ]),
+      finals.map((finalAsset) =>
+        direction === 1
+          ? [...Array.from({ length: 10 }, () => randomAsset(pool)), finalAsset]
+          : [finalAsset, ...Array.from({ length: 10 }, () => randomAsset(pool))],
+      ),
     );
     setSpinKey((value) => value + 1);
 
@@ -98,6 +186,7 @@ export default function PremiumSlot() {
       setCurrent(initialAssets);
       setSpinAssets([]);
       setSpinning(false);
+      setRollDirection(1);
     };
 
     const observer = new IntersectionObserver(
@@ -108,7 +197,7 @@ export default function PremiumSlot() {
             introTimeoutRef.current = window.setTimeout(() => {
               setMachineReady(true);
               introTimeoutRef.current = null;
-            }, 2000);
+            }, 1000);
           }
           return;
         }
@@ -132,8 +221,9 @@ export default function PremiumSlot() {
       }
 
       if (!hasSpunRef.current) {
+        if (customEvent.detail.direction === -1 && stageRef.current === 0) return;
         customEvent.preventDefault();
-        spin();
+        spin(stageRef.current, customEvent.detail.direction);
         return;
       }
 
@@ -142,10 +232,19 @@ export default function PremiumSlot() {
         return;
       }
 
-      if (stageRef.current === 0) {
+      if (customEvent.detail.direction === 1 && stageRef.current < 10) {
         customEvent.preventDefault();
+        const nextStage = (stageRef.current + 1) as 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10;
         hasSpunRef.current = false;
-        spin(1);
+        spin(nextStage, 1);
+        return;
+      }
+
+      if (customEvent.detail.direction === -1 && stageRef.current > 0) {
+        customEvent.preventDefault();
+        const previousStage = (stageRef.current - 1) as 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9;
+        hasSpunRef.current = false;
+        spin(previousStage, -1);
       }
     };
 
@@ -170,8 +269,78 @@ export default function PremiumSlot() {
         </div>
       ) : (
         <div className="premiumAssetScene">
-          <h2 className={stage === 1 ? "isInvestment" : undefined}>
-            {stage === 1 ? (
+          <h2
+            key={`slot-heading-${stage}`}
+            className={
+              stage === 1
+                ? "isInvestment"
+                : stage === 2
+                  ? "isInvestment isReach"
+                  : stage === 3
+                    ? "isImpressions"
+                    : stage === 4
+                      ? "isImpressions isFrequency"
+                      : stage === 5
+                        ? "isImpressions isVideoViews"
+                        : stage === 6
+                          ? "isInvestment isSocialEngagement"
+                          : stage === 7
+                            ? "isImpressions isUserContent"
+                            : stage === 8
+                              ? "isImpressions isUserContent isInfluencer"
+                              : stage === 9
+                                ? "isInvestment isPhysicalAssets"
+                                : stage === 10
+                                  ? "isInvestment isLongTerm"
+                    : undefined
+            }
+          >
+            {stage === 10 ? (
+              <>
+                <span>Long-Term</span>
+                <strong>Brand Visibility</strong>
+              </>
+            ) : stage === 9 ? (
+              <>
+                <span>Physical</span>
+                <strong>Branding Assets</strong>
+              </>
+            ) : stage === 8 ? (
+              <>
+                <span>Influencer</span>{" "}
+                <strong>Network</strong>
+              </>
+            ) : stage === 7 ? (
+              <>
+                <span>User Generated</span>{" "}
+                <strong>Content</strong>
+              </>
+            ) : stage === 6 ? (
+              <>
+                <span>Estimated</span>
+                <strong>Social Engagement</strong>
+              </>
+            ) : stage === 5 ? (
+              <>
+                <span>Estimated</span>{" "}
+                <strong>Video Views</strong>
+              </>
+            ) : stage === 4 ? (
+              <>
+                <span>Avg.</span>{" "}
+                <strong>Brand Frequency</strong>
+              </>
+            ) : stage === 3 ? (
+              <>
+                <span>Total</span>{" "}
+                <strong>Impressions</strong>
+              </>
+            ) : stage === 2 ? (
+              <>
+                <span>Estimated</span>
+                <strong>Unique Reach</strong>
+              </>
+            ) : stage === 1 ? (
               <>
                 <span>Total</span>
                 <strong>Marketing Investment</strong>
@@ -192,7 +361,10 @@ export default function PremiumSlot() {
                 return (
                   <div className="premiumAssetReel" key={reelIndex} style={style}>
                     {strip ? (
-                      <div className="premiumAssetStrip isSpinning" key={`${spinKey}-${reelIndex}`}>
+                      <div
+                        className={`premiumAssetStrip isSpinning${rollDirection === -1 ? " isReverse" : ""}`}
+                        key={`${spinKey}-${reelIndex}`}
+                      >
                         {strip.map((item, itemIndex) => (
                           <span className="premiumAssetCell" key={`${item}-${itemIndex}`}>
                             <img alt="" aria-hidden="true" draggable={false} src={item} />
@@ -214,7 +386,7 @@ export default function PremiumSlot() {
               aria-hidden="true"
               className="premiumAssetOverlay"
               draggable={false}
-              src="/slot/slot/Asset%205.svg"
+              src="/slot/slot/Asset%2083.svg"
             />
 
             <button

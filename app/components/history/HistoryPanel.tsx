@@ -1,7 +1,7 @@
 "use client";
 
-import { AnimatePresence, motion } from "framer-motion";
-import { useState } from "react";
+import { AnimatePresence, motion, useMotionValue, useSpring } from "framer-motion";
+import { useState, type CSSProperties } from "react";
 import {
   historyOnlineLayout,
   historyPanelTitles,
@@ -17,6 +17,112 @@ type HistoryPanelProps = {
   activePanel: HistoryPanelName;
   onClose: () => void;
 };
+
+type OnlineCardData = (typeof onlineCards)[number];
+
+function OnlinePaperCard({
+  card,
+  index,
+  onOpenFrame,
+}: {
+  card: OnlineCardData;
+  index: number;
+  onOpenFrame: (url: string) => void;
+}) {
+  const rotateXValue = useMotionValue(0);
+  const rotateYValue = useMotionValue(0);
+  const xValue = useMotionValue(0);
+  const yValue = useMotionValue(0);
+  const rotateX = useSpring(rotateXValue, { damping: 17, mass: 0.42, stiffness: 190 });
+  const rotateY = useSpring(rotateYValue, { damping: 17, mass: 0.42, stiffness: 190 });
+  const x = useSpring(xValue, { damping: 18, mass: 0.38, stiffness: 210 });
+  const y = useSpring(yValue, { damping: 18, mass: 0.38, stiffness: 210 });
+
+  const resetHover = (element: HTMLButtonElement) => {
+    rotateXValue.set(0);
+    rotateYValue.set(0);
+    xValue.set(0);
+    yValue.set(0);
+    element.style.setProperty("--online-shine-x", "50%");
+    element.style.setProperty("--online-shine-y", "42%");
+  };
+
+  return (
+    <motion.button
+      animate={{
+        opacity: 1,
+        scale: 1,
+        y: 0,
+      }}
+      aria-label={card.href ? `Open ${card.label.replace(/\n/g, " ")}` : undefined}
+      className="historyOnlineCard"
+      disabled={!card.href}
+      initial={{
+        opacity: 0,
+        scale: 0.9,
+        y: 34,
+      }}
+      key={card.id}
+      onClick={() => {
+        if (card.href) {
+          onOpenFrame(card.href);
+        }
+      }}
+      onPointerLeave={(event) => resetHover(event.currentTarget)}
+      onPointerMove={(event) => {
+        const rect = event.currentTarget.getBoundingClientRect();
+        const relX = (event.clientX - rect.left) / rect.width - 0.5;
+        const relY = (event.clientY - rect.top) / rect.height - 0.5;
+
+        rotateXValue.set(relY * -11);
+        rotateYValue.set(relX * 13);
+        xValue.set(relX * 12);
+        yValue.set(relY * 9);
+        event.currentTarget.style.setProperty("--online-shine-x", `${(relX + 0.5) * 100}%`);
+        event.currentTarget.style.setProperty("--online-shine-y", `${(relY + 0.5) * 100}%`);
+      }}
+      style={{
+        "--online-card-delay": `${index * 72}ms`,
+      } as CSSProperties}
+      transition={{
+        delay: 0.08 + card.id * 0.045,
+        duration: 0.44,
+        ease: [0.16, 1, 0.3, 1],
+      }}
+      type="button"
+      whileHover={{
+        scale: 1.055,
+        zIndex: 7,
+      }}
+      whileTap={{
+        scale: 0.96,
+      }}
+    >
+      <motion.span
+        className="historyOnlineCardPlane"
+        style={{
+          rotateX,
+          rotateY,
+          x,
+          y,
+        }}
+      >
+        <img
+          alt=""
+          aria-hidden="true"
+          className="historyOnlinePaper"
+          draggable={false}
+          src={card.paperSrc}
+          style={historyOnlineLayout.paper}
+        />
+        <span className="historyOnlineCardText">
+          <strong>{card.label}</strong>
+          <em>{card.note}</em>
+        </span>
+      </motion.span>
+    </motion.button>
+  );
+}
 
 function OnlineOverview({
   onMore,
@@ -35,47 +141,13 @@ function OnlineOverview({
       transition={{ duration: 0.38, ease: [0.16, 1, 0.3, 1] }}
     >
       <div className="historyOnlineGrid" style={historyOnlineLayout.grid}>
-        {onlineCards.map((card) => (
-          <motion.button
-            animate={{
-              opacity: 1,
-              scale: 1,
-              y: 0,
-            }}
-            aria-label={card.href ? `Open ${card.label.replace(/\n/g, " ")}` : undefined}
-            className="historyOnlineCard"
-            disabled={!card.href}
-            initial={{
-              opacity: 0,
-              scale: 0.9,
-              y: 34,
-            }}
+        {onlineCards.map((card, index) => (
+          <OnlinePaperCard
+            card={card}
+            index={index}
             key={card.id}
-            onClick={() => {
-              if (card.href) {
-                onOpenFrame(card.href);
-              }
-            }}
-            transition={{
-              delay: 0.08 + card.id * 0.045,
-              duration: 0.44,
-              ease: [0.16, 1, 0.3, 1],
-            }}
-            type="button"
-          >
-            <img
-              alt=""
-              aria-hidden="true"
-              className="historyOnlinePaper"
-              draggable={false}
-              src={card.paperSrc}
-              style={historyOnlineLayout.paper}
-            />
-            <span className="historyOnlineCardText">
-              <strong>{card.label}</strong>
-              <em>{card.note}</em>
-            </span>
-          </motion.button>
+            onOpenFrame={onOpenFrame}
+          />
         ))}
       </div>
       <button className="historyOnlineMore" onClick={onMore} type="button">
@@ -122,23 +194,19 @@ function IdeasPanel({ onSelect }: { onSelect: (card: IdeaCard) => void }) {
         <motion.button
           animate={{
             opacity: 1,
-            rotate: 0,
-            scale: 1,
             y: 0,
           }}
           aria-label={`Open ${card.label.replace(/\n/g, " ")}`}
           className="historyIdeaCard"
           initial={{
             opacity: 0,
-            rotate: index === 0 ? -2.4 : 2.4,
-            scale: 0.92,
-            y: 46,
+            y: 24,
           }}
           key={card.id}
           onClick={() => onSelect(card)}
           transition={{
-            delay: 0.18 + index * 0.12,
-            duration: 0.62,
+            delay: 0.04 + index * 0.04,
+            duration: 0.32,
             ease: [0.16, 1, 0.3, 1],
           }}
           type="button"
@@ -154,12 +222,12 @@ function IdeasPanel({ onSelect }: { onSelect: (card: IdeaCard) => void }) {
 function IdeaDetailPanel({ card, onBack }: { card: IdeaCard; onBack: () => void }) {
   return (
     <motion.div
-      animate={{ opacity: 1, scale: 1, x: 0 }}
+      animate={{ opacity: 1, x: 0 }}
       className="historyIdeaDetail"
-      exit={{ opacity: 0, scale: 0.96, x: 46 }}
-      initial={{ opacity: 0, scale: 0.98, x: 64 }}
+      exit={{ opacity: 0, x: 24 }}
+      initial={{ opacity: 0, x: 28 }}
       key={card.id}
-      transition={{ duration: 0.48, ease: [0.16, 1, 0.3, 1] }}
+      transition={{ duration: 0.32, ease: [0.16, 1, 0.3, 1] }}
     >
       <button
         aria-label="Back to ideas"
@@ -172,26 +240,26 @@ function IdeaDetailPanel({ card, onBack }: { card: IdeaCard; onBack: () => void 
       <motion.h3
         animate={{ opacity: 1, y: 0 }}
         className="historyIdeaDetailTitle"
-        initial={{ opacity: 0, y: 28 }}
-        transition={{ delay: 0.08, duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+        initial={{ opacity: 0, y: 18 }}
+        transition={{ delay: 0.03, duration: 0.32, ease: [0.16, 1, 0.3, 1] }}
       >
         {card.detailTitle}
       </motion.h3>
       <motion.img
         alt=""
-        animate={{ clipPath: "inset(0% 0% 0% 0%)", opacity: 1, y: 0 }}
+        animate={{ opacity: 1, scale: 1, y: 0 }}
         aria-hidden="true"
         className="historyIdeaDetailImage"
         draggable={false}
-        initial={{ clipPath: "inset(0% 100% 0% 0%)", opacity: 0, y: 34 }}
+        initial={{ opacity: 0, scale: 0.985, y: 22 }}
         src={card.src}
-        transition={{ delay: 0.18, duration: 0.64, ease: [0.16, 1, 0.3, 1] }}
+        transition={{ delay: 0.06, duration: 0.36, ease: [0.16, 1, 0.3, 1] }}
       />
       <motion.div
         animate={{ opacity: 1, x: 0 }}
         className="historyIdeaDetailCopy"
-        initial={{ opacity: 0, x: 48 }}
-        transition={{ delay: 0.28, duration: 0.54, ease: [0.16, 1, 0.3, 1] }}
+        initial={{ opacity: 0, x: 24 }}
+        transition={{ delay: 0.1, duration: 0.34, ease: [0.16, 1, 0.3, 1] }}
       >
         <p>{card.detailKicker}</p>
         <span>{card.detailBody}</span>
@@ -222,7 +290,6 @@ export function HistoryPanel({ activePanel, onClose }: HistoryPanelProps) {
   return (
     <motion.div
       animate={{
-        clipPath: "inset(0% 0% 0% 0%)",
         opacity: 1,
         scale: 1,
         y: 0,
@@ -230,19 +297,17 @@ export function HistoryPanel({ activePanel, onClose }: HistoryPanelProps) {
       className={panelClassName}
       style={historyOnlineLayout.panel}
       exit={{
-        clipPath: "inset(4% 4% 4% 4%)",
         opacity: 0,
         scale: 0.94,
         y: 28,
       }}
       initial={{
-        clipPath: "inset(48% 48% 48% 48%)",
         opacity: 0,
         scale: 0.86,
         y: 54,
       }}
       transition={{
-        duration: 0.62,
+        duration: 0.42,
         ease: [0.16, 1, 0.3, 1],
       }}
     >
@@ -293,7 +358,7 @@ export function HistoryPanel({ activePanel, onClose }: HistoryPanelProps) {
               )}
             </AnimatePresence>
           ) : isIdeasPanel ? (
-            <AnimatePresence mode="wait">
+            <AnimatePresence initial={false}>
               {selectedIdea ? (
                 <IdeaDetailPanel
                   card={selectedIdea}
