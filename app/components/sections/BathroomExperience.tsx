@@ -35,7 +35,7 @@ export default function BathroomExperience() {
       aria-label="Bathroom"
     >
       <img
-        className="bathroomDrag pointer-events-none absolute bottom-0 left-0 z-[1] block h-auto w-[clamp(660px,72vw,1290px)] select-none max-[640px]:w-[clamp(585px,165vw,1020px)]"
+        className="bathroomDrag pointer-events-none absolute bottom-0 left-0 z-[1] block h-auto w-[clamp(1040px,112vw,1980px)] select-none max-[640px]:w-[clamp(920px,255vw,1620px)]"
         src="/bathroom/Drag-gif.gif"
         alt=""
         aria-hidden="true"

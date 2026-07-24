@@ -5,32 +5,22 @@ import { useEffect, useRef, useState } from "react";
 
 const maxHostelPhase = 3;
 
-const leftProofImages = [
-  { alt: "Hostel genre proof one", src: "/hostelgenre/v1.png" },
-  { alt: "Hostel genre proof two", src: "/hostelgenre/v2.png" },
-  { alt: "Hostel genre proof three", src: "/hostelgenre/v3.png" },
-];
-
-const rightProofImages = [
-  { alt: "Hostel genre proof four", src: "/hostelgenre/v4.png" },
-  { alt: "Hostel genre proof five", src: "/hostelgenre/v5.png" },
-  { alt: "Hostel genre proof six", src: "/hostelgenre/v6.png" },
-  { alt: "Hostel genre proof seven", src: "/hostelgenre/v7.png" },
-];
-
-const finalProofImages = [...leftProofImages, ...rightProofImages];
-
 export default function HostelGenreProof() {
   const sectionRef = useRef<HTMLElement>(null);
   const phaseRef = useRef(0);
   const isSteppingRef = useRef(false);
   const [phase, setPhase] = useState(0);
+  const [gifRun, setGifRun] = useState(0);
 
   useEffect(() => {
     const setStepPhase = (nextPhase: number) => {
       const clampedPhase = Math.min(Math.max(nextPhase, 0), maxHostelPhase);
       phaseRef.current = clampedPhase;
       setPhase(clampedPhase);
+
+      if (clampedPhase === maxHostelPhase) {
+        setGifRun((run) => run + 1);
+      }
     };
 
     const lockHostelView = () => {
@@ -180,13 +170,41 @@ export default function HostelGenreProof() {
     <section className="hostelGenreProof" aria-labelledby="hostel-genre-title" ref={sectionRef}>
       <div className="hostelGenreShell">
         <div className="hostelGenreCopy">
-          <h2 id="hostel-genre-title">
-            <span>TN audience already</span>
-            <span>
+          <motion.h2
+            id="hostel-genre-title"
+            initial="hidden"
+            transition={{ staggerChildren: 0.1 }}
+            viewport={{ once: false, amount: 0.55 }}
+            whileInView="show"
+          >
+            <motion.span
+              variants={{
+                hidden: { opacity: 0, x: -72, skewX: -7 },
+                show: { opacity: 1, x: 0, skewX: 0 },
+              }}
+              transition={{ duration: 0.62, ease: [0.16, 1, 0.3, 1] }}
+            >
+              TN audience already
+            </motion.span>
+            <motion.span
+              variants={{
+                hidden: { opacity: 0, x: 72, skewX: 7 },
+                show: { opacity: 1, x: 0, skewX: 0 },
+              }}
+              transition={{ duration: 0.62, ease: [0.16, 1, 0.3, 1] }}
+            >
               love hostel as a{" "}
-              <em>genre</em>
-            </span>
-          </h2>
+              <motion.em
+                variants={{
+                  hidden: { opacity: 0, scale: 0.74, rotate: -3 },
+                  show: { opacity: 1, scale: 1, rotate: 0 },
+                }}
+                transition={{ delay: 0.18, duration: 0.48, ease: [0.16, 1, 0.3, 1] }}
+              >
+                genre
+              </motion.em>
+            </motion.span>
+          </motion.h2>
         </div>
 
         <motion.div
@@ -239,34 +257,25 @@ export default function HostelGenreProof() {
               </span>
             </motion.div>
           ) : null}
-          {phase >= 3 ? (
-            <div className="hostelEdgeProofs" aria-hidden="true">
-              {finalProofImages.map((image, index) => (
-                <motion.img
-                  animate={{
-                    opacity: 1,
-                    rotate: [0, index % 2 === 0 ? -8 : 8, index % 2 === 0 ? -1.5 : 1.5],
-                    scale: [0.18, 1.22, 0.96, 1],
-                    x: 0,
-                    y: 0,
-                  }}
-                  alt={image.alt}
-                  className={`hostelEdgeProofImage hostelEdgeProofImage${index + 1}`}
-                  draggable={false}
-                  initial={{ opacity: 0, rotate: 0, scale: 0.18, x: "0vw", y: "0vh" }}
-                  key={image.src}
-                  src={image.src}
-                  transition={{
-                    delay: index * 0.08,
-                    duration: 0.72,
-                    ease: [0.16, 1, 0.3, 1],
-                  }}
-                />
-              ))}
-            </div>
-          ) : null}
         </motion.div>
       </div>
+      {phase >= 3 ? (
+        <motion.div
+          aria-hidden="true"
+          animate={{ opacity: 1, scale: 1, y: 0 }}
+          className="hostelAlumbFinal"
+          initial={{ opacity: 0, scale: 0.9, y: 34 }}
+          key={`hostel-alumb-final-${gifRun}`}
+          transition={{ duration: 0.48, ease: [0.16, 1, 0.3, 1] }}
+        >
+          <img
+            alt=""
+            className="hostelAlumbGif"
+            draggable={false}
+            src={`/hostelgenre/alumb.gif?run=${gifRun}`}
+          />
+        </motion.div>
+      ) : null}
     </section>
   );
 }

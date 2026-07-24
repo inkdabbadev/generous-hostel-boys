@@ -7,14 +7,15 @@ import {
   CoreCapabilities,
   GridSlideExperience,
   HostelGenreProof,
+  HistorySection,
   IntroExperience,
   MarketingMediaPlan,
   MarketingMediaPlanTable,
   MovieMetrics,
   Noticeboard,
-  Noticeboard2,
-  Noticeboard3,
+  PlotIntro,
   PosterScroll,
+  PremiumSlot,
   RegionalAudience,
   SponsorshipExperience,
   TitleScrollAnimation,
@@ -32,7 +33,7 @@ export default function Home() {
       <BathroomExperience />
       <GridSlideExperience />
 
-      <section className="hero">
+      {/* <section className="hero">
         <div className="heroImage" aria-hidden="true" />
         <div className="heroShade" aria-hidden="true" />
         <nav className="topbar" aria-label="Deck navigation">
@@ -51,23 +52,25 @@ export default function Home() {
             <span className="headlineLine headlineLineGold">at your own risk</span>
           </h1>
         </div>
-      </section>
+      </section> */}
 
-      <AboutExperience />
-      <CoreCapabilities />
+      {/* <AboutExperience />
+      <CoreCapabilities /> */}
       <RegionalAudience />
       <HostelGenreProof />
       <MovieMetrics />
       <CommonThread />
       <WhyThisFilm />
       <Noticeboard />
-      <Noticeboard2 />
-      <Noticeboard3 />
       <TitleScrollAnimation />
       <AdaptationProof />
       <ActualAskIntro />
+      <PlotIntro />
       <MarketingMediaPlan />
+      <HistorySection />
+      <PremiumSlot />
       <MarketingMediaPlanTable />
+
     </main>
   );
 }

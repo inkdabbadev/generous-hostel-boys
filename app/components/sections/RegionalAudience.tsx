@@ -2,10 +2,76 @@
 
 import { motion } from "framer-motion";
 import { Users } from "lucide-react";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState, type CSSProperties } from "react";
 import { audienceMarkets, type AudienceMarket } from "../../data/regionalAudienceData";
 
-const ageGoldPalette = ["#fff2a6", "#ffd95c", "#ffc400", "#d99a00", "#8f5f00"];
+const ageGoldPalette = ["#ffe88a", "#ffd64a", "#ffc400", "#c88700", "#744500"];
+const ageStripPalette = ["#ffe88a", "#ffd64a", "#ffc400", "#c88700", "#744500"];
+
+type AudienceAgeStyle = CSSProperties & {
+  "--age-color": string;
+  "--age-glow": string;
+  "--age-height": string;
+};
+
+type RegionalAudienceControls = CSSProperties & {
+  "--regional-card-cols": string;
+  "--regional-card-gap": string;
+  "--regional-card-pad": string;
+  "--regional-card-rows": string;
+  "--regional-donut-col": string;
+  "--regional-donut-width": string;
+  "--regional-main-cols": string;
+  "--regional-main-gap": string;
+  "--regional-map-max-height": string;
+  "--regional-map-width": string;
+  "--regional-market-copy-size": string;
+  "--regional-region-title-size": string;
+  "--regional-shell-gap": string;
+  "--regional-shell-rows": string;
+  "--regional-title-offset": string;
+  "--regional-title-size": string;
+  "--regional-watermark-left": string;
+  "--regional-watermark-size": string;
+  "--regional-watermark-width": string;
+  "--regional-youth-copy-size": string;
+  "--regional-youth-size": string;
+};
+
+const regionalAudienceControls = {
+  "--regional-card-cols": "minmax(280px, 0.82fr) minmax(460px, 1.18fr)",
+  "--regional-card-gap": "clamp(18px, 1.7vw, 28px)",
+  "--regional-card-pad": "clamp(24px, 2vw, 38px)",
+  "--regional-card-rows": "minmax(176px, 23vh) minmax(260px, 34vh)",
+  "--regional-donut-col": "clamp(165px, 14vw, 230px)",
+  "--regional-donut-width": "clamp(162px, 13.2vw, 218px)",
+  "--regional-main-cols": "minmax(390px, 0.82fr) minmax(720px, 1.18fr)",
+  "--regional-main-gap": "clamp(28px, 3.4vw, 62px)",
+  "--regional-map-max-height": "min(60vh, 620px)",
+  "--regional-map-width": "min(90%, 570px)",
+  "--regional-market-copy-size": "clamp(0.9rem, 1.08vw, 1.3rem)",
+  "--regional-region-title-size": "clamp(3.8rem, 5.6vw, 7.45rem)",
+  "--regional-shell-gap": "clamp(12px, 1.6vh, 22px)",
+  "--regional-shell-rows": "clamp(88px, 14.2vh, 154px) minmax(0, 1fr)",
+  "--regional-title-offset": "clamp(34px, 4.4vh, 58px)",
+  "--regional-title-size": "clamp(3.4rem, 4.75vw, 6.45rem)",
+  "--regional-watermark-left": "44%",
+  "--regional-watermark-size": "clamp(5.9rem, 8.2vw, 10.9rem)",
+  "--regional-watermark-width": "min(690px, 40vw)",
+  "--regional-youth-copy-size": "clamp(1.25rem, 1.72vw, 2.25rem)",
+  "--regional-youth-size": "clamp(5rem, 6.75vw, 8.7rem)",
+} satisfies RegionalAudienceControls;
+
+function getAgeStripStyle(value: number, index: number): AudienceAgeStyle {
+  const normalized = Math.min(Math.max(value / 34, 0.32), 1);
+  const alpha = 0.18 + normalized * 0.22;
+
+  return {
+    "--age-color": ageStripPalette[index % ageStripPalette.length],
+    "--age-glow": `rgba(255, 196, 0, ${alpha.toFixed(2)})`,
+    "--age-height": `${Math.round(44 + normalized * 46)}px`,
+  };
+}
 
 function DonutChart({ market }: { market: AudienceMarket }) {
   const segments = useMemo(() => {
@@ -25,23 +91,26 @@ function DonutChart({ market }: { market: AudienceMarket }) {
   return (
     <div className="audienceDonut" aria-label={`${market.shortTitle} age audience chart`}>
       <svg viewBox="0 0 120 120" role="img">
-        <circle cx="60" cy="60" fill="none" r="42" stroke="rgba(255,255,255,0.1)" strokeWidth="10" />
+        <circle cx="60" cy="60" fill="none" r="43" stroke="rgba(255,196,0,0.14)" strokeWidth="5" />
         {segments.map((segment) => (
           <motion.circle
-            animate={{ strokeDasharray: `${segment.value} ${100 - segment.value}` }}
+            animate={{
+              opacity: 1,
+              strokeDasharray: `${Math.max(segment.value - 1.15, 0.1)} ${100 - Math.max(segment.value - 1.15, 0.1)}`,
+            }}
             cx="60"
             cy="60"
             fill="none"
-            initial={{ strokeDasharray: `0 100` }}
+            initial={{ opacity: 0, strokeDasharray: `0 100` }}
             key={`${market.id}-${segment.label}`}
             pathLength={100}
             r="42"
             stroke={segment.color}
             strokeDashoffset={-segment.offset}
-            strokeLinecap="round"
-            strokeWidth="10"
+            strokeLinecap="butt"
+            strokeWidth="6"
             transform="rotate(-90 60 60)"
-            transition={{ duration: 0.75, ease: [0.2, 0.9, 0.25, 1] }}
+            transition={{ duration: 0.8, ease: [0.2, 0.9, 0.25, 1] }}
           />
         ))}
       </svg>
@@ -53,44 +122,12 @@ function DonutChart({ market }: { market: AudienceMarket }) {
   );
 }
 
-const marketCodeOrder = [
-  { id: "karnataka", code: "KA" },
-  { id: "telugu", code: "TL" },
-  { id: "tamil", code: "TN" },
-  { id: "kerala", code: "KL" },
-];
-
 const mapOverlayText: Record<string, string[]> = {
   karnataka: ["Karna", "taka"],
   telugu: ["Telugu", "Market"],
   tamil: ["Tamil", "Nadu"],
   kerala: ["Kerala"],
 };
-
-function MarketCodeMarker({
-  active,
-  code,
-  market,
-}: {
-  active: boolean;
-  code: string;
-  market: AudienceMarket;
-}) {
-  return (
-    <motion.div
-      animate={{
-        opacity: active ? 1 : 0.36,
-        y: active ? -4 : 0,
-      }}
-      aria-current={active ? "step" : undefined}
-      aria-label={`${market.shortTitle} regional step`}
-      className={active ? "audienceMarketCode isActive" : "audienceMarketCode"}
-      transition={{ duration: 0.26, ease: [0.2, 0.8, 0.2, 1] }}
-    >
-      {code}
-    </motion.div>
-  );
-}
 
 export default function RegionalAudience() {
   const sectionRef = useRef<HTMLElement>(null);
@@ -253,6 +290,7 @@ export default function RegionalAudience() {
       className="regionalAudience relative min-h-screen text-white"
       aria-labelledby="regional-audience-title"
       ref={sectionRef}
+      style={regionalAudienceControls as CSSProperties}
     >
       <div className="regionalAudienceShell mx-auto w-full">
         <motion.div
@@ -265,27 +303,7 @@ export default function RegionalAudience() {
           <h2 className="regionalAudienceTitleSr" id="regional-audience-title">
             Regional Audience Overview
           </h2>
-          <img
-            alt=""
-            aria-hidden="true"
-            className="regionalAudienceHeadAsset"
-            draggable={false}
-            src="/maps/head.svg"
-          />
-          <div className="audienceCodeGrid" aria-label="South India regional markets">
-            {marketCodeOrder.map(({ id, code }) => {
-              const market = audienceMarkets.find((item) => item.id === id) ?? audienceMarkets[0];
-
-              return (
-                <MarketCodeMarker
-                  active={market.id === activeMarket.id}
-                  code={code}
-                  key={id}
-                  market={market}
-                />
-              );
-            })}
-          </div>
+          <div className="regionalAudienceMegaTitle">Regional Audience Overview</div>
         </motion.div>
 
         <motion.div
@@ -319,6 +337,15 @@ export default function RegionalAudience() {
           </div>
 
           <div className="audienceAgeBlock">
+            <motion.h3
+              animate={{ opacity: 1, y: 0 }}
+              className="audienceRegionTitle"
+              initial={{ opacity: 0, y: 18 }}
+              key={`${activeMarket.id}-title`}
+              transition={{ duration: 0.34, ease: [0.2, 0.8, 0.2, 1] }}
+            >
+              {activeMarket.shortTitle}
+            </motion.h3>
             <motion.div
               animate={{ opacity: 1, y: 0 }}
               className="audienceMetricGrid"
@@ -327,35 +354,27 @@ export default function RegionalAudience() {
               transition={{ duration: 0.34, ease: [0.2, 0.8, 0.2, 1] }}
             >
               <article className="audienceMetricCard audienceMetricCardYouth">
-                <span>Youth pull</span>
                 <strong>{youthShare}%</strong>
-                <p>18-34 audience concentration</p>
+                <p>18-34 year old audience</p>
               </article>
               <article className="audienceMetricCard audienceMetricCardState">
-                <span>State</span>
-                <h3>{activeMarket.shortTitle}</h3>
-                <p>{activeMarket.primaryCity}</p>
-                <strong>{activeMarket.majorHotspots.slice(0, 4).join(" / ")}</strong>
+                <span>Market read</span>
+                <p>{audienceSummary}</p>
+                <p>{insightSummary}</p>
               </article>
               <article className="audienceMetricCard audienceMetricCardDonut">
-                <span>Age split</span>
                 <div className="audienceMetricDonutRow">
                   <DonutChart market={activeMarket} />
                   <ul>
                     {activeMarket.ageDistribution.map((age, index) => (
                       <li key={age.label}>
-                        <span style={{ background: ageGoldPalette[index % ageGoldPalette.length] }} />
-                        <strong>{age.label}</strong>
+                        <span style={getAgeStripStyle(age.value, index)} />
+                        <strong>{age.label} year old</strong>
                         <em>{age.value}%</em>
                       </li>
                     ))}
                   </ul>
                 </div>
-              </article>
-              <article className="audienceMetricCard audienceMetricCardCopy">
-                <span>Market read</span>
-                <p>{audienceSummary}</p>
-                <p>{insightSummary}</p>
               </article>
             </motion.div>
           </div>

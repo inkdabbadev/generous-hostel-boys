@@ -8,41 +8,65 @@ const movies = [
     title: "Love Today",
     image: "lovetoday.jpg",
     footfall: "6.5M+",
+    boxOffice: "105C",
+    adSpend: "10M+",
+    theatricalRun: "100",
   },
   {
     title: "Youth",
     image: "youth.jpg",
     footfall: "4.5M+",
+    boxOffice: "72C",
+    adSpend: "10M+",
+    theatricalRun: "4",
   },
   {
     title: "Dragon",
     image: "dragon.jpeg",
     footfall: "9M+",
+    boxOffice: "150C",
+    adSpend: "10M+",
+    theatricalRun: "50",
   },
   {
     title: "K.G.F: Chapter 1",
     image: "kgf1.jpeg",
     footfall: "35M+",
+    boxOffice: "250C",
+    adSpend: "10M+",
+    theatricalRun: "100+",
   },
   {
     title: "Kantara",
     image: "kantara.jpeg",
     footfall: "10M+",
+    boxOffice: "450C",
+    adSpend: "10M+",
+    theatricalRun: "100",
   },
   {
     title: "Premalu",
     image: "Premalu.jpeg",
     footfall: "5M+",
+    boxOffice: "136C",
+    adSpend: "10M+",
+    theatricalRun: "50+",
   },
   {
     title: "Manjummel Boys",
     image: "Manjummel Boys.jpeg",
     footfall: "11.5M+",
+    boxOffice: "240C",
+    adSpend: "10M+",
+    theatricalRun: "100",
   },
   {
     title: "K.G.F: Chapter 2",
     image: "kgf2.jpeg",
     footfall: "53M+",
+    boxOffice: "1250C",
+    adSpend: "10M+",
+    theatricalRun: "100",
   },
 ];
 
@@ -167,15 +191,15 @@ export default function MovieMetrics() {
                   Footfall
                 </span>
                 <span>
-                  <strong>10M+</strong>
+                  <strong>{selectedMovie.boxOffice}</strong>
                   Box Office
                 </span>
                 <span>
-                  <strong>10M+</strong>
+                  <strong>{selectedMovie.adSpend}</strong>
                   Ad Spend
                 </span>
                 <span>
-                  <strong>10M+</strong>
+                  <strong>{selectedMovie.theatricalRun}</strong>
                   Theatrical Run
                 </span>
               </div>

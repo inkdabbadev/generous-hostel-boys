@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="Layer_2" data-name="Layer 2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 282.47 250.51">
+  <defs>
+    <style>
+      .cls-1 {
+        font-family: InstrumentSans-Bold, 'Instrument Sans';
+        font-size: 82.15px;
+        font-variation-settings: 'wdth' 100, 'wght' 700;
+        font-weight: 700;
+        stroke: #000;
+        stroke-miterlimit: 10;
+        stroke-width: 1.91px;
+      }
+    </style>
+  </defs>
+  <g id="Layer_1-2" data-name="Layer 1">
+    <g>
+      <text class="cls-1" transform="translate(.95 225.24)"><tspan x="0" y="0">LAKHS</tspan></text>
+      <text class="cls-1" transform="translate(.95 148.42)"><tspan x="0" y="0">LAKHS</tspan></text>
+      <text class="cls-1" transform="translate(.95 71.61)"><tspan x="0" y="0">LAKHS</tspan></text>
+    </g>
+  </g>
+</svg>

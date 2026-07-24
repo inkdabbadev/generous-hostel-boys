@@ -34,6 +34,13 @@ function sectionHandledInternalStep(section: HTMLElement, direction: 1 | -1) {
   return event.defaultPrevented;
 }
 
+function hasModalScrollSurface() {
+  return Boolean(
+    document.querySelector(".movieMetricPaperOverlay") ||
+      document.querySelector(".historyOnlinePanel"),
+  );
+}
+
 export default function SectionJumpNavigation() {
   const isJumpingRef = useRef(false);
   const jumpTimeoutRef = useRef<number | null>(null);
@@ -109,6 +116,10 @@ export default function SectionJumpNavigation() {
         return;
       }
 
+      if (hasModalScrollSurface()) {
+        return;
+      }
+
       const direction = event.deltaY > 0 ? 1 : event.deltaY < 0 ? -1 : 0;
 
       if (direction === 0) {
@@ -124,7 +135,7 @@ export default function SectionJumpNavigation() {
     };
 
     const onKeyDown = (event: KeyboardEvent) => {
-      if (document.querySelector(".movieMetricPaperOverlay")) {
+      if (hasModalScrollSurface()) {
         return;
       }
 

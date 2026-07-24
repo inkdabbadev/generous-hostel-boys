@@ -1,101 +1,56 @@
 "use client";
 
-import { motion } from "framer-motion";
-import { useState, type CSSProperties } from "react";
+import { motion, useAnimation } from "framer-motion";
+import { useEffect, useRef } from "react";
 
-type Notice = {
-  alt: string;
-  className: string;
-  delay: number;
-  src: string;
-  style: CSSProperties;
-};
-
-const notices: Notice[] = [
-  {
-    alt: "Kannada Screens review of Hostel Hudugaru Bekagiddare",
-    className: "noticeboard2Card noticeboard2CardLeft",
-    delay: 0.16,
-    src: "/board2/Asset%2013%201.png",
-    style: { left: "12.6%", top: "26.2%", width: "16.25%" },
-  },
-  {
-    alt: "South First review of Hostel Hudugaru Bekagiddare",
-    className: "noticeboard2Card noticeboard2CardTopSecond",
-    delay: 0.28,
-    src: "/board2/Asset%2015%201.png",
-    style: { left: "29.9%", top: "26.2%", width: "12%" },
-  },
-  {
-    alt: "News report about the box office performance of Hostel Hudugaru Bekagiddare",
-    className: "noticeboard2Card noticeboard2CardBottomSecond",
-    delay: 0.4,
-    src: "/board2/Asset%2014%201.png",
-    style: { left: "29.9%", top: "49.8%", width: "12%" },
-  },
-  {
-    alt: "India Today review of Hostel Hudugaru Bekagiddare",
-    className: "noticeboard2Card noticeboard2CardTopCenter",
-    delay: 0.52,
-    src: "/board2/Asset%2010%201.png",
-    style: { left: "42.8%", top: "26.2%", width: "21.8%" },
-  },
-  {
-    alt: "Kannada film listing for Hostel Hudugaru Bekagiddare",
-    className: "noticeboard2Card noticeboard2CardBottomCenterLeft",
-    delay: 0.64,
-    src: "/board2/Asset%2011%201.png",
-    style: { left: "42.8%", top: "57.6%", width: "10.2%" },
-  },
-  {
-    alt: "Pinkvilla article about Hostel Hudugaru Bekagiddare",
-    className: "noticeboard2Card noticeboard2CardBottomCenterRight",
-    delay: 0.76,
-    src: "/board2/Asset%2012%201.png",
-    style: { left: "53.8%", top: "57.6%", width: "10.8%" },
-  },
-  {
-    alt: "Daily News Karnataka report about the Hostel Hudugaru Bekagiddare press meet",
-    className: "noticeboard2Card noticeboard2CardRight",
-    delay: 0.88,
-    src: "/board2/Asset%2016%201.png",
-    style: { left: "65.6%", top: "26.2%", width: "20.7%" },
-  },
-];
-
-const stickers = [
-  {
-    delay: 0.08,
-    src: "/board2/Group%2028.png",
-    style: { left: "42.95%", top: "71.8%", width: "10.1%" },
-  },
-  {
-    delay: 0.26,
-    src: "/board2/Group%2033.png",
-    style: { left: "67.1%", top: "64.5%", width: "19.3%" },
-  },
-] satisfies Array<{
-  delay: number;
-  src: string;
-  style: CSSProperties;
-}>;
+const papers = ["1.png", "2.png", "3.png", "4.png", "5.png", "6.png", "7.png"];
+const tapes = ["1.png", "2.png"];
 
 export default function Noticeboard2() {
-  const [completedNotices, setCompletedNotices] = useState(0);
-  const allNoticesComplete = completedNotices === notices.length;
+  const sectionRef = useRef<HTMLElement>(null);
+  const controls = useAnimation();
+
+  useEffect(() => {
+    const section = sectionRef.current;
+
+    if (!section) {
+      return;
+    }
+
+    controls.set("hidden");
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        const nextIsVisible = entry.isIntersecting && entry.intersectionRatio >= 0.34;
+
+        if (nextIsVisible) {
+          controls.set("hidden");
+          requestAnimationFrame(() => {
+            void controls.start("show");
+          });
+          return;
+        }
+
+        controls.set("hidden");
+      },
+      { threshold: [0, 0.34] },
+    );
+
+    observer.observe(section);
+
+    return () => observer.disconnect();
+  }, [controls]);
 
   return (
-    <motion.section
-      aria-label="Noticeboard press coverage"
+    <section
+      aria-label="Noticeboard layered paper sequence"
       className="noticeboardSection noticeboard2Section"
-      initial="hidden"
-      onViewportEnter={() => setCompletedNotices(0)}
-      onViewportLeave={() => setCompletedNotices(0)}
-      viewport={{ once: false, amount: 0.32 }}
-      whileInView="show"
+      ref={sectionRef}
     >
       <motion.h2
+        animate={controls}
         className="noticeboardOverlayTitle"
+        initial="hidden"
         transition={{ delay: 0.04, duration: 0.58, ease: [0.16, 1, 0.3, 1] }}
         variants={{
           hidden: { opacity: 0, y: -34, scale: 0.94, filter: "blur(10px)" },
@@ -104,72 +59,63 @@ export default function Noticeboard2() {
       >
         Noticeboard
       </motion.h2>
-      <div className="noticeboard2Shell">
-        {notices.map((notice, index) => (
+      <div className="noticeboardLayerShell">
+        {papers.map((paper, index) => (
           <motion.img
-            alt={notice.alt}
-            className={notice.className}
+            alt=""
+            animate={controls}
+            aria-hidden="true"
+            className="noticeboardLayerPaper"
             draggable={false}
-            key={notice.src}
-            onAnimationComplete={(definition) => {
-              if (definition === "show") {
-                setCompletedNotices((count) =>
-                  Math.min(count + 1, notices.length),
-                );
-              }
-            }}
-            src={notice.src}
-            style={notice.style}
+            initial="hidden"
+            key={paper}
+            src={`/notice/board2/paper/${paper}`}
             transition={{
-              delay: notice.delay,
-              duration: 0.78,
+              delay: index * 0.22,
+              duration: 0.68,
               ease: [0.16, 1, 0.3, 1],
             }}
             variants={{
               hidden: {
                 opacity: 0,
-                scale: 0.82,
-                rotateZ: index % 2 === 0 ? -2.5 : 2.5,
-                y: 52,
-                filter: "blur(10px) brightness(1.25)",
+                scale: 0.96,
+                y: 42,
+                filter: "blur(10px) brightness(1.18)",
               },
               show: {
                 opacity: 1,
                 scale: 1,
-                rotateZ: 0,
                 y: 0,
                 filter: "blur(0px) brightness(1)",
               },
             }}
           />
         ))}
-        {stickers.map((sticker, index) => (
+        {tapes.map((tape, index) => (
           <motion.img
             alt=""
+            animate={controls}
             aria-hidden="true"
-            animate={allNoticesComplete ? "show" : "hidden"}
-            className="noticeboard2Sticker"
+            className="noticeboardLayerTape"
             draggable={false}
-            key={sticker.src}
-            src={sticker.src}
-            style={sticker.style}
+            initial="hidden"
+            key={tape}
+            src={`/notice/board2/tape/${tape}`}
             transition={{
-              delay: sticker.delay,
+              delay: papers.length * 0.22 + 0.46 + index * 0.16,
               duration: 0.62,
-              ease: [0.14, 1.32, 0.28, 1],
+              ease: [0.16, 1, 0.3, 1],
             }}
             variants={{
               hidden: {
                 opacity: 0,
-                scale: 1.32,
-                rotateZ: index === 0 ? -7 : 6,
-                y: -30,
-                filter: "blur(7px) brightness(1.25)",
+                scale: 1.08,
+                y: -26,
+                filter: "blur(8px) brightness(1.2)",
               },
               show: {
                 opacity: 1,
-                scale: [1, 0.94, 1.025, 1],
-                rotateZ: 0,
+                scale: 1,
                 y: 0,
                 filter: "blur(0px) brightness(1)",
               },
@@ -177,6 +123,6 @@ export default function Noticeboard2() {
           />
         ))}
       </div>
-    </motion.section>
+    </section>
   );
 }

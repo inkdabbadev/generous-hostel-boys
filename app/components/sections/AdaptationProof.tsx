@@ -1,37 +1,15 @@
 "use client";
 
-import { motion, useAnimation } from "framer-motion";
-import { useEffect, useRef } from "react";
+import { motion } from "framer-motion";
+import { useEffect, useRef, useState } from "react";
 
-const questions = ["OK ....", "But why in TAMIL NADU ?", "After 3 years ???"];
-
-const cards = [
-  {
-    kicker: "Audience",
-    title: "Tamil Nadu Pull",
-    body: "Tamil Nadu has more 18-35 greater than Karnataka and Telangana.",
-    layoutClass: "adaptationReasonCardLead",
-  },
-  {
-    kicker: "Localization",
-    title: "10% Reshot",
-    body: "10% is reshot using Tamil actors.",
-    layoutClass: "adaptationReasonCardMiddle",
-  },
-  {
-    kicker: "Craft",
-    title: "300 CGI Shots",
-    body: "300 shots redone in CGI.",
-    layoutClass: "adaptationReasonCardBottom",
-  },
-];
+type AdaptationStage = "ok" | "tamilnadu" | "years" | "hostelC1" | "hostelC2" | "hostelC3";
 
 export default function AdaptationProof() {
   const sectionRef = useRef<HTMLElement>(null);
-  const questionControls = useAnimation();
-  const cardControls = useAnimation();
-  const phaseRef = useRef(0);
-  const isSteppingRef = useRef(false);
+  const swapTimeoutRef = useRef<number | null>(null);
+  const stageRef = useRef<AdaptationStage>("ok");
+  const [stage, setStage] = useState<AdaptationStage>("ok");
 
   useEffect(() => {
     const section = sectionRef.current;
@@ -40,54 +18,47 @@ export default function AdaptationProof() {
       return;
     }
 
-    const resetAnimation = () => {
-      phaseRef.current = 0;
-      isSteppingRef.current = false;
-      questionControls.set("hidden");
-      cardControls.set("hidden");
-    };
-
-    const lockAdaptationView = () => {
-      window.scrollTo({
-        top: section.offsetTop,
-        behavior: "auto",
-      });
-    };
-
-    const adaptationIsPinned = () => {
-      const rect = section.getBoundingClientRect();
-      return rect.top <= 2 && rect.bottom >= window.innerHeight - 2;
-    };
-
-    const showCards = () => {
-      if (isSteppingRef.current) {
-        return;
+    const clearSwapTimeout = () => {
+      if (swapTimeoutRef.current !== null) {
+        window.clearTimeout(swapTimeoutRef.current);
+        swapTimeoutRef.current = null;
       }
-
-      isSteppingRef.current = true;
-      phaseRef.current = 1;
-      lockAdaptationView();
-      void cardControls.start("show");
-
-      window.setTimeout(() => {
-        isSteppingRef.current = false;
-      }, 860);
     };
 
-    const hideCards = () => {
-      if (isSteppingRef.current) {
-        return;
-      }
-
-      isSteppingRef.current = true;
-      phaseRef.current = 0;
-      lockAdaptationView();
-      cardControls.set("hidden");
-
-      window.setTimeout(() => {
-        isSteppingRef.current = false;
-      }, 360);
+    const resetScene = () => {
+      clearSwapTimeout();
+      stageRef.current = "ok";
+      setStage("ok");
     };
+
+    const startScene = () => {
+      resetScene();
+      swapTimeoutRef.current = window.setTimeout(() => {
+        stageRef.current = "tamilnadu";
+        setStage("tamilnadu");
+        swapTimeoutRef.current = null;
+      }, 1000);
+    };
+
+    const setSceneStage = (nextStage: AdaptationStage) => {
+      clearSwapTimeout();
+      stageRef.current = nextStage;
+      setStage(nextStage);
+    };
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting && entry.intersectionRatio >= 0.36) {
+          startScene();
+          return;
+        }
+
+        resetScene();
+      },
+      { threshold: [0, 0.36] },
+    );
+
+    observer.observe(section);
 
     const onSectionJumpIntent = (event: Event) => {
       const customEvent = event as CustomEvent<{
@@ -95,163 +66,326 @@ export default function AdaptationProof() {
         section: HTMLElement;
       }>;
 
-      if (customEvent.detail.section !== section || !adaptationIsPinned()) {
+      if (customEvent.detail.section !== section) {
         return;
       }
 
       const { direction } = customEvent.detail;
-      const canShowCards = direction === 1 && phaseRef.current === 0;
-      const canHideCards = direction === -1 && phaseRef.current === 1;
 
-      if (!canShowCards && !canHideCards) {
+      if (direction === 1 && stageRef.current === "ok") {
+        customEvent.preventDefault();
+        setSceneStage("tamilnadu");
         return;
       }
 
-      customEvent.preventDefault();
-
-      if (canShowCards) {
-        showCards();
+      if (direction === 1 && stageRef.current === "tamilnadu") {
+        customEvent.preventDefault();
+        setSceneStage("years");
         return;
       }
 
-      hideCards();
+      if (direction === 1 && stageRef.current === "years") {
+        customEvent.preventDefault();
+        setSceneStage("hostelC1");
+        return;
+      }
+
+      if (direction === 1 && stageRef.current === "hostelC1") {
+        customEvent.preventDefault();
+        setSceneStage("hostelC2");
+        return;
+      }
+
+      if (direction === 1 && stageRef.current === "hostelC2") {
+        customEvent.preventDefault();
+        setSceneStage("hostelC3");
+        return;
+      }
+
+      if (direction === -1 && stageRef.current === "hostelC3") {
+        customEvent.preventDefault();
+        setSceneStage("hostelC2");
+        return;
+      }
+
+      if (direction === -1 && stageRef.current === "hostelC2") {
+        customEvent.preventDefault();
+        setSceneStage("hostelC1");
+        return;
+      }
+
+      if (direction === -1 && stageRef.current === "hostelC1") {
+        customEvent.preventDefault();
+        setSceneStage("years");
+        return;
+      }
+
+      if (direction === -1 && stageRef.current === "years") {
+        customEvent.preventDefault();
+        setSceneStage("tamilnadu");
+      }
     };
 
-    resetAnimation();
-
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting && entry.intersectionRatio >= 0.36) {
-          resetAnimation();
-          void questionControls.start("show");
-          return;
-        }
-
-        resetAnimation();
-      },
-      { threshold: [0, 0.36] },
-    );
-
-    observer.observe(section);
     window.addEventListener("section-jump:intent", onSectionJumpIntent);
 
     return () => {
       observer.disconnect();
       window.removeEventListener("section-jump:intent", onSectionJumpIntent);
+      clearSwapTimeout();
     };
-  }, [cardControls, questionControls]);
+  }, []);
 
   return (
-    <motion.section
-      className="adaptationProof"
+    <section
       aria-label="Tamil adaptation proof"
+      className="adaptationProof adaptationProofTimed"
       ref={sectionRef}
     >
-      <div className="adaptationProofShell">
-        <div className="adaptationQuestionDeck">
-          <div className="adaptationQuestionStack">
-            {questions.map((question, lineIndex) => (
-              <motion.span
-                animate={questionControls}
-                className={`adaptationTypedLine ${lineIndex === 1 ? "isGold" : ""}`}
-                initial="hidden"
-                key={question}
-                transition={{
-                  delay: lineIndex * 1,
-                  duration: 0.32,
-                  ease: [0.16, 1, 0.3, 1],
-                }}
-                variants={{
-                  hidden: { opacity: 0, x: -22 },
-                  show: { opacity: 1, x: 0 },
-                }}
-              >
-                {question.split(" ").map((word, wordIndex) => (
-                  <motion.span
-                    className="adaptationTypedWord"
-                    key={`${question}-${word}-${wordIndex}`}
-                    transition={{
-                      delay: lineIndex * 1 + wordIndex * 0.08,
-                      duration: 0.38,
-                      ease: [0.16, 1, 0.3, 1],
-                    }}
-                    variants={{
-                      hidden: { opacity: 0, y: 20, clipPath: "inset(0% 100% 0% 0%)" },
-                      show: { opacity: 1, y: 0, clipPath: "inset(0% 0% 0% 0%)" },
-                    }}
-                  >
-                    {word}
-                  </motion.span>
-                ))}
-                <motion.i
-                  className="adaptationTypeCursor"
-                  transition={{
-                    delay: lineIndex * 1,
-                    duration: 0.86,
-                    ease: [0.16, 1, 0.3, 1],
-                  }}
-                  variants={{
-                    hidden: { opacity: 0, scaleX: 0 },
-                    show: { opacity: [0, 1, 1, 0], scaleX: [0, 1, 1, 0.08] },
-                  }}
-                />
-              </motion.span>
-            ))}
-          </div>
-        </div>
-
-        <div className="adaptationCardBoard" aria-label="Adaptation proof cards">
-          {cards.map((card, index) => (
-            <motion.article
-              animate={cardControls}
-              className={`adaptationReasonCard ${card.layoutClass}`}
-              initial="hidden"
-              key={card.title}
-              transition={{
-                delay: index * 0.15,
-                duration: 0.76,
-                ease: [0.14, 1.15, 0.28, 1],
-              }}
-              variants={{
-                hidden: {
-                  opacity: 0,
-                  x: 220,
-                  y: 74,
-                  rotateY: -24,
-                  rotateZ: index % 2 === 0 ? 7 : -7,
-                  scale: 0.92,
-                  filter: "blur(14px)",
-                },
-                show: {
+      {stage === "ok" ? (
+        <motion.h2
+          animate={{
+            opacity: 1,
+            rotateZ: [8, -3, 1, 0],
+            scale: [0.12, 1.34, 0.82, 1.08, 1],
+            y: [34, -10, 5, 0],
+          }}
+          className="adaptationOkTitle"
+          initial={{ opacity: 0, rotateZ: 8, scale: 0.12, y: 34 }}
+          key="ok"
+          transition={{ duration: 0.78, ease: [0.16, 1, 0.3, 1] }}
+        >
+          OK!
+        </motion.h2>
+      ) : stage.startsWith("hostel") ? (
+        <motion.div
+          animate={{ opacity: 1 }}
+          className="adaptationHostelScene"
+          initial={{ opacity: 0 }}
+          key="hostel"
+          transition={{ duration: 0.32, ease: [0.16, 1, 0.3, 1] }}
+        >
+          <motion.img
+            alt=""
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            aria-hidden="true"
+            className="adaptationHostelBg adaptationHostelCloud"
+            draggable={false}
+            initial={{ opacity: 0, scale: 1.04, y: -26 }}
+            src="/adaption/vjs%20bg1.png"
+            transition={{ duration: 0.05, ease: [0.16, 1, 0.3, 1] }}
+          />
+          <motion.img
+            alt=""
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            aria-hidden="true"
+            className="adaptationHostelBg adaptationHostelBuilding"
+            draggable={false}
+            initial={{ opacity: 0, scale: 1.035, y: 22 }}
+            src="/adaption/vjs%20bg2.png"
+            transition={{ delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
+          />
+          {stage === "hostelC1" ? (
+            <>
+              <motion.img
+                alt=""
+                animate={{ opacity: 1, scale: 1, x: 0, y: 0 }}
+                aria-hidden="true"
+                className="adaptationHostelBg adaptationHostelC1"
+                draggable={false}
+                initial={{ opacity: 0, scale: 0.92, x: 72, y: 54 }}
+                key="c1"
+                src="/adaption/c1.png"
+                transition={{ delay: 0.03, duration: 0.5, ease: [0.16, 1.08, 0.3, 1] }}
+              />
+              <motion.img
+                alt=""
+                animate={{
                   opacity: 1,
+                  rotate: [-3, 1.5, 0],
+                  scale: [0.82, 1.08, 1],
                   x: 0,
-                  y: 0,
-                  rotateY: 0,
-                  rotateZ: 0,
-                  scale: 1,
-                  filter: "blur(0px)",
-                },
-              }}
+                }}
+                aria-hidden="true"
+                className="adaptationHostelBg adaptationHostelC1Cover"
+                draggable={false}
+                initial={{ opacity: 0, rotate: -3, scale: 0.88, x: 56 }}
+                key="c1c"
+                src="/adaption/c1c.png"
+                transition={{ delay: 0.03, duration: 0.5, ease: [0.16, 1.12, 0.3, 1] }}
+              />
+            </>
+          ) : null}
+          {stage === "hostelC2" ? (
+            <motion.img
+              alt=""
+              animate={{ opacity: 1, scale: 1, x: 0, y: 0 }}
+              aria-hidden="true"
+              className="adaptationHostelBg adaptationHostelC2"
+              draggable={false}
+              initial={{ opacity: 0, scale: 1.04, x: 90, y: 24 }}
+              key="c2"
+              src="/adaption/c2.png"
+              transition={{ duration: 0.28, ease: [0.16, 1.08, 0.3, 1] }}
+            />
+          ) : null}
+          {stage === "hostelC3" ? (
+            <motion.img
+              alt=""
+              animate={{ opacity: 1, scale: 1, x: 0, y: 0 }}
+              aria-hidden="true"
+              className="adaptationHostelBg adaptationHostelC3"
+              draggable={false}
+              initial={{ opacity: 0, scale: 0.94, x: 96, y: 28 }}
+              key="c3"
+              src="/adaption/c3.png"
+              transition={{ duration: 0.3, ease: [0.16, 1.08, 0.3, 1] }}
+            />
+          ) : null}
+          <motion.div
+            animate={{ opacity: 1, x: 0, y: 0 }}
+            className={
+              stage === "hostelC2"
+                ? "adaptationHostelCopy adaptationHostelCopyCgi"
+                : "adaptationHostelCopy"
+            }
+            initial={{ opacity: 0, x: -92, y: 20 }}
+            key={`copy-${stage}`}
+            transition={{
+              delay: stage === "hostelC1" ? 1.5 : 0.08,
+              duration: stage === "hostelC1" ? 0.5 : 0.22,
+              ease: [0.16, 1.1, 0.3, 1],
+            }}
+          >
+            {stage === "hostelC2" ? (
+              <>
+                <strong>300+ CGI</strong>
+                <strong>SHOTS</strong>
+                <span>300+ SHOTS REDONE</span>
+                <span>IN CGI/VFX.</span>
+              </>
+            ) : (
+              <>
+                <strong>10%</strong>
+                <strong>RESHOT</strong>
+                <span>10% IS RESHOT USING</span>
+                <span>TAMIL ACTORS.</span>
+              </>
+            )}
+          </motion.div>
+        </motion.div>
+      ) : (
+        <motion.div
+          animate={{ opacity: 1 }}
+          className="adaptationTamilScene"
+          initial={{ opacity: 0 }}
+          key="scene"
+          transition={{ duration: 0.42, ease: [0.16, 1, 0.3, 1] }}
+        >
+          <motion.div
+            animate={{
+              opacity: 1,
+              scale: 1,
+              y: 0,
+              filter: "blur(0px)",
+            }}
+            className={stage === "years" ? "adaptationTamilText isYears" : "adaptationTamilText"}
+            initial={{
+              opacity: 0,
+              scale: stage === "years" ? 0.9 : 0.96,
+              y: stage === "years" ? 34 : 30,
+              filter: "blur(10px)",
+            }}
+            key={stage}
+            transition={{
+              delay: stage === "years" ? 0.12 : 0,
+              duration: stage === "years" ? 0.48 : 0.5,
+              ease: [0.16, 1, 0.3, 1],
+            }}
+          >
+            <motion.span
+              animate={{ opacity: 1, y: 0 }}
+              className="adaptationTamilTextWhite"
+              initial={{ opacity: 0, y: 22 }}
+              transition={{ delay: 0.05, duration: 0.48, ease: [0.16, 1, 0.3, 1] }}
             >
-              <span>{card.kicker}</span>
-              <strong>{card.title}</strong>
-              <motion.p
-                transition={{
-                  delay: 0.3 + index * 0.15,
-                  duration: 0.48,
-                  ease: [0.16, 1, 0.3, 1],
-                }}
-                variants={{
-                  hidden: { opacity: 0, y: 18, filter: "blur(8px)" },
-                  show: { opacity: 1, y: 0, filter: "blur(0px)" },
-                }}
-              >
-                {card.body}
-              </motion.p>
-            </motion.article>
-          ))}
-        </div>
-      </div>
-    </motion.section>
+              {stage === "years" ? (
+                "THAT TOO AFTER"
+              ) : (
+                <>
+                  BUT
+                  <br />
+                  WHY IN
+                  <br />
+                  TAMIL
+                </>
+              )}
+            </motion.span>
+            <motion.span
+              animate={{ opacity: 1, y: 0 }}
+              className="adaptationTamilTextGold"
+              initial={{ opacity: 0, y: 28 }}
+              transition={{ delay: 0.16, duration: 0.54, ease: [0.16, 1, 0.3, 1] }}
+            >
+              {stage === "years" ? "3 YEARS" : "NADU"}
+            </motion.span>
+          </motion.div>
+          <motion.img
+            alt=""
+            animate={{
+              opacity: 1,
+              scale: 1,
+              y: 0,
+              filter: "blur(0px) brightness(1)",
+            }}
+            aria-hidden="true"
+            className={
+              stage === "years"
+                ? "adaptationTamilImage adaptationTamilImageWhyOne"
+                : "adaptationTamilImage adaptationTamilImageWhyBase"
+            }
+            draggable={false}
+            initial={{
+              opacity: 0,
+              scale: stage === "years" ? 1.18 : 1.04,
+              y: stage === "years" ? 18 : 96,
+              filter: "blur(14px) brightness(1.2)",
+            }}
+            key="why1-plate"
+            src="/adaption/why1.png"
+            transition={{
+              delay: stage === "years" ? 0 : 0.04,
+              duration: stage === "years" ? 0.95 : 0.88,
+              ease: [0.16, 1, 0.3, 1],
+            }}
+          />
+          {stage === "years" ? (
+            <motion.img
+              alt=""
+              animate={{
+                opacity: 1,
+                rotate: 0,
+                scale: 1,
+                y: 0,
+              }}
+              aria-hidden="true"
+              className="adaptationYearsWarden"
+              draggable={false}
+              initial={{
+                opacity: 0,
+                rotate: -2,
+                scale: 0.9,
+                y: 130,
+              }}
+              src="/adaption/warden.png"
+              transition={{
+                delay: 0.08,
+                duration: 0.52,
+                ease: [0.16, 1, 0.3, 1],
+              }}
+            />
+          ) : null}
+        </motion.div>
+      )}
+    </section>
   );
 }

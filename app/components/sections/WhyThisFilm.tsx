@@ -1,5 +1,6 @@
 "use client";
 
+import { Volume2, VolumeX } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 
 const reviewDurationMs = 7100;
@@ -9,6 +10,7 @@ export default function WhyThisFilm() {
   const videoRef = useRef<HTMLVideoElement>(null);
   const reviewTimeoutRef = useRef<number | null>(null);
   const wasVisibleRef = useRef(false);
+  const [isMuted, setIsMuted] = useState(true);
   const [stage, setStage] = useState<"video" | "review">("video");
 
   useEffect(() => {
@@ -41,6 +43,8 @@ export default function WhyThisFilm() {
       }
 
       video.currentTime = 0;
+      video.muted = true;
+      setIsMuted(true);
       void video.play().catch(() => undefined);
     };
 
@@ -77,9 +81,23 @@ export default function WhyThisFilm() {
 
       if (video) {
         video.currentTime = 0;
+        video.muted = true;
+        setIsMuted(true);
         void video.play().catch(() => undefined);
       }
     }, reviewDurationMs);
+  };
+
+  const toggleSound = () => {
+    const video = videoRef.current;
+    const nextMuted = !isMuted;
+
+    setIsMuted(nextMuted);
+
+    if (video) {
+      video.muted = nextMuted;
+      void video.play().catch(() => undefined);
+    }
   };
 
   return (
@@ -93,14 +111,22 @@ export default function WhyThisFilm() {
         <div className="whyVideoFrame">
           <video
             autoPlay
-            controls
-            muted
+            muted={isMuted}
             onEnded={handleVideoEnded}
             playsInline
             preload="metadata"
             ref={videoRef}
             src="/why/video.mp4"
           />
+          <button
+            aria-label={isMuted ? "Turn video sound on" : "Turn video sound off"}
+            className="whyVideoSoundButton"
+            onClick={toggleSound}
+            type="button"
+          >
+            {isMuted ? <VolumeX aria-hidden="true" size={24} /> : <Volume2 aria-hidden="true" size={24} />}
+            <span>{isMuted ? "Sound" : "On"}</span>
+          </button>
         </div>
       </div>
       {stage === "review" ? (

@@ -1,0 +1,17 @@
+{
+  "name": "tamil-nadu-covered",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "build": "esbuild src/index.jsx --bundle --format=iife --platform=browser --target=es2019 --loader:.js=jsx --jsx=automatic --define:process.env.NODE_ENV='\"production\"' --outfile=build.js"
+  },
+  "dependencies": {
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "framer-motion": "^12.0.0",
+    "lucide-react": "^1.26.0"
+  },
+  "devDependencies": {
+    "esbuild": "^0.28.1"
+  }
+}
