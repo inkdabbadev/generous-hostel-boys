@@ -251,8 +251,8 @@ export default function AdaptationProof() {
             initial={{ opacity: 0, x: -92, y: 20 }}
             key={`copy-${stage}`}
             transition={{
-              delay: stage === "hostelC1" ? 1.5 : 0.08,
-              duration: stage === "hostelC1" ? 0.5 : 0.22,
+              delay: stage === "hostelC1" ? 0.3 : 0.08,
+              duration: stage === "hostelC1" ? 0.35 : 0.22,
               ease: [0.16, 1.1, 0.3, 1],
             }}
           >

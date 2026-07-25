@@ -1122,15 +1122,27 @@ function FitSlide({ children }: { children: React.ReactNode }) {
 
     let raf = 0;
 
+    // Union bounding box of every descendant (not just normal-flow content)
+    // so absolutely-positioned artwork (the hero slide's title/stat images)
+    // is measured too, not just flexbox/text content.
     const measure = () => {
       const availableHeight = outer.clientHeight;
-      inner.style.height = "auto";
-      const contentHeight = inner.scrollHeight;
-      inner.style.height = "100%";
-      const next =
-        availableHeight > 0 && contentHeight > availableHeight
-          ? availableHeight / contentHeight
-          : 1;
+      if (availableHeight <= 0) return;
+
+      const prevTransform = inner.style.transform;
+      inner.style.transform = "none";
+
+      const outerTop = outer.getBoundingClientRect().top;
+      let maxBottom = inner.getBoundingClientRect().bottom - outerTop;
+      const nodes = inner.querySelectorAll<HTMLElement>("*");
+      nodes.forEach((el) => {
+        const bottom = el.getBoundingClientRect().bottom - outerTop;
+        if (bottom > maxBottom) maxBottom = bottom;
+      });
+
+      inner.style.transform = prevTransform;
+
+      const next = maxBottom > availableHeight ? availableHeight / maxBottom : 1;
       setScale((prev) => (Math.abs(prev - next) > 0.004 ? next : prev));
     };
 
@@ -1147,10 +1159,15 @@ function FitSlide({ children }: { children: React.ReactNode }) {
     const mutationObserver = new MutationObserver(scheduleMeasure);
     mutationObserver.observe(inner, { childList: true, subtree: true });
 
+    // Images (the hero slide's SVG/PNG artwork) report their real size only
+    // once loaded; "load" doesn't bubble, so listen on the capture phase.
+    inner.addEventListener("load", scheduleMeasure, true);
+
     return () => {
       if (raf) cancelAnimationFrame(raf);
       resizeObserver.disconnect();
       mutationObserver.disconnect();
+      inner.removeEventListener("load", scheduleMeasure, true);
     };
   }, []);
 

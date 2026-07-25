@@ -1,6 +1,7 @@
 "use client";
 
 import { motion, useMotionValue, useSpring } from "framer-motion";
+import type { PointerEvent } from "react";
 import type { HistoryPanel, HistoryStickyNote } from "./types";
 
 type StickyNoteButtonProps = {
@@ -21,105 +22,137 @@ export function StickyNoteButton({ note, onSelect }: StickyNoteButtonProps) {
     hoverY.set(0);
     hoverRotate.set(0);
   };
+  const panel = note.panel;
+  const handleClick = panel ? () => onSelect(panel) : undefined;
 
-  return (
-    <motion.button
-      aria-label={note.alt}
-      className="historyStickyNote"
-      initial={{
+  const noteContent = (
+    <motion.span
+      className="historyStickyHoverPlane"
+      style={{
+        rotate: springRotate,
+        x: springX,
+        y: springY,
+      }}
+    >
+      <img
+        alt=""
+        aria-hidden="true"
+        className="historyStickyPaper"
+        draggable={false}
+        src={note.src}
+      />
+      <span className="historyStickyLabel" style={note.labelStyle}>
+        <motion.span
+          className="historyStickyLabelText"
+          transition={{
+            delay: note.labelDelay,
+            duration: 0.36,
+            ease: [0.16, 1, 0.3, 1],
+          }}
+          variants={{
+            hidden: {
+              opacity: 0,
+              scale: 0.82,
+              y: 8,
+            },
+            show: {
+              opacity: 1,
+              scale: 1,
+              y: 0,
+            },
+          }}
+        >
+          {note.label}
+        </motion.span>
+      </span>
+    </motion.span>
+  );
+
+  const motionProps = {
+    initial: {
+      opacity: 0,
+      rotate: note.rotate - 7,
+      scale: 1.18,
+      y: -34,
+    },
+    onPointerLeave: resetHover,
+    onPointerMove: (event: PointerEvent<HTMLElement>) => {
+      const rect = event.currentTarget.getBoundingClientRect();
+      const relX = (event.clientX - rect.left) / rect.width - 0.5;
+      const relY = (event.clientY - rect.top) / rect.height - 0.5;
+
+      hoverX.set(relX * 24);
+      hoverY.set(relY * 18);
+      hoverRotate.set(relX * 7 - relY * 2);
+    },
+    style: note.style,
+    transition: {
+      delay: note.delay,
+      duration: 0.58,
+      ease: [0.16, 1, 0.3, 1] as const,
+    },
+    variants: {
+      hidden: {
         opacity: 0,
         rotate: note.rotate - 7,
         scale: 1.18,
         y: -34,
-      }}
-      onClick={() => {
-        if (note.panel) {
-          onSelect(note.panel);
-        }
-      }}
-      onPointerLeave={resetHover}
-      onPointerMove={(event) => {
-        const rect = event.currentTarget.getBoundingClientRect();
-        const relX = (event.clientX - rect.left) / rect.width - 0.5;
-        const relY = (event.clientY - rect.top) / rect.height - 0.5;
+      },
+      show: {
+        opacity: 1,
+        rotate: note.rotate,
+        scale: 1,
+        y: 0,
+      },
+    },
+    whileFocus: {
+      scale: 1.035,
+      zIndex: 8,
+    },
+    whileHover: {
+      scale: 1.035,
+      zIndex: 8,
+    },
+    whileTap: {
+      scale: 0.97,
+    },
+  };
 
-        hoverX.set(relX * 24);
-        hoverY.set(relY * 18);
-        hoverRotate.set(relX * 7 - relY * 2);
-      }}
-      style={note.style}
-      transition={{
-        delay: note.delay,
-        duration: 0.58,
-        ease: [0.16, 1, 0.3, 1],
-      }}
-      type="button"
-      variants={{
-        hidden: {
-          opacity: 0,
-          rotate: note.rotate - 7,
-          scale: 1.18,
-          y: -34,
-        },
-        show: {
-          opacity: 1,
-          rotate: note.rotate,
-          scale: 1,
-          y: 0,
-        },
-      }}
-      whileFocus={{
-        scale: 1.035,
-        zIndex: 8,
-      }}
-      whileHover={{
-        scale: 1.035,
-        zIndex: 8,
-      }}
-      whileTap={{
-        scale: 0.97,
-      }}
-    >
-      <motion.span
-        className="historyStickyHoverPlane"
-        style={{
-          rotate: springRotate,
-          x: springX,
-          y: springY,
-        }}
+  if (note.href) {
+    return (
+      <motion.a
+        {...motionProps}
+        aria-label={note.alt}
+        className="historyStickyNote"
+        href={note.href}
       >
-        <img
-          alt=""
-          aria-hidden="true"
-          className="historyStickyPaper"
-          draggable={false}
-          src={note.src}
-        />
-        <span className="historyStickyLabel" style={note.labelStyle}>
-          <motion.span
-            className="historyStickyLabelText"
-            transition={{
-              delay: note.labelDelay,
-              duration: 0.36,
-              ease: [0.16, 1, 0.3, 1],
-            }}
-            variants={{
-              hidden: {
-                opacity: 0,
-                scale: 0.82,
-                y: 8,
-              },
-              show: {
-                opacity: 1,
-                scale: 1,
-                y: 0,
-              },
-            }}
-          >
-            {note.label}
-          </motion.span>
-        </span>
-      </motion.span>
+        {noteContent}
+      </motion.a>
+    );
+  }
+
+  if (!handleClick) {
+    return (
+      <motion.div
+        {...motionProps}
+        aria-label={note.alt}
+        className="historyStickyNote"
+        role="img"
+      >
+        {noteContent}
+      </motion.div>
+    );
+  }
+
+  return (
+    <motion.button
+      {...motionProps}
+      aria-label={note.alt}
+      className="historyStickyNote"
+      onClick={handleClick}
+      type="button"
+    >
+      {noteContent}
     </motion.button>
   );
 }

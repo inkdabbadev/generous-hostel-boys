@@ -53,7 +53,6 @@ export default function Home() {
           </h1>
         </div>
       </section> */}
-
       {/* <AboutExperience />
       <CoreCapabilities /> */}
       <RegionalAudience />
@@ -70,7 +69,8 @@ export default function Home() {
       <HistorySection />
       <PremiumSlot />
       <MarketingMediaPlanTable />
-
     </main>
   );
 }
+
+

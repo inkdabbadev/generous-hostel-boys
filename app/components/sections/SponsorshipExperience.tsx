@@ -42,14 +42,14 @@ export default function SponsorshipExperience() {
         draggable={false}
       />
       <img
-        className="sponsorshipEcho pointer-events-none absolute bottom-[clamp(0px,1.8vh,18px)] left-0 z-[1] block h-auto w-[clamp(580px,64vw,1120px)] select-none max-[640px]:bottom-0 max-[640px]:w-[clamp(560px,156vw,940px)]"
+        className="sponsorshipEcho pointer-events-none absolute bottom-[clamp(0px,1.8vh,18px)] left-0 z-[4] block h-auto w-[clamp(580px,64vw,1120px)] select-none max-[640px]:bottom-0 max-[640px]:w-[clamp(560px,156vw,940px)]"
         src="/sponsership/echo-with-echo.gif"
         alt=""
         aria-hidden="true"
         draggable={false}
       />
       <img
-        className="pointer-events-none absolute bottom-0 left-1/2 z-[2] block w-full max-w-none -translate-x-1/2 select-none"
+        className="pointer-events-none absolute bottom-0 left-1/2 z-[6] block w-full max-w-none -translate-x-1/2 select-none"
         src="/sponsership/fg.png"
         alt=""
         aria-hidden="true"

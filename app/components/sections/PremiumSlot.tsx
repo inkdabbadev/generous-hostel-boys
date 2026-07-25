@@ -168,6 +168,21 @@ export default function PremiumSlot() {
     }, 1500);
   }, [machineReady]);
 
+  const pullLever = useCallback(() => {
+    if (!machineReady || spinning || performance.now() < spinInputLockUntilRef.current) return;
+
+    if (!hasSpunRef.current) {
+      spin(stageRef.current, 1);
+      return;
+    }
+
+    if (stageRef.current < 10) {
+      const nextStage = (stageRef.current + 1) as 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10;
+      hasSpunRef.current = false;
+      spin(nextStage, 1);
+    }
+  }, [machineReady, spin, spinning]);
+
   useEffect(() => {
     const section = sectionRef.current;
     if (!section) return;
@@ -392,8 +407,8 @@ export default function PremiumSlot() {
             <button
               aria-label="Slot lever"
               className={`premiumSlotLever premiumAssetLever${spinning ? " isPulled" : ""}`}
-              disabled={!machineReady || hasSpunRef.current}
-              onClick={() => spin()}
+              disabled={!machineReady || spinning || stage === 10}
+              onClick={pullLever}
               type="button"
             >
               <span className="premiumSlotLeverTrack" aria-hidden="true">

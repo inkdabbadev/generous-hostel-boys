@@ -9,6 +9,7 @@ export type HistoryPanel = "online" | "offline" | "ideas";
 export type HistoryStickyNote = {
   alt: string;
   delay: number;
+  href?: string;
   label: string;
   labelDelay: number;
   labelStyle: CSSVariableStyle;

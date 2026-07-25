@@ -83,7 +83,7 @@ export const stickyNotes: HistoryStickyNote[] = [
     style: historyLayout.stickyOfflineRight,
   },
   {
-    alt: "Offline",
+    alt: "The Ideas",
     delay: 2.69,
     labelDelay: 3.06,
     labelStyle: {
@@ -175,27 +175,6 @@ export const onlineFeatureCards = [
     src: "/history/online/3.png",
   },
 ];
-
-export const ideaCards = [
-  {
-    detailBody: "A premium launch moment built for photos, creator arrivals, college chatter and first-night social proof.",
-    detailKicker: "A Grand Premiere",
-    detailTitle: "Redcarpet\nShow",
-    id: "redcarpet",
-    label: "Redcarpet\nShow",
-    src: "/history/theideas/redcarpet.png",
-  },
-  {
-    detailBody: "A playful on-ground night with games, teams, campus creators and shareable moments around the film.",
-    detailKicker: "A Campus Game Night",
-    detailTitle: "Game\nNight",
-    id: "gamenight",
-    label: "Game\nNight",
-    src: "/history/theideas/gamenight.png",
-  },
-];
-
-export type IdeaCard = (typeof ideaCards)[number];
 
 export const historyOnlineLayout = {
   panel: {
