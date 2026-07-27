@@ -12,7 +12,7 @@ const mediaImpactCards = [
   },
   {
     label: "Sustained",
-    value: "30",
+    value: "60",
     title: "Days of Promotion",
     copy: "A release-window burst designed to stay visible before, during and after the theatrical push.",
   },

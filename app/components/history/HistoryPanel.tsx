@@ -35,6 +35,11 @@ const onlineTextControls: Record<number, Partial<OnlineTextControl>> = {
   6: { x: "-52.5%" },
 };
 
+const offlineSlideOneMapLayers = [
+  { asset: "l1", delayOffset: 0.18 },
+  { asset: "l2", delayOffset: 0.42 },
+] as const;
+
 const offlineTransitNodes = [
   {
     activeIconSrc: "/history/offline/slide2/bicon1.svg",
@@ -77,6 +82,8 @@ const offlineSlideThreeTabs = [
 
 const offlineSlideThreeChooseOneImages = [
   "map",
+  "l1",
+  "l2",
   "a1",
   "a2",
   "a3",
@@ -85,8 +92,22 @@ const offlineSlideThreeChooseOneImages = [
   "a6",
 ] as const;
 
+const offlineSlideThreeChooseOneDots = [
+  { delay: "0s", size: 16, x: 1550, y: 200 },
+  { delay: "0s", size: 16, x: 1350, y: 252 },
+  { delay: "0.25s", size: 14, x: 1486, y: 318 },
+  { delay: "0.5s", size: 16, x: 1292, y: 422 },
+  { delay: "0.75s", size: 12, x: 1438, y: 482 },
+  { delay: "1s", size: 14, x: 1350, y: 558 },
+  { delay: "1.25s", size: 12, x: 1238, y: 548 },
+  { delay: "1.5s", size: 14, x: 1364, y: 682 },
+  { delay: "1.75s", size: 12, x: 1250, y: 718 },
+  { delay: "2s", size: 12, x: 1400, y: 350 },
+] as const;
+
 const offlineSlideThreeChooseTwoImages = [
   "map",
+  "l1",
   "a1",
   "a2",
   "a3",
@@ -96,6 +117,35 @@ const offlineSlideThreeChooseTwoImages = [
   "a7",
   "a8",
 ] as const;
+
+const offlineSlideThreeChooseThreeImages = [
+  "map",
+  "l1",
+  "l2",
+  "a1",
+  "a2",
+  "a3",
+  "a4",
+  "a5",
+  "a6",
+  "a7",
+] as const;
+
+const offlineSlideThreeChooseFourImages = [
+  "map",
+  "l1",
+  "a1",
+  "a2",
+  "a3",
+  "a4",
+  "a5",
+  "a6",
+  "a7",
+] as const;
+
+const offlineSlideFourImages = ["a1", "a2", "a3", "a4", "a5", "a6", "a7"] as const;
+
+const offlineImageSlides = ["img1", "img2", "img3", "img4", "img5", "img6"] as const;
 
 function OfflinePowerFlow() {
   return (
@@ -109,6 +159,7 @@ function OfflinePowerFlow() {
           style={{
             "--power-mask-x": `${-(207 + index * 244)}px`,
             "--power-index": String(index),
+            "--power-node-delay": `${0.72 + index * 0.9}s`,
           } as CSSProperties}
         >
           <span className="historyOfflinePowerNodeMask" />
@@ -132,6 +183,92 @@ function OfflinePowerFlow() {
         </div>
       ))}
     </div>
+  );
+}
+
+function AirportNetworkFlightOverlay() {
+  return (
+    <svg
+      aria-hidden="true"
+      className="historyOfflineAirportFlightOverlay"
+      viewBox="0 0 1790 950"
+    >
+      <defs>
+        <path
+          d="M 1198 482 C 1242 544 1332 546 1380 486"
+          id="airport-flight-path-1"
+        />
+        <path
+          d="M 1380 486 C 1368 360 1450 258 1576 212"
+          id="airport-flight-path-2"
+        />
+        <path
+          d="M 1198 482 C 1264 350 1418 228 1576 212"
+          id="airport-flight-path-3"
+        />
+        <path
+          d="M 1576 212 C 1418 228 1264 350 1198 482"
+          id="airport-flight-path-3-reverse"
+        />
+      </defs>
+      <use className="historyOfflineAirportRoute" href="#airport-flight-path-1" />
+      <use className="historyOfflineAirportRoute historyOfflineAirportRouteSecond" href="#airport-flight-path-2" />
+      <use className="historyOfflineAirportRoute historyOfflineAirportRouteThird" href="#airport-flight-path-3" />
+      {[
+        { x: 1198, y: 506 },
+        { x: 1380, y: 510 },
+        { x: 1576, y: 236 },
+      ].map((point, index) => (
+        <g
+          className="historyOfflineAirportPoint"
+          key={`${point.x}-${point.y}`}
+          style={{ "--airport-point-delay": `${0.3 + index * 0.18}s` } as CSSProperties}
+          transform={`translate(${point.x} ${point.y})`}
+        >
+          <circle className="historyOfflineAirportPointRing" r="25" />
+          <circle className="historyOfflineAirportPointCore" r="15" />
+        </g>
+      ))}
+      <g className="historyOfflineAirportPlaneIcon">
+        <image
+          height="42"
+          href="/history/offline/slide3/choose4/airplane.svg"
+          transform="rotate(90)"
+          width="42"
+          x="-21"
+          y="-21"
+        />
+        <animateMotion begin="1.95s" dur="2.5s" repeatCount="indefinite" rotate="auto">
+          <mpath href="#airport-flight-path-1" />
+        </animateMotion>
+      </g>
+      <g className="historyOfflineAirportPlaneIcon historyOfflineAirportPlaneIconSecond">
+        <image
+          height="42"
+          href="/history/offline/slide3/choose4/airplane.svg"
+          transform="rotate(90)"
+          width="42"
+          x="-21"
+          y="-21"
+        />
+        <animateMotion begin="3.2s" dur="2.9s" repeatCount="indefinite" rotate="auto">
+          <mpath href="#airport-flight-path-2" />
+        </animateMotion>
+      </g>
+      <g className="historyOfflineAirportPlaneIcon historyOfflineAirportPlaneIconThird">
+        <image
+          height="42"
+          href="/history/offline/slide3/choose4/airplane.svg"
+          transform="rotate(90)"
+          width="42"
+          x="-21"
+          y="-21"
+        />
+        <animateMotion begin="4.05s" dur="3.15s" repeatCount="indefinite" rotate="auto">
+          <mpath href="#airport-flight-path-3-reverse" />
+        </animateMotion>
+      </g>
+    </svg>
   );
 }
 
@@ -321,7 +458,7 @@ function OfflinePopupSlides() {
     useState<(typeof offlineSlideThreeTabs)[number]>("Statewide Digital");
   const isTriggerLocked = useRef(false);
   const previousSlideRef = useRef(0);
-  const slideCount = 3;
+  const slideCount = 4 + offlineImageSlides.length;
   const slideOneLayerDelay = slideOneReplayKey === 0 ? 0.24 : 0.72;
 
   const releaseTriggerLock = () => {
@@ -345,16 +482,20 @@ function OfflinePopupSlides() {
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.key === "ArrowDown" || event.key === "PageDown" || event.key === " ") {
         event.preventDefault();
+        event.stopPropagation();
+        event.stopImmediatePropagation();
         moveSlide(1);
       }
       if (event.key === "ArrowUp" || event.key === "PageUp") {
         event.preventDefault();
+        event.stopPropagation();
+        event.stopImmediatePropagation();
         moveSlide(-1);
       }
     };
 
-    window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
+    document.addEventListener("keydown", handleKeyDown, { capture: true });
+    return () => document.removeEventListener("keydown", handleKeyDown, { capture: true });
   }, []);
 
   useEffect(() => {
@@ -397,6 +538,23 @@ function OfflinePopupSlides() {
               draggable={false}
               src="/history/offline/slide1/text-map.png"
             />
+            {offlineSlideOneMapLayers.map((layer, index) => (
+              <motion.img
+                alt=""
+                animate={{ opacity: 1, scale: 1 }}
+                aria-hidden="true"
+                className={`historyOfflineMapLayer historyOfflineMapLayer-${layer.asset}`}
+                draggable={false}
+                initial={{ opacity: 0, scale: 1.035 }}
+                key={`${slideOneReplayKey}-${layer.asset}`}
+                src={`/history/offline/slide1/${layer.asset}.png`}
+                transition={{
+                  delay: slideOneLayerDelay + layer.delayOffset,
+                  duration: 0.5,
+                  ease: [0.16, 1, 0.3, 1],
+                }}
+              />
+            ))}
             {["a1", "a2", "a3", "a4"].map((asset, index) => (
               <motion.img
                 alt=""
@@ -459,7 +617,7 @@ function OfflinePopupSlides() {
                     alt=""
                     animate={{ opacity: 1, scale: 1 }}
                     aria-hidden="true"
-                    className="historyOfflineSlideThreeChoiceLayer"
+                    className="historyOfflineSlideThreeChoiceLayer historyOfflineSlideThreeChoiceLayerChoose1"
                     draggable={false}
                     initial={{ opacity: 0, scale: 1.04 }}
                     key={`choose1-${asset}`}
@@ -478,7 +636,7 @@ function OfflinePopupSlides() {
                   alt=""
                   animate={{ opacity: 1, scale: 1 }}
                   aria-hidden="true"
-                  className="historyOfflineSlideThreeChoiceLayer"
+                  className="historyOfflineSlideThreeChoiceLayer historyOfflineSlideThreeChoiceLayerChoose2"
                   draggable={false}
                   initial={{ opacity: 0, scale: 1.04 }}
                   key={`choose2-${asset}`}
@@ -491,6 +649,56 @@ function OfflinePopupSlides() {
                 />
               ))
               : null}
+            {activeSlideThreeTab === "Rest of Tamilnadu"
+              ? offlineSlideThreeChooseThreeImages.map((asset, index) => (
+                <motion.img
+                  alt=""
+                  animate={{
+                    opacity: 1,
+                    scale: asset === "map" || asset === "l1" || asset === "l2" ? 1 : 0.9,
+                  }}
+                  aria-hidden="true"
+                  className={`historyOfflineSlideThreeChoiceLayer historyOfflineSlideThreeChoiceLayerChoose3 historyOfflineSlideThreeChoiceLayerChoose3-${asset}`}
+                  draggable={false}
+                  initial={{
+                    opacity: 0,
+                    scale: asset === "map" || asset === "l1" || asset === "l2" ? 1.04 : 0.96,
+                  }}
+                  key={`choose3-${asset}`}
+                  src={`/history/offline/slide3/choose3/${asset}.png`}
+                  transition={{
+                    delay: 0.16 + index * 0.18,
+                    duration: 0.42,
+                    ease: [0.16, 1, 0.3, 1],
+                  }}
+                />
+              ))
+              : null}
+            {activeSlideThreeTab === "Airport Network"
+              ? offlineSlideThreeChooseFourImages.map((asset, index) => (
+                <motion.img
+                  alt=""
+                  animate={{ opacity: 1, scale: 1 }}
+                  aria-hidden="true"
+                  className={`historyOfflineSlideThreeChoiceLayer historyOfflineSlideThreeChoiceLayerChoose4 historyOfflineSlideThreeChoiceLayerChoose4-${asset}`}
+                  draggable={false}
+                  initial={{ opacity: 0, scale: 1.04 }}
+                  key={`choose4-${asset}`}
+                  src={`/history/offline/slide3/choose4/${asset}.png`}
+                  transition={{
+                    delay: 0.16 + index * 0.18,
+                    duration: 0.42,
+                    ease: [0.16, 1, 0.3, 1],
+                  }}
+                />
+              ))
+              : null}
+            {activeSlideThreeTab === "Airport Network" ? (
+              <>
+                <AirportNetworkFlightOverlay />
+                <span className="historyOfflineAirportCornerCleanup" aria-hidden="true" />
+              </>
+            ) : null}
             <div className="historyOfflineSlideThreeButtons">
               {offlineSlideThreeTabs.map((tab) => (
                 <button
@@ -505,6 +713,77 @@ function OfflinePopupSlides() {
             </div>
           </motion.div>
         ) : null}
+        {currentSlide >= 3 ? (
+          <motion.div
+            animate={{ y: 0 }}
+            className="historyOfflinePopupSlide historyOfflinePopupSlideFour"
+            exit={{ y: "108%" }}
+            initial={{ y: "108%" }}
+            key="offline-slide-4"
+            style={{ zIndex: 4 }}
+            transition={{ duration: 0.62, ease: [0.16, 1, 0.3, 1] }}
+          >
+            <img
+              alt=""
+              aria-hidden="true"
+              className="historyOfflineSlideFourBg"
+              draggable={false}
+              src="/history/offline/slide4/bg.png"
+            />
+            <div className="historyOfflineSlideFourTint" aria-hidden="true" />
+            <motion.h3
+              animate={{ opacity: 1, y: 0 }}
+              className="historyOfflineSlideFourTitle"
+              initial={{ opacity: 0, y: 24 }}
+              transition={{ delay: 0.14, duration: 0.46, ease: [0.16, 1, 0.3, 1] }}
+            >
+              <span>From Statewide Scale To</span>
+              <strong>City Level Frequency.</strong>
+            </motion.h3>
+            {offlineSlideFourImages.map((asset, index) => (
+              <motion.img
+                alt=""
+                animate={{ opacity: 1, scale: 1 }}
+                aria-hidden="true"
+                className={`historyOfflineSlideFourAsset historyOfflineSlideFourAsset-${asset}`}
+                draggable={false}
+                initial={{ opacity: 0, scale: 1.04 }}
+                key={`slide4-${asset}`}
+                src={`/history/offline/slide4/${asset}.png`}
+                transition={{
+                  delay: 0.34 + index * 0.12,
+                  duration: 0.38,
+                  ease: [0.16, 1, 0.3, 1],
+                }}
+              />
+            ))}
+          </motion.div>
+        ) : null}
+        {offlineImageSlides.map((asset, index) => {
+          const slideIndex = 4 + index;
+          return currentSlide >= slideIndex ? (
+            <motion.div
+              animate={{ y: 0 }}
+              className="historyOfflinePopupSlide historyOfflineImageSlide"
+              exit={{ y: "108%" }}
+              initial={{ y: "108%" }}
+              key={`offline-image-slide-${asset}`}
+              style={{ zIndex: slideIndex + 1 }}
+              transition={{ duration: 0.62, ease: [0.16, 1, 0.3, 1] }}
+            >
+              <motion.img
+                alt=""
+                animate={{ opacity: 1, scale: 1 }}
+                aria-hidden="true"
+                className="historyOfflineImageSlideAsset"
+                draggable={false}
+                initial={{ opacity: 0, scale: 1.02 }}
+                src={`/history/offline/images/${asset}.png`}
+                transition={{ delay: 0.12, duration: 0.42, ease: [0.16, 1, 0.3, 1] }}
+              />
+            </motion.div>
+          ) : null;
+        })}
       </AnimatePresence>
     </div>
   );
@@ -606,17 +885,14 @@ export function HistoryPanel({ activePanel, onClose }: HistoryPanelProps) {
   const [onlineView, setOnlineView] = useState<"overview" | "details">("overview");
   const [iframeUrl, setIframeUrl] = useState<string | null>(null);
   const isIframeOpen = Boolean(iframeUrl);
-  const isStructuredPanel = isOfflinePanel || isIdeasPanel;
+  const isStructuredPanel = isOnlinePanel || isOfflinePanel || isIdeasPanel;
+  const structuredPanelClassName = `historyOnlinePanel historyOfflinePanel${isOnlinePanel ? " historyOnlineStructuredPanel" : ""}${isOnlinePanel && onlineView === "details" ? " historyOnlineDetailPanel" : ""}${isIdeasPanel ? " historyIdeasPanel" : ""}`;
   const panelClassName =
     isIframeOpen
       ? "historyOnlinePanel historyOnlineFramePanel"
       : isStructuredPanel
-        ? `historyOnlinePanel historyOfflinePanel${isIdeasPanel ? " historyIdeasPanel" : ""}`
-          : isOnlinePanel && onlineView === "details"
-            ? "historyOnlinePanel historyOnlineOnlyPanel historyOnlineDetailPanel"
-            : isOnlinePanel
-              ? "historyOnlinePanel historyOnlineOnlyPanel"
-              : "historyOnlinePanel";
+        ? structuredPanelClassName
+        : "historyOnlinePanel";
   const panelStyle = isStructuredPanel && !isIframeOpen
     ? ({
         height: "950px",
@@ -685,7 +961,7 @@ export function HistoryPanel({ activePanel, onClose }: HistoryPanelProps) {
               onClick={() => setOnlineView("overview")}
               type="button"
             >
-              Back
+              <span aria-hidden="true" />
             </button>
           ) : null}
           <h3>{historyPanelTitles[activePanel]}</h3>

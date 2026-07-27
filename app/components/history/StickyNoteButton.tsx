@@ -41,30 +41,6 @@ export function StickyNoteButton({ note, onSelect }: StickyNoteButtonProps) {
         draggable={false}
         src={note.src}
       />
-      <span className="historyStickyLabel" style={note.labelStyle}>
-        <motion.span
-          className="historyStickyLabelText"
-          transition={{
-            delay: note.labelDelay,
-            duration: 0.36,
-            ease: [0.16, 1, 0.3, 1],
-          }}
-          variants={{
-            hidden: {
-              opacity: 0,
-              scale: 0.82,
-              y: 8,
-            },
-            show: {
-              opacity: 1,
-              scale: 1,
-              y: 0,
-            },
-          }}
-        >
-          {note.label}
-        </motion.span>
-      </span>
     </motion.span>
   );
 

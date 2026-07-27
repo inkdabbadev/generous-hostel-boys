@@ -263,6 +263,13 @@ export default function AdaptationProof() {
                 <span>300+ SHOTS REDONE</span>
                 <span>IN CGI/VFX.</span>
               </>
+            ) : stage === "hostelC3" ? (
+              <>
+                <strong>TAMILNADU</strong>
+                <strong>AUDIENCE</strong>
+                <span>TN HAS MORE 18-35 YEAR OLD</span>
+                <span>COMPARED TO KA OR AP/TG.</span>
+              </>
             ) : (
               <>
                 <strong>10%</strong>
@@ -271,6 +278,7 @@ export default function AdaptationProof() {
                 <span>TAMIL ACTORS.</span>
               </>
             )}
+            
           </motion.div>
         </motion.div>
       ) : (

@@ -83,7 +83,7 @@ const stageFinalAssets = [
     "/slot/3%20CR/Asset%2078.svg",
     "/slot/3%20CR/Asset%2077.svg",
     "/slot/3%20CR/Asset%2076.svg",
-    "/slot/3%20CR/Asset%2075.svg",
+    "/slot/3%20CR/Asset%2072.svg",
   ],
   [
     "/slot/10%20Lakhs/Asset%2045.svg",

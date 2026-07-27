@@ -18,6 +18,7 @@ import {
   PremiumSlot,
   RegionalAudience,
   SponsorshipExperience,
+  ThankYou,
   TitleScrollAnimation,
   WhyThisFilm,
 } from "./components/sections";
@@ -53,8 +54,8 @@ export default function Home() {
           </h1>
         </div>
       </section> */}
-      {/* <AboutExperience />
-      <CoreCapabilities /> */}
+      <AboutExperience />
+      {/* <CoreCapabilities /> */}
       <RegionalAudience />
       <HostelGenreProof />
       <MovieMetrics />
@@ -69,6 +70,7 @@ export default function Home() {
       <HistorySection />
       <PremiumSlot />
       <MarketingMediaPlanTable />
+      <ThankYou />
     </main>
   );
 }

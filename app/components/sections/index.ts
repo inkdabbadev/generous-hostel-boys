@@ -19,5 +19,6 @@ export { default as PremiumSlot } from "./PremiumSlot";
 export { default as PosterScroll } from "./poster-scroll";
 export { default as RegionalAudience } from "./RegionalAudience";
 export { default as SponsorshipExperience } from "./SponsorshipExperience";
+export { default as ThankYou } from "./ThankYou";
 export { default as TitleScrollAnimation } from "./TitleScrollAnimation";
 export { default as WhyThisFilm } from "./WhyThisFilm";

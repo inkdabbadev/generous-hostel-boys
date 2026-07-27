@@ -92,7 +92,7 @@ export const stickyNotes: HistoryStickyNote[] = [
       "--sticky-label-size": "clamp(1.95rem, 3.25vw, 4.25rem)",
       "--sticky-label-line-height": "0.88",
     },
-    label: "THE\nIDEAS",
+    label: "IDEAS",
     panel: "ideas",
     rotate: -1.1,
     src: "/history/sticky3.png",
