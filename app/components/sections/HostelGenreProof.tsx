@@ -3,22 +3,42 @@
 import { motion } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
 
-const maxHostelPhase = 3;
+const maxHostelPhase = 2;
 
 export default function HostelGenreProof() {
   const sectionRef = useRef<HTMLElement>(null);
   const phaseRef = useRef(0);
   const isSteppingRef = useRef(false);
+  const primaryTimerRef = useRef<number | null>(null);
   const [phase, setPhase] = useState(0);
+  const [primaryVisible, setPrimaryVisible] = useState(false);
   const [gifRun, setGifRun] = useState(0);
 
   useEffect(() => {
     const setStepPhase = (nextPhase: number) => {
       const clampedPhase = Math.min(Math.max(nextPhase, 0), maxHostelPhase);
+      if (primaryTimerRef.current !== null) {
+        window.clearTimeout(primaryTimerRef.current);
+        primaryTimerRef.current = null;
+      }
+
       phaseRef.current = clampedPhase;
       setPhase(clampedPhase);
 
+      if (clampedPhase <= 0) {
+        setPrimaryVisible(false);
+      }
+
+      if (clampedPhase === 1) {
+        setPrimaryVisible(false);
+        primaryTimerRef.current = window.setTimeout(() => {
+          setPrimaryVisible(true);
+          primaryTimerRef.current = null;
+        }, 1500);
+      }
+
       if (clampedPhase === maxHostelPhase) {
+        setPrimaryVisible(true);
         setGifRun((run) => run + 1);
       }
     };
@@ -160,6 +180,10 @@ export default function HostelGenreProof() {
     document.addEventListener("keydown", onKeyDown, { capture: true });
 
     return () => {
+      if (primaryTimerRef.current !== null) {
+        window.clearTimeout(primaryTimerRef.current);
+      }
+
       window.removeEventListener("wheel", onWheel);
       window.removeEventListener("section-jump:intent", onSectionJumpIntent);
       document.removeEventListener("keydown", onKeyDown, { capture: true });
@@ -225,13 +249,13 @@ export default function HostelGenreProof() {
                 <motion.img
                   animate={{
                     clipPath:
-                      phase >= 2 ? "circle(78% at 50% 50%)" : "circle(0% at 50% 50%)",
+                      primaryVisible ? "circle(78% at 50% 50%)" : "circle(0% at 50% 50%)",
                     filter:
-                      phase >= 2
+                      primaryVisible
                         ? "brightness(0.96) contrast(1.04) saturate(0.96)"
                         : "brightness(1.8) contrast(1.25) saturate(0.2)",
-                    opacity: phase >= 2 ? 1 : 0,
-                    scale: phase >= 2 ? 1.02 : 0.08,
+                    opacity: primaryVisible ? 1 : 0,
+                    scale: primaryVisible ? 1.02 : 0.08,
                   }}
                   className="hostelTvScreen"
                   alt=""
@@ -242,8 +266,8 @@ export default function HostelGenreProof() {
                 />
                 <motion.span
                   animate={{
-                    opacity: phase >= 2 ? [0, 1, 0] : 0,
-                    scaleX: phase >= 2 ? [0.06, 1, 0.8] : 0.06,
+                    opacity: primaryVisible ? [0, 1, 0] : 0,
+                    scaleX: primaryVisible ? [0.06, 1, 0.8] : 0.06,
                   }}
                   className="hostelTvPowerFlash"
                   transition={{ duration: 0.28, ease: [0.16, 1, 0.3, 1] }}
@@ -259,7 +283,7 @@ export default function HostelGenreProof() {
           ) : null}
         </motion.div>
       </div>
-      {phase >= 3 ? (
+      {phase >= 2 ? (
         <motion.div
           aria-hidden="true"
           animate={{ opacity: 1, scale: 1, y: 0 }}

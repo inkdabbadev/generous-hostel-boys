@@ -6,6 +6,7 @@ import { useEffect, useRef, useState } from "react";
 const movies = [
   {
     title: "Love Today",
+    year: "2022",
     image: "lovetoday.jpg",
     footfall: "6.5M+",
     boxOffice: "105C",
@@ -14,6 +15,7 @@ const movies = [
   },
   {
     title: "Youth",
+    year: "2002",
     image: "youth.jpg",
     footfall: "4.5M+",
     boxOffice: "72C",
@@ -22,6 +24,7 @@ const movies = [
   },
   {
     title: "Dragon",
+    year: "2025",
     image: "dragon.jpeg",
     footfall: "9M+",
     boxOffice: "150C",
@@ -30,6 +33,7 @@ const movies = [
   },
   {
     title: "K.G.F: Chapter 1",
+    year: null,
     image: "kgf1.jpeg",
     footfall: "35M+",
     boxOffice: "250C",
@@ -38,6 +42,7 @@ const movies = [
   },
   {
     title: "Kantara",
+    year: "2022",
     image: "kantara.jpeg",
     footfall: "10M+",
     boxOffice: "450C",
@@ -46,6 +51,7 @@ const movies = [
   },
   {
     title: "Premalu",
+    year: "2024",
     image: "Premalu.jpeg",
     footfall: "5M+",
     boxOffice: "136C",
@@ -54,6 +60,7 @@ const movies = [
   },
   {
     title: "Manjummel Boys",
+    year: "2024",
     image: "Manjummel Boys.jpeg",
     footfall: "11.5M+",
     boxOffice: "240C",
@@ -62,6 +69,7 @@ const movies = [
   },
   {
     title: "K.G.F: Chapter 2",
+    year: null,
     image: "kgf2.jpeg",
     footfall: "53M+",
     boxOffice: "1250C",
@@ -71,21 +79,6 @@ const movies = [
 ];
 
 type Movie = (typeof movies)[number];
-
-function splitTitleLines(title: string) {
-  if (title.startsWith("K.G.F:")) {
-    return ["K.G.F", title.replace("K.G.F:", "").trim()];
-  }
-
-  const words = title.split(" ");
-
-  if (words.length <= 1) {
-    return [title];
-  }
-
-  const midpoint = Math.ceil(words.length / 2);
-  return [words.slice(0, midpoint).join(" "), words.slice(midpoint).join(" ")];
-}
 
 export default function MovieMetrics() {
   const sectionRef = useRef<HTMLElement>(null);
@@ -161,14 +154,6 @@ export default function MovieMetrics() {
           role="dialog"
           onClick={() => setSelectedMovie(null)}
         >
-          <button
-            aria-label="Close movie metric paper"
-            className="movieMetricPaperClose"
-            onClick={() => setSelectedMovie(null)}
-            type="button"
-          >
-            x
-          </button>
           <div className="movieMetricPaperSheet" onClick={(event) => event.stopPropagation()}>
             <img
               alt=""
@@ -178,13 +163,39 @@ export default function MovieMetrics() {
               src="/moviemetrics/paper.png"
             />
             <div className="movieMetricPaperCopy">
-              <h3>
-                {splitTitleLines(selectedMovie.title).map((line, index) => (
-                  <span key={line} className={`movieMetricTitleLine movieMetricTitleLine${index + 1}`}>
-                    {line}
-                  </span>
-                ))}
-              </h3>
+              <div className="movieMetricPaperHeading">
+                <h3
+                  className={
+                  selectedMovie.title.startsWith("K.G.F:")
+                    ? "isKgfTitle"
+                    : selectedMovie.title === "Youth"
+                      ? "isYouthTitle"
+                    : selectedMovie.title.length > 12
+                      ? "isLongTitle"
+                      : undefined
+                  }
+                >
+                  {selectedMovie.title.startsWith("K.G.F:") ? (
+                    <>
+                      <span className="movieMetricTitleLine">K.G.F</span>
+                      <span className="movieMetricTitleLine">
+                        {selectedMovie.title.replace("K.G.F:", "").trim()}
+                      </span>
+                    </>
+                  ) : selectedMovie.title === "Manjummel Boys" ? (
+                    <span className="movieMetricTitleLine">
+                      Manjummel
+                      <br />
+                      Boys
+                    </span>
+                  ) : (
+                    <span className="movieMetricTitleLine">{selectedMovie.title}</span>
+                  )}
+                  {selectedMovie.year && selectedMovie.title !== "Manjummel Boys" ? (
+                    <span className="movieMetricReleaseYear">({selectedMovie.year})</span>
+                  ) : null}
+                </h3>
+              </div>
               <div className="movieMetricPaperStats" aria-label={`${selectedMovie.title} metrics`}>
                 <span>
                   <strong>{selectedMovie.footfall}</strong>
@@ -210,6 +221,14 @@ export default function MovieMetrics() {
               draggable={false}
               src={`/moviemetrics/${encodeURIComponent(selectedMovie.image)}`}
             />
+            <button
+              aria-label="Close movie metric paper"
+              className="movieMetricPaperClose"
+              onClick={() => setSelectedMovie(null)}
+              type="button"
+            >
+              ×
+            </button>
           </div>
         </div>
       ) : null}

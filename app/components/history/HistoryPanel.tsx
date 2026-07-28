@@ -32,7 +32,7 @@ const defaultOnlineTextControl: OnlineTextControl = {
 
 const onlineTextControls: Record<number, Partial<OnlineTextControl>> = {
   4: { x: "-54%" },
-  6: { x: "-52.5%" },
+  6: { x: "-50.8%", y: "-43.5%" },
 };
 
 const offlineSlideOneMapLayers = [
@@ -79,6 +79,10 @@ const offlineSlideThreeTabs = [
   "Rest of Tamilnadu",
   "Airport Network",
 ] as const;
+
+const offlineSlideThreeStartIndex = 2;
+const offlineSlideFourIndex = offlineSlideThreeStartIndex + offlineSlideThreeTabs.length;
+const offlineImageSlidesStartIndex = offlineSlideFourIndex + 1;
 
 const offlineSlideThreeChooseOneImages = [
   "map",
@@ -222,7 +226,7 @@ function AirportNetworkFlightOverlay() {
         <g
           className="historyOfflineAirportPoint"
           key={`${point.x}-${point.y}`}
-          style={{ "--airport-point-delay": `${0.3 + index * 0.18}s` } as CSSProperties}
+          style={{ "--airport-point-delay": `${0.08 + index * 0.08}s` } as CSSProperties}
           transform={`translate(${point.x} ${point.y})`}
         >
           <circle className="historyOfflineAirportPointRing" r="25" />
@@ -238,7 +242,7 @@ function AirportNetworkFlightOverlay() {
           x="-21"
           y="-21"
         />
-        <animateMotion begin="1.95s" dur="2.5s" repeatCount="indefinite" rotate="auto">
+        <animateMotion begin="0.38s" dur="2.5s" repeatCount="indefinite" rotate="auto">
           <mpath href="#airport-flight-path-1" />
         </animateMotion>
       </g>
@@ -251,7 +255,7 @@ function AirportNetworkFlightOverlay() {
           x="-21"
           y="-21"
         />
-        <animateMotion begin="3.2s" dur="2.9s" repeatCount="indefinite" rotate="auto">
+        <animateMotion begin="0.74s" dur="2.9s" repeatCount="indefinite" rotate="auto">
           <mpath href="#airport-flight-path-2" />
         </animateMotion>
       </g>
@@ -264,7 +268,7 @@ function AirportNetworkFlightOverlay() {
           x="-21"
           y="-21"
         />
-        <animateMotion begin="4.05s" dur="3.15s" repeatCount="indefinite" rotate="auto">
+        <animateMotion begin="1.02s" dur="3.15s" repeatCount="indefinite" rotate="auto">
           <mpath href="#airport-flight-path-3-reverse" />
         </animateMotion>
       </g>
@@ -339,6 +343,7 @@ function OnlinePaperCard({
       }}
       style={{
         "--online-card-delay": `${index * 72}ms`,
+        "--online-card-scale": card.id === 6 ? "1.065" : "1",
       } as CSSProperties}
       transition={{
         delay: 0.08 + card.id * 0.045,
@@ -415,7 +420,7 @@ function OnlineOverview({
         ))}
       </div>
       <button className="historyOnlineMore" onClick={onMore} type="button">
-        More...
+        More
       </button>
     </motion.div>
   );
@@ -454,12 +459,15 @@ function OnlineDetails() {
 function OfflinePopupSlides() {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [slideOneReplayKey, setSlideOneReplayKey] = useState(0);
-  const [activeSlideThreeTab, setActiveSlideThreeTab] =
-    useState<(typeof offlineSlideThreeTabs)[number]>("Statewide Digital");
   const isTriggerLocked = useRef(false);
   const previousSlideRef = useRef(0);
-  const slideCount = 4 + offlineImageSlides.length;
+  const slideCount = offlineImageSlidesStartIndex + offlineImageSlides.length;
   const slideOneLayerDelay = slideOneReplayKey === 0 ? 0.24 : 0.72;
+  const activeSlideThreeIndex = Math.min(
+    Math.max(currentSlide - offlineSlideThreeStartIndex, 0),
+    offlineSlideThreeTabs.length - 1,
+  );
+  const activeSlideThreeTab = offlineSlideThreeTabs[activeSlideThreeIndex];
 
   const releaseTriggerLock = () => {
     window.setTimeout(() => {
@@ -699,28 +707,26 @@ function OfflinePopupSlides() {
                 <span className="historyOfflineAirportCornerCleanup" aria-hidden="true" />
               </>
             ) : null}
-            <div className="historyOfflineSlideThreeButtons">
-              {offlineSlideThreeTabs.map((tab) => (
-                <button
-                  className={tab === activeSlideThreeTab ? "isActive" : undefined}
+            <div className="historyOfflineSlideThreeButtons" aria-hidden="true">
+              {offlineSlideThreeTabs.map((tab, index) => (
+                <span
+                  className={index === activeSlideThreeIndex ? "isActive" : undefined}
                   key={tab}
-                  onClick={() => setActiveSlideThreeTab(tab)}
-                  type="button"
                 >
                   {tab}
-                </button>
+                </span>
               ))}
             </div>
           </motion.div>
         ) : null}
-        {currentSlide >= 3 ? (
+        {currentSlide >= offlineSlideFourIndex ? (
           <motion.div
             animate={{ y: 0 }}
             className="historyOfflinePopupSlide historyOfflinePopupSlideFour"
             exit={{ y: "108%" }}
             initial={{ y: "108%" }}
             key="offline-slide-4"
-            style={{ zIndex: 4 }}
+            style={{ zIndex: offlineSlideFourIndex + 1 }}
             transition={{ duration: 0.62, ease: [0.16, 1, 0.3, 1] }}
           >
             <img
@@ -760,7 +766,7 @@ function OfflinePopupSlides() {
           </motion.div>
         ) : null}
         {offlineImageSlides.map((asset, index) => {
-          const slideIndex = 4 + index;
+          const slideIndex = offlineImageSlidesStartIndex + index;
           return currentSlide >= slideIndex ? (
             <motion.div
               animate={{ y: 0 }}
@@ -895,10 +901,11 @@ export function HistoryPanel({ activePanel, onClose }: HistoryPanelProps) {
         : "historyOnlinePanel";
   const panelStyle = isStructuredPanel && !isIframeOpen
     ? ({
-        height: "950px",
-        left: "calc(50% - 895px)",
-        top: "calc(50% - 475px)",
-        width: "1790px",
+        height: "min(950px, calc(100svh - clamp(52px, 8vh, 116px)), calc((100vw - clamp(52px, 6vw, 128px)) / 1.8842))",
+        left: "50%",
+        top: "50%",
+        translate: "-50% -50%",
+        width: "min(1790px, calc(100vw - clamp(52px, 6vw, 128px)), calc((100svh - clamp(52px, 8vh, 116px)) * 1.8842))",
       } satisfies CSSProperties)
     : historyOnlineLayout.panel;
 

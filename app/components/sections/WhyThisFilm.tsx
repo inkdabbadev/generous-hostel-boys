@@ -3,7 +3,7 @@
 import { Volume2, VolumeX } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 
-const reviewDurationMs = 7100;
+const reviewDurationMs = 18000;
 
 export default function WhyThisFilm() {
   const sectionRef = useRef<HTMLElement>(null);

@@ -1728,56 +1728,117 @@ section {
   width: 100%;
   height: 100%;
   object-fit: fill;
+  transform: rotate(-1.8deg);
   pointer-events: none;
 }
 
 .movieMetricPaperCopy {
   position: absolute;
   left: 13%;
-  top: 27%;
+  top: 18%;
   z-index: 2;
-  width: 44%;
-  height: 58%;
+  width: 42%;
+  height: 70%;
   display: grid;
-  grid-template-rows: minmax(0, 0.54fr) minmax(0, 0.46fr);
-  align-items: start;
+  grid-template-rows: repeat(2, minmax(0, 1fr));
+  align-items: stretch;
   color: #2434a1;
   font-family: Impact, "Arial Black", Haettenschweiler, sans-serif;
   text-transform: uppercase;
   overflow: visible;
 }
 
+.movieMetricPaperHeading {
+  min-height: 100%;
+  display: grid;
+  align-items: center;
+  justify-items: start;
+  gap: 0;
+}
+
 .movieMetricPaperCopy h3 {
   margin: 0;
-  max-width: 100%;
+  width: min(620px, 100%);
+  max-width: none;
   color: #253aa4;
-  font-size: clamp(2.3rem, 4.7vw, 5.9rem);
+  font-size: clamp(4rem, 7vw, 8.5rem);
+  font-family: Impact, Haettenschweiler, "Arial Narrow Bold", "Arial Black", sans-serif;
+  font-stretch: condensed;
+  font-weight: 100;
   line-height: 0.9;
-  letter-spacing: 0;
-  overflow-wrap: anywhere;
+  letter-spacing: -0.042em;
+  justify-self: start;
+  text-align: left;
   overflow: visible;
-  transform: translateY(-18px);
+  transform: translateY(-18px) rotate(-3.3deg);
+  transform-origin: left center;
 }
 
 .movieMetricTitleLine {
   display: block;
+  white-space: nowrap;
 }
 
-.movieMetricTitleLine1 {
-  transform: translateY(-5px);
+.movieMetricPaperCopy h3.isKgfTitle {
+  width: 100%;
+  font-size: clamp(3.2rem, 5.8vw, 7.2rem);
+  line-height: 0.82;
+  letter-spacing: 0;
+  word-spacing: 0.08em;
+  justify-self: start;
+  text-align: left;
+  transform: translateY(-18px) rotate(-3.3deg);
+  transform-origin: left center;
 }
 
-.movieMetricTitleLine2 {
-  transform: translateY(-5px);
+.movieMetricPaperCopy h3.isKgfTitle .movieMetricTitleLine + .movieMetricTitleLine {
+  margin-top: 0.08em;
+}
+
+.movieMetricPaperCopy h3.isLongTitle {
+  width: 100%;
+  font-size: clamp(2.8rem, 4.8vw, 6rem);
+  line-height: 0.82;
+  letter-spacing: 0;
+  word-spacing: 0.09em;
+  justify-self: start;
+  text-align: left;
+  transform: translateY(-18px) rotate(-3.3deg);
+  transform-origin: left center;
+}
+
+.movieMetricPaperCopy h3.isLongTitle .movieMetricReleaseYear {
+  text-align: left;
+}
+
+.movieMetricPaperCopy h3.isYouthTitle {
+  transform: translateY(-18px) rotate(-3.3deg);
+}
+
+.movieMetricPaperCopy h3.isYouthTitle .movieMetricReleaseYear {
+  text-align: left;
+}
+
+.movieMetricReleaseYear {
+  display: block;
+  width: 100%;
+  margin-top: 0.13em;
+  color: #253aa4;
+  font-size: 0.88em;
+  line-height: 0.88;
+  letter-spacing: -0.018em;
+  text-align: left;
 }
 
 .movieMetricPaperStats {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  align-self: end;
+  align-self: stretch;
+  align-content: center;
   gap: clamp(10px, 1.4vw, 24px);
   width: min(620px, 100%);
-  margin-top: 0;
+  margin-top: clamp(10px, 1.2vw, 20px);
+  transform: rotate(-3.3deg);
 }
 
 .movieMetricPaperStats span {
@@ -1808,40 +1869,48 @@ section {
 
 .movieMetricPaperPoster {
   position: absolute;
-  right: 11%;
-  top: 24%;
+  right: 7%;
+  top: 10%;
   z-index: 2;
-  width: 29%;
-  height: 55%;
-  object-fit: cover;
+  width: 32%;
+  height: 90%;
+  max-width: 32%;
+  max-height: 80%;
+  object-fit: contain;
+  object-position: center;
   border: 0;
-  box-shadow: 0 15px 24px rgba(0, 0, 0, 0.2);
+  transform: rotate(-3.3deg);
+  box-shadow: none;
 }
 
 .movieMetricPaperClose {
-  position: fixed;
-  right: clamp(18px, 2.2vw, 36px);
-  top: clamp(18px, 2.2vw, 36px);
-  z-index: 2;
-  width: 44px;
-  height: 44px;
+  position: absolute;
+  right: 4.4%;
+  top: 0%;
+  z-index: 4;
+  width: clamp(30px, 3.4vw, 48px);
+  height: clamp(30px, 3.4vw, 48px);
   display: grid;
   place-items: center;
-  border: 2px solid rgba(255, 196, 0, 0.75);
+  padding: 0;
+  border: 2px solid #f7f3e8;
   border-radius: 999px;
-  background: rgba(19, 15, 12, 0.72);
+  background:
+    radial-gradient(circle at 34% 28%, transparent 11%),
+    linear-gradient(145deg, #ff0202, #9f0000);
   color: white;
   cursor: pointer;
-  font-size: 1.4rem;
-  font-weight: 900;
-  line-height: 1;
+  box-shadow:
+    0 3px 0 rgba(103, 11, 43, 0.28),
+    inset 0 0 0 2px rgba(255, 255, 255, 0.16);
+  font: 900 clamp(1rem, 1.7vw, 1.5rem) / 1 Arial, sans-serif;
   text-transform: uppercase;
 }
 
 .movieMetricPaperClose:hover,
 .movieMetricPaperClose:focus-visible {
-  background: var(--gold);
-  color: var(--ink);
+  background: linear-gradient(145deg, #ff2418, #b40000);
+  color: white;
 }
 
 @keyframes movieMetricPaperOverlayIn {
@@ -2100,7 +2169,7 @@ section {
 .commonThreadBackdropPoster {
   position: absolute;
   top: 50%;
-  width: min(44vw, 670px);
+  width: min(38vw, 720px);
   aspect-ratio: 4 / 5;
   display: grid;
   place-items: center;
@@ -2111,11 +2180,11 @@ section {
 }
 
 .commonThreadBackdropLeft {
-  left: clamp(74px, 12vw, 230px);
+  left: calc(50% - min(38vw, 720px) - clamp(48px, 2.6vw, 96px));
 }
 
 .commonThreadBackdropRight {
-  right: clamp(74px, 12vw, 230px);
+  right: calc(50% - min(38vw, 720px) - clamp(48px, 2.6vw, 96px));
 }
 
 .commonThreadBackdropPoster img {
@@ -2213,10 +2282,10 @@ section {
   position: relative;
   min-height: 100vh;
   min-height: 100svh;
-  display: grid;
-  align-items: start;
-  justify-items: center;
-  padding: clamp(16px, 2vw, 30px) clamp(34px, 5vw, 96px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
   background:
     radial-gradient(circle at 50% 42%, rgba(255, 196, 0, 0.09), transparent 36%),
     linear-gradient(90deg, rgba(8, 4, 2, 0.94), rgba(96, 18, 8, 0.72)),
@@ -2229,11 +2298,16 @@ section {
 .whyThisFilmShell {
   position: relative;
   z-index: 1;
-  width: min(1660px, 100%);
-  padding-top: 0;
-  display: grid;
+  width: 100%;
+  height: 100vh;
+  height: 100svh;
+  padding-top: clamp(24px, 3.2vh, 38px);
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   justify-items: center;
-  gap: clamp(24px, 3.8vh, 46px);
+  gap: clamp(38px, 5.4vh, 64px);
   transition: opacity 360ms ease, transform 360ms ease, filter 360ms ease;
 }
 
@@ -2248,7 +2322,7 @@ section {
   margin: 0;
   color: var(--gold);
   font-family: var(--font-figtree), sans-serif;
-  font-size: clamp(4rem, 8.8vw, 11rem);
+  font-size: clamp(4.8rem, 8.3vw, 10rem);
   font-weight: 900;
   line-height: 0.78;
   letter-spacing: 0;
@@ -2262,14 +2336,13 @@ section {
 
 .whyVideoFrame {
   position: relative;
-  width: min(78vw, 1220px);
+  width: min(77.1vw, 1480px);
   aspect-ratio: 16 / 9;
-  margin-top: clamp(4px, 1vh, 12px);
+  margin-top: 0;
   overflow: hidden;
   border-radius: 10px;
   background: rgba(10, 4, 2, 0.72);
   box-shadow:
-    0 24px 0 rgba(74, 11, 2, 0.34),
     0 38px 86px rgba(18, 3, 1, 0.46);
 }
 
@@ -2281,7 +2354,7 @@ section {
   display: block;
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: contain;
   pointer-events: none;
 }
 
@@ -2316,6 +2389,21 @@ section {
   background: rgba(255, 196, 0, 0.92);
   color: #210400;
   outline: none;
+}
+
+@media (max-width: 760px) {
+  .whyThisFilmShell {
+    gap: clamp(24px, 4.6vh, 38px);
+    padding-top: clamp(24px, 4.6vh, 42px);
+  }
+
+  .whyThisFilm h2 {
+    font-size: clamp(2.8rem, 14vw, 5.6rem);
+  }
+
+  .whyVideoFrame {
+    width: min(92vw, 1480px);
+  }
 }
 
 .noticeboardSection {
@@ -4852,15 +4940,15 @@ section {
   stroke-linecap: round;
   opacity: 0;
   filter: drop-shadow(0 0 10px rgba(255, 199, 0, 0.62));
-  animation: historyAirportRouteIn 0.45s 1.7s ease-out forwards;
+  animation: historyAirportRouteIn 0.26s 0.18s ease-out forwards;
 }
 
 .historyOfflineAirportRouteSecond {
-  animation-delay: 1.95s;
+  animation-delay: 0.3s;
 }
 
 .historyOfflineAirportRouteThird {
-  animation-delay: 2.15s;
+  animation-delay: 0.42s;
 }
 
 .historyOfflineAirportPoint {
@@ -4888,15 +4976,15 @@ section {
   filter:
     drop-shadow(0 0 4px rgba(255, 199, 0, 0.9))
     drop-shadow(0 5px 5px rgba(55, 0, 0, 0.5));
-  animation: historyAirportPlaneIn 0.2s 1.95s ease-out forwards;
+  animation: historyAirportPlaneIn 0.18s 0.38s ease-out forwards;
 }
 
 .historyOfflineAirportPlaneIconSecond {
-  animation-delay: 3.2s;
+  animation-delay: 0.74s;
 }
 
 .historyOfflineAirportPlaneIconThird {
-  animation-delay: 4.05s;
+  animation-delay: 1.02s;
 }
 
 .historyOfflineAirportCornerCleanup {
@@ -4964,10 +5052,10 @@ section {
   grid-template-columns: repeat(2, 392px);
   gap: 32px 62px;
   transform: translateY(-50%);
-  pointer-events: auto;
+  pointer-events: none;
 }
 
-.historyOfflineSlideThreeButtons button {
+.historyOfflineSlideThreeButtons span {
   display: grid;
   place-items: center;
   height: 70px;
@@ -4976,7 +5064,6 @@ section {
   border-radius: 10px;
   background: transparent;
   color: white;
-  cursor: pointer;
   font-family: var(--font-figtree), sans-serif;
   font-size: 29px;
   font-weight: 1000;
@@ -4985,12 +5072,10 @@ section {
   text-align: center;
   text-transform: uppercase;
   text-shadow: 0 5px 0 rgba(72, 0, 0, 0.32);
-}
-
-.historyOfflineSlideThreeButtons button:hover,
-.historyOfflineSlideThreeButtons button:focus-visible {
-  outline: 0;
-  transform: scale(0.98);
+  transition:
+    background 220ms ease,
+    color 220ms ease,
+    transform 220ms ease;
 }
 
 .historyOfflineSlideThreeButtons .isActive {
@@ -5337,7 +5422,7 @@ section {
   position: relative;
   display: grid;
   place-items: center;
-  width: 100%;
+  width: calc(100% * var(--online-card-scale, 1));
   min-height: 100%;
   line-height: 0;
   transform-style: preserve-3d;
@@ -7601,13 +7686,13 @@ body {
 .premiumAssetCell img[src$="/5%20CR/Asset%2013.svg"],
 .premiumAssetCell img[src$="/20x/Asset%2022.svg"],
 .premiumAssetCell img[src$="/3%20CR/Asset%2075.svg"],
-.premiumAssetCell img[src$="/8K+/Asset%2053.svg"],
+.premiumAssetCell img[src$="/8K%2B/Asset%2053.svg"],
 .premiumAssetCell img[src$="/Infinity/Asset%2082.svg"] {
   --asset-image-scale: 1.1;
 }
 
-.premiumAssetCell img[src$="/8K+/Asset%2057.svg"],
-.premiumAssetCell img[src$="/8K+/Asset%2056.svg"] {
+.premiumAssetCell img[src$="/8K%2B/Asset%2057.svg"],
+.premiumAssetCell img[src$="/8K%2B/Asset%2056.svg"] {
   --asset-image-scale: 0.82;
 }
 
@@ -7632,9 +7717,9 @@ body {
 
 .premiumAssetCell img[src$="/10%20Lakhs/Asset%2043.svg"] { --asset-image-scale: 1.3; }
 
-.premiumAssetCell img[src$="/8K+/Asset%2053.svg"] { --asset-image-scale: 1.2; }
-.premiumAssetCell img[src$="/8K+/Asset%2057.svg"],
-.premiumAssetCell img[src$="/8K+/Asset%2056.svg"] { --asset-image-scale: 0.82; }
+.premiumAssetCell img[src$="/8K%2B/Asset%2053.svg"] { --asset-image-scale: 1.2; }
+.premiumAssetCell img[src$="/8K%2B/Asset%2057.svg"],
+.premiumAssetCell img[src$="/8K%2B/Asset%2056.svg"] { --asset-image-scale: 0.82; }
 
 .premiumAssetCell img[src$="/Infinity/Asset%2082.svg"] { --asset-image-scale: 1.4; }
 

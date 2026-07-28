@@ -256,27 +256,31 @@ export default function CommonThread() {
         />
 
         <motion.div
+          key={phase >= 3 ? "common-strip-cinemo" : "common-strip-music"}
           animate={{
             opacity: phase >= 2 ? 1 : 0,
             y: phase >= 2 ? 0 : 130,
           }}
           className="commonThreadStripLayer"
-          initial={false}
+          initial={{ opacity: 0, y: 130 }}
           transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
         >
           <motion.div
             animate={{ x: phase >= 2 ? 0 : "-34%", rotate: -7 }}
             className="commonThreadStrip commonThreadStripA"
+            initial={{ x: "-34%", rotate: -7 }}
             transition={{ duration: 0.82, ease: [0.16, 1, 0.3, 1] }}
           />
           <motion.div
             animate={{ x: phase >= 2 ? 0 : "34%", rotate: 7 }}
             className="commonThreadStrip commonThreadStripB"
+            initial={{ x: "34%", rotate: 7 }}
             transition={{ duration: 0.82, ease: [0.16, 1, 0.3, 1] }}
           />
         </motion.div>
 
         <motion.img
+          key="common-music-person"
           animate={{
             opacity: phase === 2 ? 1 : 0,
             scale: phase >= 2 ? 1.68 : 0.72,
@@ -292,11 +296,12 @@ export default function CommonThread() {
         />
 
         <motion.img
+          key="common-cinemo-person"
           animate={{
             opacity: phase >= 3 ? 1 : 0,
-            scale: phase >= 3 ? 1 : 0.76,
+            scale: phase >= 3 ? 1.16 : 0.76,
             x: "-50%",
-            y: phase >= 3 ? "calc(-50% - 6px)" : "calc(-50% + 120px)",
+            y: phase >= 3 ? "calc(-50% + 2px)" : "calc(-50% + 120px)",
             filter: phase >= 3 ? "blur(0px)" : "blur(10px)",
           }}
           className="commonThreadMusicPerson commonThreadCinemoPerson"
@@ -307,6 +312,7 @@ export default function CommonThread() {
         />
 
         <motion.img
+          key="common-music-title"
           animate={{
             opacity: phase === 2 ? 1 : 0,
             scale: phase >= 2 ? 1 : 0.78,
@@ -321,6 +327,7 @@ export default function CommonThread() {
         />
 
         <motion.img
+          key="common-cinemo-title"
           animate={{
             opacity: phase >= 3 ? 1 : 0,
             scale: phase >= 3 ? 1 : 0.78,

@@ -54,7 +54,7 @@ export default function IntroExperience() {
       progressTweenRef.current?.kill();
       progressTweenRef.current = gsap.to(progressRef, {
         current: clampedTarget,
-        duration: 3,
+        duration: 6.5,
         ease: "none",
         onUpdate: () => updateProgress(progressRef.current),
         onComplete: () => {
@@ -240,8 +240,9 @@ export default function IntroExperience() {
   const introProgress = segment(progress, 0, 1);
 
   const runnerProgress = 1 - Math.pow(1 - introProgress, 1.35);
-  const titleRevealProgress = segment(runnerProgress, 0.4, 0.62);
-  const roadRevealProgress = segment(runnerProgress, 0.4, 0.64);
+  const titleRevealProgress = segment(runnerProgress, 0.66, 0.82);
+  const roadRevealRaw = segment(runnerProgress, 0.7, 0.8);
+  const roadRevealProgress = 1 - Math.pow(1 - roadRevealRaw, 3);
 
   const logoStyle = {
     opacity: 1,
@@ -292,14 +293,14 @@ export default function IntroExperience() {
           />
         </div>
         <img
-          className="pointer-events-none absolute left-1/2 top-[clamp(268px,35.5vh,352px)] z-[3] block h-auto w-[min(1040px,82vw)] select-none transition-[transform,opacity,filter] duration-500 ease-out will-change-[transform,opacity] [filter:drop-shadow(0_18px_22px_rgba(0,0,0,0.42))] max-[640px]:top-[clamp(240px,36.5vh,306px)] max-[640px]:w-[min(520px,88vw)]"
+          className="pointer-events-none absolute left-1/2 top-[clamp(268px,35.5vh,352px)] z-[3] block h-auto w-[min(1040px,82vw)] select-none transition-[transform,opacity,filter] duration-300 ease-out will-change-[transform,opacity] [filter:drop-shadow(0_18px_22px_rgba(0,0,0,0.42))] max-[640px]:top-[clamp(240px,36.5vh,306px)] max-[640px]:w-[min(520px,88vw)]"
           src="/intro/road.svg"
           alt="Road to making history with the worst film ever made"
           draggable={false}
           style={roadTitleStyle}
         />
         <img
-          className="pointer-events-none absolute bottom-[clamp(0px,1.8vh,18px)] left-[-44vw] z-[2] block h-auto w-[clamp(390px,40vw,700px)] select-none transition-transform duration-300 ease-out will-change-transform max-[640px]:bottom-0 max-[640px]:left-[-102vw] scale-[1.5] max-[640px]:w-[clamp(360px,92vw,520px)]"
+          className="pointer-events-none absolute bottom-[clamp(0px,1.8vh,18px)] left-[-62vw] z-[5] block h-auto w-[clamp(430px,44vw,790px)] select-none transition-transform duration-300 ease-out will-change-transform [filter:drop-shadow(0_22px_18px_rgba(0,0,0,0.36))] max-[640px]:bottom-0 max-[640px]:left-[-124vw] scale-[1.65] max-[640px]:w-[clamp(390px,98vw,580px)]"
           src="/intro/run.gif"
           alt=""
           aria-hidden="true"

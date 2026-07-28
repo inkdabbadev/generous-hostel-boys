@@ -16,17 +16,17 @@ const thankYouControls = {
     mobileSize: "clamp(3rem, 14vw, 5.5rem)",
     desktopTop: "40vh",
     mobileTop: "12vh",
-    entranceDelay: "0.72s",
-    entranceDuration: "1.65s",
+    entranceDelay: "7.1s",
+    entranceDuration: "1.45s",
   },
   van: {
     desktopWidth: "clamp(540px, 48vw, 980px)",
     mobileWidth: "clamp(360px, 92vw, 620px)",
     desktopBottom: "clamp(1.1rem, 3.2vh, 2.7rem)",
     mobileBottom: "3vh",
-    duration: "9.4s",
+    duration: "9s",
     startOffset: "7vw",
-    endOffset: "8vw",
+    endOffset: "9vw",
   },
 };
 
@@ -133,12 +133,12 @@ export default function ThankYou() {
           z-index: 10;
           padding-top: var(--thank-text-top);
           opacity: 0;
-          filter: blur(8px);
-          transform: translate3d(0, 2.2rem, 0) scale(0.985);
+          filter: blur(10px);
+          transform: translate3d(0, 3.4rem, 0) scale(0.94);
         }
 
         .thankYouTextWrap.isPlaying {
-          animation: thankYouClassicIn var(--thank-text-duration) cubic-bezier(0.16, 1, 0.3, 1) var(--thank-text-delay) forwards;
+          animation: thankYouMidwayTitle var(--thank-reveal-duration) linear forwards;
         }
 
         .thankYouText {
@@ -162,7 +162,7 @@ export default function ThankYou() {
         }
 
         .thankYouVan.isPlaying {
-          animation: thankYouVanDrive var(--thank-reveal-duration) cubic-bezier(0.22, 0.74, 0.18, 1) forwards;
+          animation: thankYouVanDrive var(--thank-reveal-duration) cubic-bezier(0.32, 0.02, 0.18, 1) forwards;
         }
 
         @keyframes thankYouVanDrive {
@@ -174,12 +174,19 @@ export default function ThankYou() {
           }
         }
 
-        @keyframes thankYouClassicIn {
-          0% {
+        @keyframes thankYouMidwayTitle {
+          0%,
+          48% {
             opacity: 0;
-            filter: blur(8px);
-            transform: translate3d(0, 2.2rem, 0) scale(0.985);
+            filter: blur(10px);
+            transform: translate3d(0, 3.4rem, 0) scale(0.94);
           }
+          58% {
+            opacity: 1;
+            filter: blur(0);
+            transform: translate3d(0, -0.34rem, 0) scale(1.025);
+          }
+          68%,
           100% {
             opacity: 1;
             filter: blur(0);
