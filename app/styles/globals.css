@@ -2099,13 +2099,14 @@ section {
 
 .commonThreadBackdropPoster {
   position: absolute;
-  top: 5%;
+  top: 50%;
   width: min(44vw, 670px);
-  height: 90%;
+  aspect-ratio: 4 / 5;
   display: grid;
   place-items: center;
-  overflow: visible;
+  overflow: hidden;
   transform-origin: center;
+  translate: 0 -50%;
   will-change: transform;
 }
 
@@ -2119,10 +2120,9 @@ section {
 
 .commonThreadBackdropPoster img {
   display: block;
-  width: auto;
-  max-width: 100%;
+  width: 100%;
   height: 100%;
-  object-fit: contain;
+  object-fit: cover;
   object-position: center;
   border-radius: 10px;
   box-shadow: 0 28px 58px rgba(20, 0, 0, 0.42);
@@ -2788,7 +2788,7 @@ section {
 .audienceMetricCardState p {
   color: white;
   font-size: var(--regional-market-copy-size, clamp(0.9rem, 1.08vw, 1.3rem));
-  font-weight: 1000;
+  font-weight: 500;
   line-height: 1.08;
 }
 
@@ -3000,6 +3000,8 @@ section {
 
 .audienceAgeBlock .audienceMetricCard li span {
   width: clamp(4px, 0.38vw, 6px);
+  height: clamp(72px, 5vw, 88px);
+  min-height: clamp(72px, 5vw, 88px);
 }
 
 .hostelGenreProof {
@@ -5667,6 +5669,69 @@ section {
   text-transform: uppercase;
   white-space: pre-line;
   filter: drop-shadow(0 7px 0 rgba(95, 0, 0, 0.32));
+}
+
+.historyOnlineStructuredPanel.historyOnlineDetailPanel::before {
+  background: linear-gradient(249.36deg, #ff0000 -7.22%, #990000 86.7%);
+}
+
+.historyOnlineStructuredPanel.historyOnlineDetailPanel .historyOnlineInner {
+  grid-template-rows: auto 1fr;
+  gap: 56px !important;
+  padding: 76px 78px 86px !important;
+}
+
+.historyOnlineStructuredPanel.historyOnlineDetailPanel .historyOnlineInner h3 {
+  font-size: 124px;
+  line-height: 0.76;
+  filter: drop-shadow(0 12px 0 rgba(92, 0, 0, 0.34));
+}
+
+.historyOnlineStructuredPanel.historyOnlineDetailPanel .historyOnlineFeatureGrid {
+  grid-template-columns: repeat(3, 460px);
+  align-content: center;
+  align-items: center;
+  justify-content: center;
+  gap: 96px;
+  min-height: 0;
+  width: 100%;
+  height: 100%;
+  padding-bottom: 24px;
+}
+
+.historyOnlineStructuredPanel.historyOnlineDetailPanel .historyOnlineFeatureCard {
+  aspect-ratio: auto;
+  height: 540px;
+  border-radius: 28px;
+  background: #3a0300;
+  box-shadow: none;
+}
+
+.historyOnlineStructuredPanel.historyOnlineDetailPanel .historyOnlineFeatureCard img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: none;
+  opacity: 1;
+}
+
+.historyOnlineStructuredPanel.historyOnlineDetailPanel .historyOnlineFeatureCard:nth-child(3) img {
+  opacity: 1;
+  filter: none;
+}
+
+.historyOnlineStructuredPanel.historyOnlineDetailPanel .historyOnlineFeatureCard::after {
+  height: 46%;
+  background: linear-gradient(180deg, transparent 0%, rgba(13, 0, 0, 0.42) 40%, rgba(8, 0, 0, 0.78) 100%);
+}
+
+.historyOnlineStructuredPanel.historyOnlineDetailPanel .historyOnlineFeatureCard span {
+  left: 54px;
+  right: 40px;
+  bottom: 46px;
+  font-size: 66px;
+  line-height: 0.94;
+  filter: drop-shadow(0 8px 0 rgba(0, 0, 0, 0.28));
 }
 
 .historyPanelEmpty {
