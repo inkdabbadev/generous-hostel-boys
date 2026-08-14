@@ -1,7 +1,6 @@
 "use client";
 
 import { motion } from "framer-motion";
-import type { CSSProperties } from "react";
 import { useEffect, useRef, useState } from "react";
 
 const topWords = ["What", "happens"];
@@ -10,13 +9,6 @@ const maxAskPhase = 1;
 const clockTransition = { duration: 1.25, ease: [0.16, 1, 0.3, 1] } as const;
 const headlineLineTransition = { duration: 0.86, ease: [0.16, 1, 0.3, 1] } as const;
 const headlineWordTransition = { duration: 0.72, ease: [0.16, 1, 0.3, 1] } as const;
-
-const clockStyle = {
-  left: "50%",
-  top: "58%",
-  width: "min(2120px, 128vw)",
-  maxHeight: "96vh",
-} satisfies CSSProperties;
 
 export default function ActualAskIntro() {
   const sectionRef = useRef<HTMLElement>(null);
@@ -363,7 +355,7 @@ export default function ActualAskIntro() {
         </h2>
       </div>
       {phase >= 1 ? (
-        <div className="actualAskClockWrap" style={clockStyle}>
+        <div className="actualAskClockWrap">
           <motion.div
             animate={{ y: clockVisible ? 0 : "82vh", opacity: 1 }}
             className="actualAskClockMotion"

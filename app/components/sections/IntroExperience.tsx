@@ -294,7 +294,7 @@ export default function IntroExperience() {
         </div>
         <img
           className="pointer-events-none absolute left-1/2 top-[clamp(268px,35.5vh,352px)] z-[3] block h-auto w-[min(1040px,82vw)] select-none transition-[transform,opacity,filter] duration-300 ease-out will-change-[transform,opacity] [filter:drop-shadow(0_18px_22px_rgba(0,0,0,0.42))] max-[640px]:top-[clamp(240px,36.5vh,306px)] max-[640px]:w-[min(520px,88vw)]"
-          src="/intro/road.svg"
+          src="/intro/road.png"
           alt="Road to making history with the worst film ever made"
           draggable={false}
           style={roadTitleStyle}

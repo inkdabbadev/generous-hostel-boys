@@ -15,7 +15,7 @@ const movies = [
   },
   {
     title: "Youth",
-    year: "2002",
+    year: "2026",
     image: "youth.jpg",
     footfall: "4.5M+",
     boxOffice: "72C",

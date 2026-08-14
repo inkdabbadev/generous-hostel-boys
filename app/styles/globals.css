@@ -729,384 +729,909 @@ section {
 
 .aboutExperience {
   position: relative;
-  display: grid;
-  align-items: start;
   min-height: 100vh;
   min-height: 100svh;
-  padding: clamp(22px, 2.8vw, 42px) clamp(48px, 6vw, 104px) clamp(28px, 3.4vw, 52px) clamp(86px, 9vw, 154px);
+  height: 100vh;
+  height: 100svh;
   background:
-    linear-gradient(90deg, rgba(18, 4, 0, 0.76) 0%, rgba(137, 24, 8, 0.44) 48%, rgba(18, 4, 0, 0.34) 100%),
-    linear-gradient(0deg, rgba(0, 0, 0, 0.26), rgba(0, 0, 0, 0.06)),
-    url("/background.png") center / 100% 100% no-repeat;
+    linear-gradient(90deg, rgba(18, 3, 1, 0.28), rgba(18, 3, 1, 0.05) 48%, rgba(18, 3, 1, 0.32)),
+    url("/background.png") center / cover no-repeat,
+    linear-gradient(135deg, #850b05 0%, #d70904 50%, #700900 100%);
+  color: white;
+  overflow: hidden;
+  user-select: none;
+}
+
+.aboutInfrastructureSlide,
+.aboutIndustrySlide,
+.aboutTheatricalSlide,
+.aboutWhoSlide {
+  position: absolute;
+  inset: 0;
+  transition:
+    opacity 720ms cubic-bezier(0.16, 1, 0.3, 1),
+    transform 900ms cubic-bezier(0.16, 1, 0.3, 1),
+    filter 900ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.aboutStepInfrastructure .aboutInfrastructureSlide,
+.aboutStepIndustry .aboutIndustrySlide,
+.aboutStepTheatrical .aboutTheatricalSlide,
+.aboutStepWho .aboutWhoSlide {
+  opacity: 1;
+  transform: translate3d(0, 0, 0) scale(1);
+  pointer-events: auto;
+}
+
+.aboutStepInfrastructure .aboutWhoSlide,
+.aboutStepIndustry .aboutWhoSlide {
+  opacity: 0;
+  transform: translate3d(0, -5vh, 0) scale(0.98);
+  pointer-events: none;
+}
+
+.aboutStepWho .aboutInfrastructureSlide {
+  opacity: 0;
+  transform: translate3d(0, 5vh, 0) scale(0.98);
+  pointer-events: none;
+}
+
+.aboutStepIndustry .aboutInfrastructureSlide,
+.aboutStepWho .aboutIndustrySlide,
+.aboutStepInfrastructure .aboutIndustrySlide {
+  opacity: 0;
+  transform: translate3d(0, -5vh, 0) scale(0.985);
+  filter: blur(3px);
+  pointer-events: none;
+}
+
+.aboutStepTheatrical .aboutWhoSlide,
+.aboutStepTheatrical .aboutInfrastructureSlide,
+.aboutStepTheatrical .aboutIndustrySlide {
+  opacity: 0;
+  transform: translate3d(0, -5vh, 0) scale(0.985);
+  filter: blur(3px);
+  pointer-events: none;
+}
+
+.aboutStepWho .aboutTheatricalSlide,
+.aboutStepInfrastructure .aboutTheatricalSlide,
+.aboutStepIndustry .aboutTheatricalSlide {
+  opacity: 0;
+  transform: translate3d(0, 5vh, 0) scale(0.985);
+  filter: blur(3px);
+  pointer-events: none;
+}
+
+.aboutInfrastructureSlide {
+  background:
+    linear-gradient(90deg, rgba(18, 3, 1, 0.34), rgba(18, 3, 1, 0.04) 47%, rgba(18, 3, 1, 0.28)),
+    url("/background.png") center / cover no-repeat,
+    linear-gradient(132deg, #8d0902 0%, #e10600 51%, #700900 100%);
+}
+
+.aboutInfrastructureCopy {
+  position: absolute;
+  left: clamp(48px, 6.1vw, 136px);
+  right: clamp(42px, 6vw, 136px);
+  top: clamp(76px, 13.5svh, 142px);
+  z-index: 2;
+}
+
+.aboutInfrastructureCopy h2 {
+  max-width: 100%;
+  margin: 0 0 clamp(42px, 6.2svh, 68px);
+  color: var(--gold);
+  font-family: var(--font-figtree), sans-serif;
+  font-size: clamp(4.4rem, 4.72vw, 5.7rem);
+  font-weight: 1000;
+  line-height: 0.86;
+  letter-spacing: 0;
+  text-transform: uppercase;
+  white-space: nowrap;
+  text-shadow: 0 10px 0 rgba(93, 10, 1, 0.58);
+  opacity: 0;
+  transform: translate3d(-4vw, 0, 0);
+}
+
+.aboutInfrastructureCopy p {
+  max-width: min(1320px, 82vw);
+  margin: 0;
+  color: rgba(255, 255, 255, 0.96);
+  font-family: var(--font-figtree), sans-serif;
+  font-size: clamp(1.55rem, 2.05vw, 2.55rem);
+  font-weight: 500;
+  line-height: 1.12;
+  letter-spacing: 0;
+  opacity: 0;
+  transform: translate3d(0, 22px, 0);
+}
+
+.aboutInfrastructureCopy p + p {
+  max-width: min(1280px, 78vw);
+  margin-top: clamp(20px, 3svh, 34px);
+}
+
+.aboutInfrastructureCards {
+  position: absolute;
+  left: 50%;
+  width: min(1360px, 74vw);
+  bottom: clamp(44px, 6.4svh, 72px);
+  z-index: 3;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(300px, 1fr));
+  gap: clamp(24px, 3vw, 54px);
+  align-items: end;
+  transform: translateX(-50%);
+}
+
+.aboutInfrastructureCard {
+  position: relative;
+  aspect-ratio: 1 / 1;
+  height: auto;
+  margin: 0;
+  overflow: hidden;
+  border-radius: clamp(16px, 1.3vw, 28px);
+  background: rgba(55, 4, 1, 0.34);
+  box-shadow: 0 26px 46px rgba(40, 4, 1, 0.36);
+  opacity: 0;
+  transform: translate3d(34px, 46px, 0) scale(0.94);
+}
+
+.aboutInfrastructureCard img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  user-select: none;
+}
+
+.aboutInfrastructureCard::after {
+  position: absolute;
+  inset: auto 0 0;
+  height: 42%;
+  content: "";
+  background: linear-gradient(180deg, transparent, rgba(0, 0, 0, 0.72));
+}
+
+.aboutInfrastructureCard figcaption {
+  position: absolute;
+  left: clamp(20px, 2vw, 46px);
+  right: clamp(20px, 2vw, 46px);
+  bottom: clamp(16px, 2svh, 34px);
+  z-index: 2;
+  color: white;
+  font-family: var(--font-figtree), sans-serif;
+  font-size: clamp(1.18rem, 1.55vw, 2.2rem);
+  font-weight: 850;
+  line-height: 1;
+  letter-spacing: 0;
+  text-shadow: 0 5px 16px rgba(0, 0, 0, 0.75);
+}
+
+.aboutExperience.isVisible.aboutStepInfrastructure .aboutInfrastructureCopy h2 {
+  animation: aboutInfraHeadlineIn 800ms cubic-bezier(0.16, 1, 0.3, 1) 90ms forwards;
+}
+
+.aboutExperience.isVisible.aboutStepInfrastructure .aboutInfrastructureCopy p {
+  animation: aboutInfraCopyIn 720ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.aboutExperience.isVisible.aboutStepInfrastructure .aboutInfrastructureCopy p:nth-of-type(1) {
+  animation-delay: 320ms;
+}
+
+.aboutExperience.isVisible.aboutStepInfrastructure .aboutInfrastructureCopy p:nth-of-type(2) {
+  animation-delay: 460ms;
+}
+
+.aboutExperience.isVisible.aboutStepInfrastructure .aboutInfrastructureCard {
+  animation: aboutInfraCardIn 780ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.aboutExperience.isVisible.aboutStepInfrastructure .aboutInfrastructureCard:nth-child(1) {
+  animation-delay: 580ms;
+}
+
+.aboutExperience.isVisible.aboutStepInfrastructure .aboutInfrastructureCard:nth-child(2) {
+  animation-delay: 700ms;
+}
+
+.aboutExperience.isVisible.aboutStepInfrastructure .aboutInfrastructureCard:nth-child(3) {
+  animation-delay: 820ms;
+}
+
+.aboutIndustrySlide {
+  display: grid;
+  grid-template-rows: auto auto auto auto;
+  align-content: start;
+  justify-items: center;
+  row-gap: clamp(18px, 2.4svh, 34px);
+  padding: clamp(66px, 8.4svh, 108px) clamp(52px, 7vw, 150px) clamp(42px, 5.4svh, 70px);
+  background:
+    linear-gradient(90deg, rgba(18, 3, 1, 0.3), rgba(18, 3, 1, 0.02) 48%, rgba(18, 3, 1, 0.26)),
+    url("/about/slide1/crowd-bg.png") center / cover no-repeat,
+    linear-gradient(132deg, #8d0902 0%, #e10600 51%, #700900 100%);
+  overflow: hidden;
+}
+
+.aboutIndustryBackdrop {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at 48% 18%, rgba(255, 72, 25, 0.24), transparent 34%),
+    linear-gradient(180deg, rgba(223, 8, 1, 0.1), rgba(223, 8, 1, 0.28));
+  pointer-events: none;
+}
+
+.aboutIndustryHeader {
+  position: relative;
+  width: min(1280px, 74vw);
+  z-index: 2;
+  text-align: center;
+  justify-self: center;
+}
+
+.aboutIndustryHeader h2 {
+  margin: 0;
+  color: var(--gold);
+  font-family: var(--font-figtree), sans-serif;
+  font-size: clamp(4.6rem, 6vw, 8.2rem);
+  font-weight: 1000;
+  line-height: 0.86;
+  letter-spacing: 0;
+  text-transform: uppercase;
+  white-space: nowrap;
+  text-shadow: 0 10px 0 rgba(93, 10, 1, 0.58);
+  opacity: 0;
+  transform: translate3d(0, -18px, 0);
+}
+
+.aboutIndustryHeader p,
+.aboutProductionTitle {
+  margin: 0;
+  color: rgba(255, 255, 255, 0.98);
+  font-family: var(--font-figtree), sans-serif;
+  font-size: clamp(2rem, 2.95vw, 4.05rem);
+  font-weight: 850;
+  line-height: 1;
+  letter-spacing: 0;
+  text-align: center;
+  text-shadow: 0 8px 18px rgba(70, 5, 0, 0.28);
+  opacity: 0;
+  transform: translate3d(0, 26px, 0);
+}
+
+.aboutIndustryHeader p {
+  display: block;
+  width: 100%;
+  margin: clamp(44px, 6.4svh, 76px) 0 0;
+  text-align: center;
+}
+
+.aboutProductionTitle {
+  position: relative;
+  z-index: 2;
+  width: min(1280px, 74vw);
+  padding-top: clamp(2px, 0.4svh, 8px);
+  text-align: center;
+  transform: translate3d(0, 26px, 0);
+}
+
+.aboutPartnerPanel {
+  position: relative;
+  z-index: 2;
+  display: grid;
+  place-items: center;
+  justify-self: center;
+  width: min(1280px, 74vw);
+  min-height: clamp(138px, 16svh, 196px);
+  padding: clamp(20px, 2.1vw, 36px) clamp(34px, 4vw, 76px);
+  border-radius: clamp(14px, 1vw, 20px);
+  background: #ffffff;
+  box-shadow: 0 30px 70px rgba(55, 4, 1, 0.28);
+  opacity: 0;
+  transform: translate3d(0, 34px, 0) scale(0.96);
+}
+
+.aboutPartnerPanel img {
+  display: block;
+  width: min(920px, 100%);
+  height: auto;
+  max-height: none;
+  object-fit: contain;
+  user-select: none;
+}
+
+.aboutExperience.isVisible.aboutStepIndustry .aboutIndustryHeader h2 {
+  animation: aboutInfraHeadlineIn 800ms cubic-bezier(0.16, 1, 0.3, 1) 90ms forwards;
+}
+
+.aboutExperience.isVisible.aboutStepIndustry .aboutIndustryHeader p {
+  animation: aboutIndustryTextIn 720ms cubic-bezier(0.16, 1, 0.3, 1) 330ms forwards;
+}
+
+.aboutExperience.isVisible.aboutStepIndustry .aboutBroadcastPanel {
+  animation: aboutIndustryPanelIn 780ms cubic-bezier(0.16, 1, 0.3, 1) 520ms forwards;
+}
+
+.aboutExperience.isVisible.aboutStepIndustry .aboutProductionTitle {
+  animation: aboutIndustryTitleIn 720ms cubic-bezier(0.16, 1, 0.3, 1) 720ms forwards;
+}
+
+.aboutExperience.isVisible.aboutStepIndustry .aboutProductionPanel {
+  animation: aboutIndustryPanelIn 780ms cubic-bezier(0.16, 1, 0.3, 1) 880ms forwards;
+}
+
+.aboutTheatricalSlide {
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
+  align-content: start;
+  justify-items: center;
+  row-gap: clamp(34px, 5.2svh, 76px);
+  padding: clamp(56px, 7.2svh, 92px) clamp(34px, 4.8vw, 96px) clamp(34px, 4.4svh, 58px);
+  background:
+    linear-gradient(90deg, rgba(18, 3, 1, 0.24), rgba(18, 3, 1, 0.02) 50%, rgba(18, 3, 1, 0.22)),
+    url("/background.png") center / cover no-repeat,
+    linear-gradient(132deg, #8d0902 0%, #e10600 51%, #700900 100%);
+  overflow: hidden;
+}
+
+.aboutTheatricalTitle {
+  position: relative;
+  z-index: 2;
+  margin: 0;
+  color: var(--gold);
+  font-family: var(--font-figtree), sans-serif;
+  font-size: clamp(4.2rem, 5.85vw, 8.8rem);
+  font-weight: 1000;
+  line-height: 0.86;
+  letter-spacing: 0;
+  text-align: center;
+  text-transform: uppercase;
+  max-width: 94vw;
+  white-space: nowrap;
+  text-shadow: 0 10px 0 rgba(93, 10, 1, 0.58);
+  opacity: 0;
+  transform: translate3d(0, -22px, 0);
+}
+
+.aboutTheatricalGrid {
+  position: relative;
+  z-index: 2;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(132px, 1fr));
+  gap: clamp(16px, 2vw, 38px);
+  align-content: center;
+  width: min(1760px, 86vw);
+}
+
+.aboutTheatricalPoster {
+  position: relative;
+  margin: 0;
+  display: grid;
+  place-items: center;
+  justify-self: center;
+  width: clamp(155px, 12.8vw, 292px);
+  aspect-ratio: 2 / 3;
+  padding: clamp(7px, 0.55vw, 12px);
+  background: rgba(255, 255, 255, 0.98);
+  box-shadow: 0 28px 58px rgba(55, 4, 1, 0.34);
+  overflow: hidden;
+  opacity: 0;
+  transform: translate3d(0, 42px, 0) scale(0.94);
+}
+
+.aboutTheatricalPoster img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  background: #160300;
+  user-select: none;
+}
+
+.aboutExperience.isVisible.aboutStepTheatrical .aboutTheatricalTitle {
+  animation: aboutInfraHeadlineIn 800ms cubic-bezier(0.16, 1, 0.3, 1) 90ms forwards;
+}
+
+.aboutExperience.isVisible.aboutStepTheatrical .aboutTheatricalPoster {
+  animation: aboutTheatricalPosterIn 820ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.aboutExperience.isVisible.aboutStepTheatrical .aboutTheatricalPoster:nth-child(1) {
+  animation-delay: 300ms;
+}
+
+.aboutExperience.isVisible.aboutStepTheatrical .aboutTheatricalPoster:nth-child(2) {
+  animation-delay: 380ms;
+}
+
+.aboutExperience.isVisible.aboutStepTheatrical .aboutTheatricalPoster:nth-child(3) {
+  animation-delay: 460ms;
+}
+
+.aboutExperience.isVisible.aboutStepTheatrical .aboutTheatricalPoster:nth-child(4) {
+  animation-delay: 540ms;
+}
+
+.aboutExperience.isVisible.aboutStepTheatrical .aboutTheatricalPoster:nth-child(5) {
+  animation-delay: 420ms;
+}
+
+.aboutExperience.isVisible.aboutStepTheatrical .aboutTheatricalPoster:nth-child(6) {
+  animation-delay: 500ms;
+}
+
+.aboutExperience.isVisible.aboutStepTheatrical .aboutTheatricalPoster:nth-child(7) {
+  animation-delay: 580ms;
+}
+
+.aboutExperience.isVisible.aboutStepTheatrical .aboutTheatricalPoster:nth-child(8) {
+  animation-delay: 660ms;
+}
+
+.aboutWhoSlide {
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr) auto;
+  row-gap: clamp(14px, 2svh, 30px);
+  padding: clamp(24px, 4.2svh, 60px) clamp(28px, 5vw, 96px);
+  background:
+    linear-gradient(180deg, rgba(18, 3, 1, 0.4) 0%, rgba(18, 3, 1, 0.2) 38%, rgba(18, 3, 1, 0.62) 100%),
+    url("/about/crowd.png") center 32% / cover no-repeat,
+    linear-gradient(135deg, #7c0f05 0%, #c9230d 46%, #4d0b04 100%);
+  background-blend-mode: normal, multiply, normal;
   color: white;
   overflow: hidden;
 }
 
-.verticalAboutLabel {
-  position: absolute;
-  left: clamp(22px, 2.8vw, 46px);
-  top: 50%;
-  z-index: 2;
+.aboutWhoTitle {
+  grid-row: 1;
+  margin: clamp(18px, 3svh, 44px) 0 0;
+  justify-self: start;
   color: var(--gold);
   font-family: var(--font-figtree), sans-serif;
-  font-size: clamp(2.8rem, 5.4vw, 6.8rem);
-  font-weight: 900;
-  letter-spacing: 0;
-  line-height: 0.82;
-  text-transform: uppercase;
-  writing-mode: vertical-rl;
-  transform: translate3d(-18px, -50%, 0) scale(0.92);
-  opacity: 0;
-  filter: drop-shadow(0 10px 0 rgba(74, 11, 2, 0.54));
-  pointer-events: none;
-}
-
-.aboutExperience.isVisible .verticalAboutLabel {
-  animation: verticalLabelIn 820ms cubic-bezier(0.2, 1.45, 0.32, 1) 80ms forwards;
-}
-
-.verticalAboutLabel span {
-  position: relative;
-  display: inline-block;
-  clip-path: inset(0 0 100% 0);
-}
-
-.aboutExperience.isVisible .verticalAboutLabel span {
-  animation: verticalTypeLoop 2600ms steps(10, end) 980ms infinite;
-}
-
-.storyShell {
-  display: grid;
-  gap: clamp(16px, 2.1vw, 28px);
-  width: min(1220px, 100%);
-  margin: 0 auto;
-}
-
-.storyHeader {
-  display: grid;
-  max-width: 1120px;
-}
-
-.microBadge {
-  width: fit-content;
-  padding: 10px 15px;
-  border: 2px solid rgba(255, 196, 0, 0.9);
-  background: rgba(19, 15, 12, 0.28);
-  color: var(--gold);
-  font-size: clamp(0.78rem, 1vw, 0.95rem);
-  font-weight: 900;
-  text-transform: uppercase;
-  box-shadow: 0 7px 0 rgba(74, 11, 2, 0.52);
-  opacity: 0;
-  transform: translate3d(-22px, 0, 0) rotate(-1deg);
-}
-
-.aboutExperience.isVisible .microBadge {
-  animation: storyBadgeIn 780ms cubic-bezier(0.2, 1.35, 0.32, 1) 120ms forwards;
-}
-
-.storyHeader h2 {
-  margin: 0;
-  display: grid;
-  gap: clamp(0px, 0.25vw, 4px);
-  color: var(--gold);
-  font-family: var(--font-figtree), sans-serif;
-  font-size: clamp(2.8rem, 6.6vw, 7rem);
-  line-height: 0.84;
-  letter-spacing: 0;
-  text-transform: uppercase;
-  filter: drop-shadow(0 12px 0 rgba(74, 11, 2, 0.5));
-}
-
-.storyHeader h2 span {
-  display: block;
-  width: fit-content;
-  opacity: 0;
-  transform: translate3d(-42px, 18px, 0) rotate(-2deg) scale(0.86);
-  transform-origin: left center;
-}
-
-.aboutExperience.isVisible .storyHeader h2 span {
-  animation: storyHeadlinePop 950ms cubic-bezier(0.2, 1.55, 0.32, 1) forwards;
-}
-
-.storyHeader h2 span:first-child {
-  color: #ffffff;
-  font-size: 0.58em;
-  animation-delay: 220ms;
-}
-
-.storyHeader h2 span:nth-child(2) {
-  animation-delay: 380ms;
-}
-
-.explorer {
-  display: grid;
-  grid-template-columns: minmax(220px, 300px) minmax(0, 1fr);
-  gap: clamp(16px, 2vw, 28px);
-  align-items: stretch;
-}
-
-.checkpointRail {
-  display: grid;
-  gap: clamp(10px, 1.2vw, 14px);
-  perspective: 900px;
-}
-
-.checkpoint {
-  position: relative;
-  min-height: clamp(70px, 8.8vh, 84px);
-  display: grid;
-  grid-template-columns: 34px 1fr;
-  grid-template-rows: auto auto;
-  align-items: center;
-  gap: 4px 14px;
-  padding: clamp(13px, 1.4vw, 16px) clamp(16px, 1.7vw, 20px);
-  border: 2px solid rgba(255, 196, 0, 0.48);
-  background:
-    linear-gradient(135deg, rgba(255, 196, 0, 0.08), rgba(19, 15, 12, 0.42) 45%),
-    rgba(19, 15, 12, 0.32);
-  color: rgba(255, 255, 255, 0.86);
-  cursor: pointer;
-  font: inherit;
-  font-weight: 900;
-  text-transform: uppercase;
-  clip-path: polygon(0 0, calc(100% - 22px) 0, 100% 22px, 100% 100%, 22px 100%, 0 calc(100% - 22px));
-  box-shadow: 0 10px 0 rgba(74, 11, 2, 0.55);
-  opacity: 0;
-  transform: translate3d(-28px, 12px, 0) rotate(-1deg) scale(0.94);
-  transition: transform 200ms ease, color 200ms ease, border-color 200ms ease, background 200ms ease, box-shadow 200ms ease;
-}
-
-.checkpoint::before {
-  content: "";
-  position: absolute;
-  inset: 8px;
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  clip-path: inherit;
-  pointer-events: none;
-}
-
-.checkpoint svg {
-  grid-row: 1 / span 2;
-  width: 26px;
-  height: 26px;
-}
-
-.checkpoint small {
-  color: rgba(255, 196, 0, 0.72);
-  font-size: 0.72rem;
-  line-height: 1;
-}
-
-.checkpoint span {
-  font-size: clamp(1.12rem, 1.5vw, 1.45rem);
-  line-height: 0.95;
-}
-
-.aboutExperience.isVisible .checkpoint {
-  animation: checkpointIn 720ms cubic-bezier(0.2, 1.45, 0.32, 1) forwards;
-}
-
-.checkpoint:nth-child(1) {
-  animation-delay: 560ms;
-}
-
-.checkpoint:nth-child(2) {
-  animation-delay: 660ms;
-}
-
-.checkpoint:nth-child(3) {
-  animation-delay: 760ms;
-}
-
-.checkpoint:nth-child(4) {
-  animation-delay: 860ms;
-}
-
-.checkpoint:hover,
-.checkpoint.active {
-  border-color: var(--gold);
-  background:
-    linear-gradient(135deg, rgba(255, 196, 0, 0.34), rgba(171, 39, 4, 0.72) 48%),
-    rgba(19, 15, 12, 0.34);
-  color: var(--gold);
-  transform: translate3d(12px, -7px, 0) rotateY(-8deg) rotateZ(0.4deg) scale(1.045);
-  box-shadow: 0 15px 0 rgba(74, 11, 2, 0.68);
-}
-
-.checkpoint.active small {
-  color: #ffffff;
-}
-
-.checkpoint:focus-visible {
-  outline: 3px solid white;
-  outline-offset: 4px;
-}
-
-.storyStage {
-  position: relative;
-  min-height: clamp(278px, 29vw, 380px);
-  display: grid;
-  align-content: center;
-  gap: clamp(12px, 1.45vw, 20px);
-  padding: clamp(20px, 2.55vw, 36px);
-  border: 3px solid rgba(255, 196, 0, 0.82);
-  background:
-    linear-gradient(135deg, rgba(20, 11, 8, 0.86), rgba(82, 18, 10, 0.72)),
-    rgba(19, 15, 12, 0.42);
-  box-shadow:
-    0 16px 0 rgba(74, 11, 2, 0.62),
-    inset 0 0 0 1px rgba(255, 255, 255, 0.12);
-  clip-path: polygon(0 0, calc(100% - 38px) 0, 100% 38px, 100% 100%, 38px 100%, 0 calc(100% - 38px));
-  opacity: 0;
-  transform: translate3d(22px, 18px, 0) rotate(0.4deg) scale(0.985);
-}
-
-.aboutExperience.isVisible .storyStage {
-  animation: stageSwap 560ms cubic-bezier(0.2, 1.2, 0.32, 1) forwards;
-}
-
-.stageTag {
-  width: fit-content;
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
-  padding: 8px 12px;
-  background: var(--gold);
-  color: var(--ink);
-  font-size: clamp(0.78rem, 1vw, 0.95rem);
-  font-weight: 900;
-  text-transform: uppercase;
-  box-shadow: 0 6px 0 rgba(74, 11, 2, 0.52);
-}
-
-.chapterTitle {
-  margin: 0;
-  color: var(--gold);
-  font-family: var(--font-figtree), sans-serif;
-  font-size: clamp(2rem, 4.2vw, 4.45rem);
+  font-weight: 1000;
+  font-size: clamp(4.4rem, 4.72vw, 5.7rem);
   line-height: 0.86;
   letter-spacing: 0;
   text-transform: uppercase;
-  filter: drop-shadow(0 8px 0 rgba(74, 11, 2, 0.54));
-}
-
-.storyStage h3 {
-  max-width: 900px;
-  margin: 0;
-  color: #ffffff;
-  font-size: clamp(1.06rem, 1.62vw, 1.72rem);
-  line-height: 1.08;
-  letter-spacing: 0;
-  text-transform: uppercase;
-}
-
-.storyStage p:not(.chapterTitle) {
-  max-width: 880px;
-  margin: 0;
-  color: rgba(255, 255, 255, 0.86);
-  font-size: clamp(0.86rem, 1vw, 1rem);
-  line-height: 1.38;
-  font-weight: 800;
-}
-
-.progressTrack {
-  width: min(520px, 100%);
-  height: 16px;
-  padding: 3px;
-  border: 2px solid rgba(255, 196, 0, 0.82);
-  background: rgba(19, 15, 12, 0.42);
-  box-shadow: 0 6px 0 rgba(74, 11, 2, 0.5);
-}
-
-.progressTrack span {
-  display: block;
-  height: 100%;
-  background: linear-gradient(90deg, var(--gold), #ffffff);
-  animation: meterGrow 640ms cubic-bezier(0.2, 1.2, 0.32, 1) forwards;
-}
-
-.windowDock {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: clamp(12px, 1.6vw, 22px);
-}
-
-.windowToken {
-  min-height: clamp(48px, 6.2vh, 58px);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-  padding: 12px 16px;
-  border: 2px solid rgba(255, 196, 0, 0.58);
-  background: rgba(19, 15, 12, 0.28);
-  color: var(--gold);
-  font-size: clamp(0.9rem, 1.2vw, 1.1rem);
-  font-weight: 900;
-  text-transform: uppercase;
-  box-shadow: 0 8px 0 rgba(74, 11, 2, 0.48);
+  text-shadow: 0 10px 0 rgba(93, 10, 1, 0.58);
+  filter: none;
   opacity: 0;
-  transform: translateY(18px) scale(0.96);
+  transform: translate3d(-4vw, 0, 0);
 }
 
-.aboutExperience.isVisible .windowToken {
-  animation: dockIn 760ms cubic-bezier(0.2, 1.35, 0.32, 1) forwards;
+.aboutExperience.isVisible.aboutStepWho .aboutWhoTitle {
+  animation: aboutTitleIn 760ms cubic-bezier(0.2, 1.35, 0.32, 1) 80ms forwards;
 }
 
-.windowToken:nth-child(1) {
-  animation-delay: 960ms;
+.aboutCenterBlock {
+  grid-row: 2;
+  height: 100%;
+  display: grid;
+  align-content: center;
+  justify-items: center;
+  gap: clamp(24px, 4.6svh, 50px);
 }
 
-.windowToken:nth-child(2) {
-  animation-delay: 1080ms;
+.aboutLogo {
+  justify-self: center;
+  display: block;
+  width: min(580px, 36vw);
+  height: auto;
+  filter: drop-shadow(0 12px 24px rgba(0, 0, 0, 0.4));
+  opacity: 0;
+  transform: translate3d(0, 22px, 0) scale(0.96);
 }
 
-.windowToken:nth-child(3) {
-  animation-delay: 1200ms;
+.aboutExperience.isVisible.aboutStepWho .aboutLogo {
+  animation: aboutLogoIn 820ms cubic-bezier(0.16, 1, 0.3, 1) 200ms forwards;
 }
 
-@keyframes storyBadgeIn {
+.aboutCopyBlock {
+  display: grid;
+  gap: clamp(20px, 3svh, 34px);
+  max-width: min(1280px, 78vw);
+  justify-items: center;
+  text-align: center;
+}
+
+.aboutCopyBlock p {
+  margin: 0;
+  color: rgba(255, 255, 255, 0.96);
+  font-family: var(--font-figtree), sans-serif;
+  font-weight: 500;
+  line-height: 1.12;
+  font-size: clamp(1.55rem, 2.05vw, 2.55rem);
+  opacity: 0;
+  transform: translate3d(0, 16px, 0);
+}
+
+.aboutExperience.isVisible.aboutStepWho .aboutCopyBlock p {
+  animation: aboutCopyIn 700ms cubic-bezier(0.2, 1.2, 0.32, 1) forwards;
+}
+
+.aboutExperience.isVisible.aboutStepWho .aboutCopyBlock p:nth-child(1) {
+  animation-delay: 440ms;
+}
+
+.aboutExperience.isVisible.aboutStepWho .aboutCopyBlock p:nth-child(2) {
+  animation-delay: 560ms;
+}
+
+.aboutStatsRow {
+  grid-row: 3;
+  justify-self: center;
+  transform: translateY(clamp(-38px, -4svh, -18px));
+}
+
+.aboutStatsImg {
+  display: block;
+  width: min(760px, 46vw);
+  height: auto;
+  opacity: 0;
+  transform: translate3d(0, 18px, 0) scale(0.96);
+}
+
+.aboutExperience.isVisible.aboutStepWho .aboutStatsImg {
+  animation: aboutStatsIn 760ms cubic-bezier(0.2, 1.35, 0.32, 1) 720ms forwards;
+}
+
+@keyframes aboutInfraHeadlineIn {
   to {
     opacity: 1;
-    transform: translate3d(0, 0, 0) rotate(-1deg);
+    transform: translate3d(0, 0, 0);
   }
 }
 
-@keyframes verticalLabelIn {
+@keyframes aboutInfraCopyIn {
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@keyframes aboutInfraCardIn {
+  58% {
+    opacity: 1;
+    transform: translate3d(-3px, -6px, 0) scale(1.018);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+}
+
+@keyframes aboutIndustryTextIn {
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@keyframes aboutIndustryTitleIn {
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@keyframes aboutIndustryPanelIn {
+  58% {
+    opacity: 1;
+    transform: translate3d(0, -6px, 0) scale(1.012);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+}
+
+@keyframes aboutTheatricalPosterIn {
   0% {
     opacity: 0;
-    transform: translate3d(-18px, -50%, 0) scale(0.92);
+    transform: translate3d(0, 42px, 0) scale(0.94);
   }
 
   58% {
     opacity: 1;
-    transform: translate3d(5px, -50%, 0) scale(1.05);
+    transform: translate3d(0, -8px, 0) scale(1.025);
   }
 
   100% {
     opacity: 1;
-    transform: translate3d(0, -50%, 0) scale(1);
+    transform: translate3d(0, 0, 0) scale(1);
   }
 }
 
-@keyframes verticalTypeLoop {
-  0% {
-    clip-path: inset(0 0 100% 0);
+@media (max-width: 1100px) {
+  .aboutIndustrySlide {
+    row-gap: clamp(14px, 2svh, 26px);
+    padding: clamp(42px, 7svh, 78px) clamp(22px, 5vw, 54px) clamp(28px, 4svh, 48px);
   }
 
-  34%,
-  74% {
-    clip-path: inset(0 0 0 0);
+  .aboutTheatricalSlide {
+    row-gap: clamp(22px, 3svh, 42px);
+    padding: clamp(44px, 6svh, 70px) clamp(20px, 4vw, 46px) clamp(28px, 4svh, 42px);
   }
 
-  88%,
-  100% {
-    clip-path: inset(100% 0 0 0);
+  .aboutTheatricalTitle {
+    font-size: clamp(3rem, 8.6vw, 5.7rem);
+    white-space: normal;
+  }
+
+  .aboutTheatricalGrid {
+    width: min(900px, 90vw);
+    gap: clamp(12px, 2vw, 22px);
+  }
+
+  .aboutTheatricalPoster {
+    width: clamp(118px, 18vw, 190px);
+    padding: 7px;
+  }
+
+  .aboutInfrastructureCopy {
+    left: clamp(22px, 5vw, 54px);
+    right: clamp(18px, 4vw, 44px);
+    top: clamp(58px, 10svh, 110px);
+  }
+
+  .aboutInfrastructureCopy h2 {
+    margin-bottom: clamp(28px, 5svh, 56px);
+    font-size: clamp(3rem, 11vw, 6.6rem);
+    white-space: normal;
+    max-width: 94vw;
+  }
+
+  .aboutInfrastructureCopy p {
+    max-width: 90vw;
+    font-size: clamp(1.16rem, 3.2vw, 2rem);
+  }
+
+  .aboutInfrastructureCopy p + p {
+    max-width: 92vw;
+    margin-top: clamp(18px, 3.2svh, 34px);
+  }
+
+  .aboutInfrastructureCards {
+    left: 50%;
+    width: min(1020px, 90vw);
+    grid-template-columns: repeat(3, minmax(180px, 1fr));
+    gap: clamp(14px, 2.4vw, 28px);
+    bottom: clamp(24px, 4.2svh, 44px);
+    transform: translateX(-50%);
+  }
+
+  .aboutInfrastructureCard {
+    aspect-ratio: 1 / 1;
+    height: auto;
+  }
+
+  .aboutInfrastructureCard figcaption {
+    font-size: clamp(0.9rem, 2.1vw, 1.28rem);
+  }
+
+  .aboutIndustryHeader {
+    width: min(880px, 86vw);
+    text-align: center;
+  }
+
+  .aboutIndustryHeader h2 {
+    max-width: 94vw;
+    font-size: clamp(3.2rem, 10.4vw, 6.4rem);
+    white-space: normal;
+  }
+
+  .aboutIndustryHeader p {
+    width: 100%;
+    margin-top: clamp(28px, 5.6svh, 58px);
+    margin-left: 0;
+    text-align: center;
+    font-size: clamp(1.7rem, 4.4vw, 3.1rem);
+  }
+
+  .aboutPartnerPanel {
+    width: min(880px, 86vw);
+    min-height: clamp(116px, 16svh, 172px);
+    padding: clamp(18px, 3vw, 30px) clamp(22px, 4vw, 48px);
+  }
+
+  .aboutProductionTitle {
+    width: min(880px, 86vw);
+    text-align: center;
+    font-size: clamp(1.75rem, 4.5vw, 3rem);
+  }
+
+  .aboutPartnerPanel img {
+    width: min(760px, 100%);
+    max-height: none;
   }
 }
 
+@media (max-width: 720px) {
+  .aboutIndustrySlide {
+    row-gap: clamp(12px, 1.8svh, 20px);
+    padding: clamp(30px, 5svh, 48px) 22px clamp(24px, 4svh, 38px);
+  }
+
+  .aboutTheatricalSlide {
+    row-gap: 16px;
+    padding: clamp(30px, 5svh, 44px) 16px clamp(22px, 4svh, 34px);
+  }
+
+  .aboutTheatricalTitle {
+    font-size: clamp(2.35rem, 11vw, 4rem);
+  }
+
+  .aboutTheatricalGrid {
+    width: min(420px, 92vw);
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 8px;
+  }
+
+  .aboutTheatricalPoster {
+    width: 100%;
+    padding: 4px;
+  }
+
+  .aboutInfrastructureCards {
+    grid-template-columns: 1fr;
+    width: min(390px, 84vw);
+    left: 50%;
+    transform: translateX(-50%);
+    bottom: clamp(18px, 3svh, 28px);
+    gap: 10px;
+  }
+
+  .aboutInfrastructureCard {
+    aspect-ratio: 1 / 1;
+    height: auto;
+    border-radius: 14px;
+  }
+
+  .aboutInfrastructureCard figcaption {
+    bottom: 12px;
+  }
+
+  .aboutWhoSlide {
+    padding: clamp(24px, 5svh, 42px) 22px;
+  }
+
+  .aboutWhoTitle {
+    justify-self: center;
+    text-align: center;
+    font-size: clamp(2.4rem, 12vw, 4rem);
+  }
+
+  .aboutLogo {
+    width: min(360px, 72vw);
+  }
+
+  .aboutCopyBlock {
+    max-width: 92vw;
+  }
+
+  .aboutCopyBlock p {
+    font-size: clamp(1rem, 4.4vw, 1.28rem);
+  }
+
+  .aboutStatsImg {
+    width: min(440px, 86vw);
+  }
+
+  .aboutIndustryHeader {
+    width: min(420px, 88vw);
+    text-align: center;
+  }
+
+  .aboutIndustryHeader h2 {
+    font-size: clamp(2.35rem, 12.6vw, 4.1rem);
+  }
+
+  .aboutIndustryHeader p {
+    margin-top: clamp(22px, 4.2svh, 34px);
+    margin-left: 0;
+    width: 100%;
+    text-align: center;
+    font-size: clamp(1.22rem, 6.1vw, 2rem);
+  }
+
+  .aboutPartnerPanel {
+    width: min(420px, 88vw);
+    min-height: clamp(92px, 13svh, 132px);
+    border-radius: 12px;
+    padding: clamp(14px, 3vw, 22px);
+  }
+
+  .aboutProductionTitle {
+    width: min(420px, 88vw);
+    text-align: center;
+    font-size: clamp(1.25rem, 6.5vw, 2.08rem);
+  }
+
+  .aboutPartnerPanel img {
+    width: 100%;
+    max-height: none;
+  }
+}
+
+@media (max-height: 760px) and (min-width: 721px) {
+  .aboutIndustrySlide {
+    row-gap: clamp(10px, 1.45svh, 18px);
+    padding-top: clamp(34px, 5.4svh, 54px);
+    padding-bottom: clamp(24px, 3.5svh, 38px);
+  }
+
+  .aboutTheatricalSlide {
+    row-gap: clamp(18px, 3svh, 30px);
+    padding-top: clamp(32px, 5svh, 50px);
+    padding-bottom: clamp(20px, 3svh, 34px);
+  }
+
+  .aboutTheatricalTitle {
+    font-size: clamp(3.4rem, 8.8svh, 5.4rem);
+  }
+
+  .aboutTheatricalPoster {
+    width: clamp(135px, 11.8vw, 230px);
+    padding: 7px;
+  }
+
+  .aboutIndustryHeader h2 {
+    font-size: clamp(3.5rem, 8.7svh, 5.6rem);
+  }
+
+  .aboutIndustryHeader p,
+  .aboutProductionTitle {
+    font-size: clamp(1.7rem, 4.4svh, 2.9rem);
+  }
+
+  .aboutIndustryHeader p {
+    margin-top: clamp(22px, 3.8svh, 36px);
+  }
+
+  .aboutPartnerPanel {
+    min-height: clamp(96px, 15svh, 128px);
+    padding-top: clamp(14px, 2svh, 22px);
+    padding-bottom: clamp(14px, 2svh, 22px);
+  }
+
+  .aboutPartnerPanel img {
+    width: min(720px, 100%);
+    max-height: none;
+  }
+}
+
+@keyframes aboutTitleIn {
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@keyframes aboutLogoIn {
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+}
+
+@keyframes aboutCopyIn {
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@keyframes aboutStatsIn {
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+}
 
 @keyframes storyHeadlinePop {
   0% {
@@ -1122,37 +1647,6 @@ section {
   100% {
     opacity: 1;
     transform: translate3d(0, 0, 0) rotate(0deg) scale(1);
-  }
-}
-
-@keyframes checkpointIn {
-  to {
-    opacity: 1;
-    transform: translate3d(0, 0, 0) rotate(0deg) scale(1);
-  }
-}
-
-@keyframes stageSwap {
-  0% {
-    opacity: 0;
-    transform: translate3d(22px, 18px, 0) rotate(0.4deg) scale(0.985);
-  }
-
-  100% {
-    opacity: 1;
-    transform: translate3d(0, 0, 0) rotate(0deg) scale(1);
-  }
-}
-
-@keyframes meterGrow {
-  0% {
-    transform: scaleX(0);
-    transform-origin: left center;
-  }
-
-  100% {
-    transform: scaleX(1);
-    transform-origin: left center;
   }
 }
 
@@ -1734,11 +2228,11 @@ section {
 
 .movieMetricPaperCopy {
   position: absolute;
-  left: 13%;
-  top: 18%;
+  left: 11%;
+  top: 26%;
   z-index: 2;
   width: 42%;
-  height: 70%;
+  height: 60%;
   display: grid;
   grid-template-rows: repeat(2, minmax(0, 1fr));
   align-items: stretch;
@@ -1797,9 +2291,9 @@ section {
 
 .movieMetricPaperCopy h3.isLongTitle {
   width: 100%;
-  font-size: clamp(2.8rem, 4.8vw, 6rem);
-  line-height: 0.82;
-  letter-spacing: 0;
+  font-size: clamp(3.8rem, 6.8vw, 6rem);
+  line-height: 1.12;
+  letter-spacing: 0.42px;
   word-spacing: 0.09em;
   justify-self: start;
   text-align: left;
@@ -1870,13 +2364,13 @@ section {
 .movieMetricPaperPoster {
   position: absolute;
   right: 7%;
-  top: 10%;
+  top: 18%;
   z-index: 2;
   width: 32%;
-  height: 90%;
+  height: 70%;
   max-width: 32%;
-  max-height: 80%;
-  object-fit: contain;
+  max-height: 70%;
+  object-fit: cover;
   object-position: center;
   border: 0;
   transform: rotate(-3.3deg);
@@ -3703,8 +4197,17 @@ section {
   top: auto;
   right: auto;
   bottom: 0;
-  left: -46vw;
-  width: 198vw;
+  /*
+   * The panorama is sized by width (198vw), so its on-screen HEIGHT depends
+   * only on viewport width -- on a short / wider-than-16:9 viewport (Windows
+   * 125% scaling, browser chrome) the temple towers over the text. Cap the
+   * width by viewport height (352svh == 198vw on a true 16:9 viewport) so the
+   * composition keeps the exact 16:9 proportion everywhere, and re-anchor the
+   * left edge from the design centre (~53vw) so it stays centred when capped.
+   * This is a strict NO-OP on a true 16:9 viewport (the 100% design).
+   */
+  left: calc(53vw - min(99vw, 176svh));
+  width: min(198vw, 352svh);
   height: auto;
   object-fit: contain;
   object-position: center bottom;
@@ -3738,7 +4241,15 @@ section {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  object-position: center;
+  /*
+   * All hostel layers are aligned 1920x1080 composites and the character +
+   * "VJ SIDDHU" name plate sit at the bottom of that canvas. With centre
+   * cropping, a short / wider-than-16:9 viewport (Windows scaling + browser
+   * chrome) trims the top AND bottom equally and clips the name plate.
+   * Anchoring to the bottom keeps every layer aligned and preserves the plate,
+   * trimming only decorative sky from the top. No-op on a true 16:9 viewport.
+   */
+  object-position: center bottom;
   pointer-events: none;
   user-select: none;
 }
@@ -3913,12 +4424,41 @@ section {
 
 .actualAskClockWrap {
   position: absolute;
+  left: 50%;
+  top: 58%;
+  width: min(2120px, 128vw);
+  max-height: 96vh;
   z-index: 6;
   transform: translate(-50%, -50%);
   pointer-events: none;
   user-select: none;
   display: grid;
   place-items: center;
+}
+
+/*
+ * ActualAsk clock fit-to-viewport hardening.
+ * The clock is a square GIF centred at 58% and sized to ~96vh. On a short /
+ * wider-than-16:9 viewport (Windows scaling + browser chrome) the headline
+ * sits proportionally lower while the clock stays put, so the clock rides up
+ * into the "IF YOU GIVE US" line. On short viewports lift the headline and
+ * drop the clock so the tab clears the text -- matching the 16:9 layout.
+ * Height-gated, so it is a NO-OP at the 1080px design height.
+ */
+@media (max-height: 860px) {
+  .actualAskIntroShell {
+    margin-top: clamp(24px, 4svh, 70px);
+  }
+
+  .actualAskClockWrap {
+    top: 65%;
+  }
+}
+
+@media (max-height: 760px) {
+  .actualAskClockWrap {
+    top: 68%;
+  }
 }
 
 .actualAskClockMotion {
@@ -5965,6 +6505,100 @@ section {
   background: rgba(255, 196, 0, 0.12);
 }
 
+/*
+ * Visibility Plan table fit-to-viewport hardening.
+ * The table holds 34 rows (two columns of 17). At the full design height
+ * (1920x1080 @ 100% OS scale) it fits exactly, so these height media queries
+ * are a deliberate NO-OP at >= 1000px tall -- the 100% layout is untouched.
+ * On shorter viewports (Windows 125%/150% scaling, laptops) the vertical
+ * rhythm shrinks step by step so every row stays inside the section instead
+ * of being clipped by `overflow: hidden`.
+ */
+@media (max-height: 940px) {
+  .mediaPlanDetail {
+    padding-top: clamp(18px, 2.4svh, 34px);
+    padding-bottom: clamp(18px, 2.4svh, 34px);
+  }
+
+  .mediaPlanDetailShell {
+    gap: clamp(12px, 1.6svh, 22px);
+  }
+
+  .mediaPlanDetail .mediaPlanTableHeader h2 {
+    font-size: clamp(2.4rem, 6.4svh, 4.6rem);
+  }
+
+  .mediaPlanTable {
+    border-spacing: 0 5px;
+  }
+
+  .mediaPlanTable th,
+  .mediaPlanTable td {
+    padding-top: 5px;
+    padding-bottom: 5px;
+  }
+}
+
+@media (max-height: 780px) {
+  .mediaPlanDetail {
+    padding-top: clamp(14px, 2svh, 24px);
+    padding-bottom: clamp(14px, 2svh, 24px);
+  }
+
+  .mediaPlanDetailShell {
+    gap: clamp(10px, 1.3svh, 16px);
+  }
+
+  .mediaPlanDetail .mediaPlanTableHeader h2 {
+    font-size: clamp(2rem, 5.4svh, 3.6rem);
+  }
+
+  .mediaPlanTable {
+    border-spacing: 0 4px;
+  }
+
+  .mediaPlanTable th,
+  .mediaPlanTable td {
+    padding-top: 4px;
+    padding-bottom: 4px;
+  }
+
+  .mediaPlanTable td {
+    font-size: clamp(0.64rem, 0.7vw, 0.8rem);
+  }
+}
+
+@media (max-height: 680px) {
+  .mediaPlanDetail {
+    padding-top: 12px;
+    padding-bottom: 12px;
+  }
+
+  .mediaPlanDetailShell {
+    gap: 10px;
+  }
+
+  .mediaPlanDetail .mediaPlanTableHeader h2 {
+    font-size: clamp(1.7rem, 4.8svh, 3rem);
+  }
+
+  .mediaPlanTable {
+    border-spacing: 0 3px;
+  }
+
+  .mediaPlanTable th,
+  .mediaPlanTable td {
+    padding-top: 3px;
+    padding-bottom: 3px;
+    line-height: 1.06;
+  }
+
+  .mediaPlanTable td,
+  .mediaPlanTable tbody td:first-child {
+    font-size: clamp(0.58rem, 0.64vw, 0.72rem);
+  }
+}
+
 .titleScrollCopy {
   position: relative;
   z-index: 2;
@@ -6584,7 +7218,7 @@ section {
   }
 
   .aboutExperience {
-    padding: 30px 22px 34px 66px;
+    padding: 0;
   }
 
   .verticalAboutLabel {
@@ -7945,4 +8579,34 @@ body {
   min-height: 100vh;
   min-height: 100svh;
   overflow: hidden;
+}
+
+/*
+ * Regional Audience fit-to-viewport hardening.
+ * On very short viewports (e.g. a 1366x768 laptop at Windows 125% scale =>
+ * 1093x614 CSS px) the stacked market/age cards were tall enough to clip the
+ * last AGE percentage ("12%") under `overflow: hidden`. This reclaims vertical
+ * room from the section chrome (padding, header row, title, gaps) so every
+ * card stays inside the frame. Height-gated at <= 700px, so it is a strict
+ * NO-OP at the 100% design height (1080px) and at the already-good 720px case.
+ */
+@media (max-height: 700px) {
+  .regionalAudience {
+    padding-top: clamp(12px, 2svh, 20px);
+    padding-bottom: clamp(12px, 2svh, 20px);
+  }
+
+  .regionalAudienceShell {
+    --regional-shell-rows: clamp(50px, 8svh, 78px) minmax(0, 1fr);
+    --regional-shell-gap: clamp(8px, 1svh, 14px);
+    --regional-title-offset: clamp(4px, 0.8svh, 10px);
+  }
+
+  .regionalAudienceMegaTitle {
+    --regional-title-size: clamp(2.6rem, 6svh, 4.6rem);
+  }
+
+  .audienceAgeBlock {
+    gap: clamp(6px, 1svh, 12px);
+  }
 }
