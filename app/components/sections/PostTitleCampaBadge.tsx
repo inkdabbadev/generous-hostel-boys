@@ -17,6 +17,7 @@ const badgeControls = {
 export default function PostTitleCampaBadge() {
   const markerRef = useRef<HTMLDivElement>(null);
   const [isVisible, setIsVisible] = useState(false);
+  const [isHistoryVisible, setIsHistoryVisible] = useState(false);
 
   useEffect(() => {
     let frame = 0;
@@ -24,12 +25,20 @@ export default function PostTitleCampaBadge() {
     const updateVisibility = () => {
       frame = 0;
       const marker = markerRef.current;
+      const historySection = document.querySelector(".historySection");
 
       if (!marker) {
         return;
       }
 
       setIsVisible(marker.getBoundingClientRect().top <= 1);
+      if (historySection) {
+        const rect = historySection.getBoundingClientRect();
+        const viewportCenter = window.innerHeight / 2;
+        setIsHistoryVisible(rect.top <= viewportCenter && rect.bottom >= viewportCenter);
+      } else {
+        setIsHistoryVisible(false);
+      }
     };
 
     const requestUpdate = () => {
@@ -60,9 +69,9 @@ export default function PostTitleCampaBadge() {
       <motion.div
         aria-hidden="true"
         animate={{
-          opacity: isVisible ? 1 : 0,
-          y: isVisible ? 0 : -18,
-          scale: isVisible ? 1 : 0.92,
+          opacity: isVisible && !isHistoryVisible ? 1 : 0,
+          y: isVisible && !isHistoryVisible ? 0 : -18,
+          scale: isVisible && !isHistoryVisible ? 1 : 0.92,
         }}
         className="postTitleCampaBadge"
         initial={false}

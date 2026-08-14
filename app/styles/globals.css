@@ -3149,7 +3149,7 @@ section {
 }
 
 .regionalAudienceShell {
-  width: min(1780px, 100%);
+  width: min(1740px, 100%);
   height: 100%;
   margin: 0 auto;
   display: grid;
@@ -3190,9 +3190,9 @@ section {
 .audienceExecutiveBoard {
   position: relative;
   display: grid;
-  grid-template-columns: var(--regional-main-cols, minmax(390px, 0.82fr) minmax(720px, 1.18fr));
+  grid-template-columns: var(--regional-main-cols, minmax(430px, 0.72fr) minmax(840px, 1.28fr));
   align-items: center;
-  gap: var(--regional-main-gap, clamp(28px, 3.4vw, 62px));
+  gap: var(--regional-main-gap, clamp(30px, 3vw, 56px));
   min-height: 0;
   height: 100%;
   padding: 0;
@@ -3226,8 +3226,8 @@ section {
 .audienceHeroMapImage {
   position: relative;
   z-index: 3;
-  width: var(--regional-map-width, min(90%, 570px));
-  max-height: var(--regional-map-max-height, min(60vh, 620px));
+  width: var(--regional-map-width, min(92%, 590px));
+  max-height: var(--regional-map-max-height, min(64vh, 660px));
   object-fit: contain;
   filter:
     drop-shadow(0 18px 0 rgba(74, 11, 2, 0.18))
@@ -3266,8 +3266,9 @@ section {
   grid-template-columns: 1fr;
   align-content: center;
   justify-items: stretch;
-  gap: clamp(10px, 1.5vh, 20px);
+  gap: clamp(8px, 1.05vh, 16px);
   min-width: 0;
+  min-height: 0;
 }
 
 .audienceRegionTitle {
@@ -3276,7 +3277,7 @@ section {
   font-family: var(--font-figtree), sans-serif;
   font-size: var(--regional-region-title-size, clamp(3.8rem, 5.6vw, 7.45rem));
   font-weight: 1000;
-  line-height: 0.8;
+  line-height: 0.82;
   letter-spacing: 0;
   text-align: center;
   text-transform: uppercase;
@@ -3332,21 +3333,23 @@ section {
 .audienceMetricGrid {
   width: 100%;
   display: grid;
-  grid-template-columns: var(--regional-card-cols, minmax(280px, 0.82fr) minmax(460px, 1.18fr));
+  grid-template-columns: var(--regional-card-cols, minmax(390px, 0.88fr) minmax(570px, 1.12fr));
   grid-template-areas:
     "youth state"
     "donut donut";
-  grid-template-rows: var(--regional-card-rows, minmax(176px, 23vh) minmax(260px, 34vh));
-  align-content: center;
+  grid-template-rows: var(--regional-card-rows, minmax(218px, 23.5vh) minmax(292px, 31vh));
+  align-content: stretch;
+  align-self: stretch;
   gap: var(--regional-card-gap, clamp(18px, 1.7vw, 28px));
+  min-height: 0;
 }
 
 .audienceMetricCard {
   position: relative;
   min-height: 0;
   display: grid;
-  align-content: space-between;
-  gap: clamp(10px, 1.1vw, 18px);
+  align-content: center;
+  gap: clamp(10px, 0.95vw, 16px);
   padding: var(--regional-card-pad, clamp(24px, 2vw, 38px));
   border: 0;
   background:
@@ -3384,15 +3387,21 @@ section {
 
 .audienceMetricCardState p {
   color: white;
-  font-size: var(--regional-market-copy-size, clamp(0.9rem, 1.08vw, 1.3rem));
-  font-weight: 500;
-  line-height: 1.08;
+  max-width: 44ch;
+  font-size: var(--regional-market-copy-size, clamp(0.96rem, 1.06vw, 1.28rem));
+  font-weight: 760;
+  line-height: 1.12;
+  display: -webkit-box;
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 4;
 }
 
 .audienceMetricCardYouth {
   grid-area: youth;
   align-content: center;
   justify-items: start;
+  gap: clamp(6px, 0.65vw, 12px);
 }
 
 .audienceMetricCardYouth strong {
@@ -3406,15 +3415,48 @@ section {
 
 .audienceMetricCardYouth p {
   color: white;
-  max-width: 320px;
+  max-width: 360px;
   font-size: var(--regional-youth-copy-size, clamp(1.25rem, 1.72vw, 2.25rem));
   font-weight: 1000;
-  line-height: 0.95;
+  line-height: 0.98;
+  text-transform: uppercase;
+}
+
+.audiencePopulationEstimate {
+  width: min(100%, 360px);
+  display: grid;
+  gap: clamp(2px, 0.24vw, 5px);
+  margin-top: clamp(2px, 0.28vw, 5px);
+  padding-top: clamp(7px, 0.58vw, 11px);
+  border-top: 1px solid rgba(255, 196, 0, 0.32);
+}
+
+.audiencePopulationEstimate span {
+  color: rgba(255, 232, 138, 0.86);
+  font-size: clamp(0.66rem, 0.72vw, 0.88rem);
+  font-weight: 1000;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.audiencePopulationEstimate b {
+  color: white;
+  font-size: clamp(0.98rem, 1.18vw, 1.58rem);
+  font-weight: 1000;
+  line-height: 0.98;
+}
+
+.audiencePopulationEstimate small {
+  color: rgba(255, 255, 255, 0.78);
+  font-size: clamp(0.62rem, 0.64vw, 0.8rem);
+  font-weight: 850;
+  line-height: 1.08;
   text-transform: uppercase;
 }
 
 .audienceMetricCardState {
   grid-area: state;
+  align-content: center;
 }
 
 .audienceMetricCardDonut {
@@ -3422,6 +3464,7 @@ section {
   align-content: center;
   min-height: 0;
   grid-template-rows: 1fr;
+  padding-block: clamp(20px, 1.34vw, 30px);
   border-radius: 12px;
   background:
     linear-gradient(90deg, rgba(47, 5, 2, 0.56), rgba(128, 13, 4, 0.28)),
@@ -3430,9 +3473,9 @@ section {
 
 .audienceMetricDonutRow {
   display: grid;
-  grid-template-columns: var(--regional-donut-col, clamp(165px, 14vw, 230px)) minmax(0, 1fr);
+  grid-template-columns: var(--regional-donut-col, clamp(184px, 12.2vw, 228px)) minmax(0, 1fr);
   align-items: center;
-  gap: clamp(28px, 2.7vw, 50px);
+  gap: clamp(22px, 2.2vw, 42px);
   min-width: 0;
   padding-left: 0;
 }
@@ -3446,8 +3489,9 @@ section {
 
 .audienceMetricCard ul {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: clamp(14px, 1.35vw, 24px) clamp(18px, 2vw, 36px);
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  align-content: center;
+  gap: clamp(14px, 1.08vw, 20px) clamp(20px, 1.55vw, 32px);
   margin: 0;
   padding: 0;
   list-style: none;
@@ -3461,18 +3505,20 @@ section {
     "swatch label"
     "swatch value";
   align-items: start;
-  gap: 6px clamp(12px, 1.1vw, 18px);
+  gap: 4px clamp(10px, 0.9vw, 15px);
   color: white;
-  font-size: clamp(0.88rem, 1vw, 1.2rem);
+  font-size: clamp(0.92rem, 1.06vw, 1.24rem);
   font-weight: 900;
   min-width: 0;
+  min-height: clamp(76px, 5.5vw, 106px);
+  align-content: center;
 }
 
 .audienceMetricCard li span {
   grid-area: swatch;
   width: clamp(4px, 0.38vw, 6px);
-  height: min(var(--age-height), clamp(50px, 4.55vw, 78px));
-  min-height: clamp(42px, 3.9vw, 58px);
+  height: min(var(--age-height), clamp(46px, 3.2vw, 62px));
+  min-height: clamp(36px, 2.6vw, 48px);
   align-self: stretch;
   border-radius: 999px;
   background: linear-gradient(180deg, rgba(255, 239, 160, 0.88), var(--age-color));
@@ -3485,9 +3531,9 @@ section {
   grid-area: value;
   color: var(--gold);
   font-style: normal;
-  font-size: clamp(2.8rem, 3.9vw, 5.25rem);
+  font-size: clamp(2.28rem, 2.9vw, 3.86rem);
   font-weight: 1000;
-  line-height: 0.82;
+  line-height: 0.86;
   letter-spacing: 0;
   white-space: nowrap;
 }
@@ -3495,9 +3541,9 @@ section {
 .audienceMetricCard li strong {
   grid-area: label;
   color: white;
-  font-size: clamp(0.82rem, 0.96vw, 1.14rem);
-  line-height: 0.98;
-  max-width: 8.5em;
+  font-size: clamp(0.7rem, 0.74vw, 0.9rem);
+  line-height: 1;
+  max-width: none;
   text-transform: uppercase;
   overflow-wrap: normal;
 }
@@ -3549,7 +3595,7 @@ section {
 .audienceDonutLabel {
   display: block;
   color: white;
-  font-size: clamp(2.28rem, 2.9vw, 3.9rem);
+  font-size: clamp(2.3rem, 3vw, 3.9rem);
   font-weight: 1000;
   line-height: 1;
   letter-spacing: 0.04em;
@@ -3585,20 +3631,22 @@ section {
 }
 
 .audienceAgeBlock .audienceMetricCard ul {
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: clamp(14px, 1.35vw, 24px) clamp(18px, 2vw, 36px);
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(14px, 1.08vw, 20px) clamp(20px, 1.55vw, 32px);
 }
 
 .audienceAgeBlock .audienceMetricCard li {
   grid-template-columns: clamp(5px, 0.5vw, 8px) minmax(0, 1fr);
-  gap: 6px clamp(12px, 1.1vw, 18px);
-  font-size: clamp(0.88rem, 1vw, 1.2rem);
+  gap: 4px clamp(10px, 0.9vw, 15px);
+  font-size: clamp(0.92rem, 1.06vw, 1.24rem);
+  min-height: clamp(76px, 5.5vw, 106px);
+  align-content: center;
 }
 
 .audienceAgeBlock .audienceMetricCard li span {
   width: clamp(4px, 0.38vw, 6px);
-  height: clamp(72px, 5vw, 88px);
-  min-height: clamp(72px, 5vw, 88px);
+  height: min(var(--age-height), clamp(46px, 3.2vw, 62px));
+  min-height: clamp(36px, 2.6vw, 48px);
 }
 
 .hostelGenreProof {
@@ -7190,6 +7238,27 @@ section {
     grid-template-columns: 1fr;
     justify-content: start;
   }
+
+  .regionalAudienceShell {
+    --regional-card-cols: minmax(335px, 0.92fr) minmax(560px, 1.08fr);
+    --regional-card-pad: clamp(22px, 1.75vw, 32px);
+    --regional-card-rows: minmax(204px, 23vh) minmax(286px, 32vh);
+    --regional-donut-col: clamp(156px, 12.4vw, 200px);
+    --regional-donut-width: clamp(144px, 11.4vw, 184px);
+    --regional-main-cols: minmax(340px, 0.66fr) minmax(720px, 1.34fr);
+    --regional-main-gap: clamp(24px, 2.7vw, 46px);
+    --regional-map-width: min(90%, 540px);
+    --regional-market-copy-size: clamp(1rem, 1.04vw, 1.24rem);
+    --regional-region-title-size: clamp(2.75rem, 4.05vw, 4.75rem);
+    --regional-title-size: clamp(2.75rem, 4.05vw, 4.9rem);
+    --regional-youth-size: clamp(4.1rem, 5.35vw, 6.3rem);
+    --regional-youth-copy-size: clamp(1rem, 1.22vw, 1.38rem);
+  }
+
+  .audienceMetricCard ul,
+  .audienceAgeBlock .audienceMetricCard ul {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
 }
 
 @media (max-width: 640px) {
@@ -8657,13 +8726,38 @@ body {
     --regional-shell-rows: clamp(50px, 8svh, 78px) minmax(0, 1fr);
     --regional-shell-gap: clamp(8px, 1svh, 14px);
     --regional-title-offset: clamp(4px, 0.8svh, 10px);
+    --regional-card-pad: clamp(17px, 2.25svh, 24px);
+    --regional-card-rows: minmax(162px, 22svh) minmax(250px, 35svh);
+    --regional-donut-col: clamp(132px, 18svh, 168px);
+    --regional-donut-width: clamp(118px, 16.5svh, 150px);
+    --regional-market-copy-size: clamp(0.84rem, 2svh, 1rem);
+    --regional-region-title-size: clamp(2.15rem, 6.35svh, 3.7rem);
+    --regional-youth-size: clamp(3.15rem, 8.4svh, 4.85rem);
+    --regional-youth-copy-size: clamp(0.88rem, 2.35svh, 1.16rem);
   }
 
   .regionalAudienceMegaTitle {
-    --regional-title-size: clamp(2.6rem, 6svh, 4.6rem);
+    --regional-title-size: clamp(2.25rem, 5.6svh, 4.2rem);
   }
 
   .audienceAgeBlock {
     gap: clamp(6px, 1svh, 12px);
+  }
+
+  .audienceMetricCard li,
+  .audienceAgeBlock .audienceMetricCard li {
+    min-height: clamp(52px, 10svh, 74px);
+  }
+
+  .audienceMetricCard li em {
+    font-size: clamp(1.72rem, 5.7svh, 3rem);
+  }
+
+  .audienceMetricCard li strong {
+    font-size: clamp(0.58rem, 1.7svh, 0.76rem);
+  }
+
+  .audienceDonutLabel {
+    font-size: clamp(1.62rem, 4.8svh, 2.7rem);
   }
 }

@@ -12,6 +12,9 @@ export type AudienceMarket = {
   icon: string;
   image: string;
   primaryCity: string;
+  youthPopulation: string;
+  populationBasis: string;
+  populationBreakdown?: string[];
   majorHotspots: string[];
   audienceProfile: string;
   marketInsight: string;
@@ -33,9 +36,10 @@ export const audienceMarkets: AudienceMarket[] = [
     icon: "KA",
     image: "karnataka.svg",
     primaryCity: "Bengaluru",
+    youthPopulation: "~1.79-1.87 crore",
+    populationBasis: "Approx. 18-34 population pool",
     majorHotspots: ["Bengaluru", "Mysuru", "Mangaluru", "Hubballi-Dharwad"],
-    audienceProfile:
-      "Urban youth-heavy audience with strong weekend conversion from Bengaluru and Mysuru.",
+    audienceProfile: "Bengaluru-led youth density with Mysuru and Mangaluru weekend reach.",
     marketInsight:
       "Tech-campus clusters and tier-2 multiplex belts respond strongly to meme-led youth campaigns.",
     ageDistribution: [
@@ -62,16 +66,18 @@ export const audienceMarkets: AudienceMarket[] = [
     icon: "TG",
     image: "telugu.svg",
     primaryCity: "Hyderabad",
+    youthPopulation: "~2.40-2.50 crore",
+    populationBasis: "Approx. AP + Telangana 18-34 pool",
+    populationBreakdown: ["AP ~1.40-1.45 cr", "TG ~1.00-1.05 cr"],
     majorHotspots: ["Hyderabad", "Vijayawada", "Visakhapatnam", "Warangal", "Tirupati"],
-    audienceProfile:
-      "Strong metro and tier-2 audience across Telugu-speaking markets with high theatrical energy.",
+    audienceProfile: "Metro and tier-2 clusters with strong group-viewing energy.",
     marketInsight:
       "The region rewards loud positioning, star-adjacent hooks, and youth comedy with repeat group viewing.",
     ageDistribution: [
       { label: "13-17", value: 10, color: "#bee7a8" },
-      { label: "18-24", value: 30, color: "#84d366" },
+      { label: "18-24", value: 29, color: "#84d366" },
       { label: "25-34", value: 32, color: "#238f3d" },
-      { label: "35-44", value: 16, color: "#61bd5e" },
+      { label: "35-44", value: 17, color: "#61bd5e" },
       { label: "45+", value: 12, color: "#e0f4d7" },
     ],
     hotspots: [
@@ -92,14 +98,15 @@ export const audienceMarkets: AudienceMarket[] = [
     icon: "TN",
     image: "tamil.svg",
     primaryCity: "Chennai",
+    youthPopulation: "~2.02-2.10 crore",
+    populationBasis: "Approx. 18-34 population pool",
     majorHotspots: ["Chennai", "Coimbatore", "Madurai", "Tiruchirappalli", "Salem"],
-    audienceProfile:
-      "Wide statewide reach with strong concentration in Chennai and the western belt.",
+    audienceProfile: "Chennai-led youth concentration with Coimbatore and Madurai support.",
     marketInsight:
       "College towns, creator-led chatter, and Tamil comedy timing can convert quickly into opening buzz.",
     ageDistribution: [
-      { label: "13-17", value: 9, color: "#dcc3ff" },
-      { label: "18-24", value: 29, color: "#b985ff" },
+      { label: "13-17", value: 8, color: "#dcc3ff" },
+      { label: "18-24", value: 30, color: "#b985ff" },
       { label: "25-34", value: 33, color: "#6d27a9" },
       { label: "35-44", value: 17, color: "#9954d6" },
       { label: "45+", value: 12, color: "#efe3ff" },
@@ -122,16 +129,17 @@ export const audienceMarkets: AudienceMarket[] = [
     icon: "KL",
     image: "kerala.svg",
     primaryCity: "Kochi",
+    youthPopulation: "~0.90-0.94 crore",
+    populationBasis: "Approx. 18-34 population pool",
     majorHotspots: ["Kochi", "Thiruvananthapuram", "Kozhikode", "Thrissur"],
-    audienceProfile:
-      "Dense, review-sensitive market with digitally aware youth audiences and strong family pockets.",
+    audienceProfile: "Kochi-led review-sensitive youth market across compact city clusters.",
     marketInsight:
       "Smart comedy, campus recall, and strong word-of-mouth can scale fast across compact city clusters.",
     ageDistribution: [
       { label: "13-17", value: 11, color: "#b2fff5" },
-      { label: "18-24", value: 31, color: "#5df0df" },
+      { label: "18-24", value: 30, color: "#5df0df" },
       { label: "25-34", value: 30, color: "#008b82" },
-      { label: "35-44", value: 16, color: "#31c6bb" },
+      { label: "35-44", value: 17, color: "#31c6bb" },
       { label: "45+", value: 12, color: "#e1fffb" },
     ],
     hotspots: [

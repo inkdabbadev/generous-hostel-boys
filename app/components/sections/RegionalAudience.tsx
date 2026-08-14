@@ -39,27 +39,27 @@ type RegionalAudienceControls = CSSProperties & {
 };
 
 const regionalAudienceControls = {
-  "--regional-card-cols": "minmax(280px, 0.82fr) minmax(460px, 1.18fr)",
-  "--regional-card-gap": "clamp(18px, 1.7vw, 28px)",
-  "--regional-card-pad": "clamp(24px, 2vw, 38px)",
-  "--regional-card-rows": "minmax(176px, 23vh) minmax(260px, 34vh)",
-  "--regional-donut-col": "clamp(165px, 14vw, 230px)",
-  "--regional-donut-width": "clamp(162px, 13.2vw, 218px)",
-  "--regional-main-cols": "minmax(390px, 0.82fr) minmax(720px, 1.18fr)",
-  "--regional-main-gap": "clamp(28px, 3.4vw, 62px)",
-  "--regional-map-max-height": "min(60vh, 620px)",
-  "--regional-map-width": "min(90%, 570px)",
-  "--regional-market-copy-size": "clamp(0.9rem, 1.08vw, 1.3rem)",
-  "--regional-region-title-size": "clamp(3.8rem, 5.6vw, 7.45rem)",
-  "--regional-shell-gap": "clamp(12px, 1.6vh, 22px)",
-  "--regional-shell-rows": "clamp(88px, 14.2vh, 154px) minmax(0, 1fr)",
-  "--regional-title-offset": "clamp(34px, 4.4vh, 58px)",
-  "--regional-title-size": "clamp(3.4rem, 4.75vw, 6.45rem)",
+  "--regional-card-cols": "minmax(410px, 0.92fr) minmax(660px, 1.08fr)",
+  "--regional-card-gap": "clamp(18px, 1.35vw, 26px)",
+  "--regional-card-pad": "clamp(26px, 1.8vw, 36px)",
+  "--regional-card-rows": "minmax(218px, 23.5vh) minmax(292px, 31vh)",
+  "--regional-donut-col": "clamp(184px, 12.2vw, 228px)",
+  "--regional-donut-width": "clamp(166px, 11.2vw, 202px)",
+  "--regional-main-cols": "minmax(390px, 0.66fr) minmax(900px, 1.34fr)",
+  "--regional-main-gap": "clamp(28px, 2.8vw, 52px)",
+  "--regional-map-max-height": "min(63vh, 635px)",
+  "--regional-map-width": "min(94%, 615px)",
+  "--regional-market-copy-size": "clamp(1.08rem, 1.08vw, 1.34rem)",
+  "--regional-region-title-size": "clamp(3rem, 4vw, 5.25rem)",
+  "--regional-shell-gap": "clamp(8px, 1vh, 16px)",
+  "--regional-shell-rows": "clamp(72px, 9.4vh, 104px) minmax(0, 1fr)",
+  "--regional-title-offset": "clamp(14px, 2vh, 28px)",
+  "--regional-title-size": "clamp(3.05rem, 4.1vw, 5.45rem)",
   "--regional-watermark-left": "44%",
   "--regional-watermark-size": "clamp(5.9rem, 8.2vw, 10.9rem)",
   "--regional-watermark-width": "min(690px, 40vw)",
-  "--regional-youth-copy-size": "clamp(1.25rem, 1.72vw, 2.25rem)",
-  "--regional-youth-size": "clamp(5rem, 6.75vw, 8.7rem)",
+  "--regional-youth-copy-size": "clamp(1.1rem, 1.28vw, 1.58rem)",
+  "--regional-youth-size": "clamp(4.75rem, 5.75vw, 7.25rem)",
 } satisfies RegionalAudienceControls;
 
 function getAgeStripStyle(value: number, index: number): AudienceAgeStyle {
@@ -142,8 +142,7 @@ export default function RegionalAudience() {
   const youthShare = activeMarket.ageDistribution
     .filter((age) => age.label === "18-24" || age.label === "25-34")
     .reduce((total, age) => total + age.value, 0);
-  const audienceSummary = activeMarket.audienceProfile.replace(/\.$/, "");
-  const insightSummary = activeMarket.marketInsight.replace(/\.$/, "");
+  const marketSummary = `${activeMarket.audienceProfile.replace(/\.$/, "")}. ${activeMarket.marketInsight}`;
 
   useEffect(() => {
     const updateActiveIndex = (nextIndex: number) => {
@@ -360,11 +359,14 @@ export default function RegionalAudience() {
               <article className="audienceMetricCard audienceMetricCardYouth">
                 <strong>{youthShare}%</strong>
                 <p>18-34 year old audience</p>
+                <div className="audiencePopulationEstimate">
+                  <span>18-34 population pool</span>
+                  <b>{activeMarket.youthPopulation}</b>
+                </div>
               </article>
               <article className="audienceMetricCard audienceMetricCardState">
                 <span>Market read</span>
-                <p>{audienceSummary}</p>
-                <p>{insightSummary}</p>
+                <p>{marketSummary}</p>
               </article>
               <article className="audienceMetricCard audienceMetricCardDonut">
                 <div className="audienceMetricDonutRow">
