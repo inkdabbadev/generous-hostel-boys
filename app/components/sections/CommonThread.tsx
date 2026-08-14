@@ -3,7 +3,7 @@
 import { motion } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
 
-const maxCommonPhase = 3;
+const maxCommonPhase = 4;
 
 export default function CommonThread() {
   const sectionRef = useRef<HTMLElement>(null);
@@ -256,7 +256,13 @@ export default function CommonThread() {
         />
 
         <motion.div
-          key={phase >= 3 ? "common-strip-cinemo" : "common-strip-music"}
+          key={
+            phase >= 4
+              ? "common-strip-rishab"
+              : phase >= 3
+                ? "common-strip-cinemo"
+                : "common-strip-music"
+          }
           animate={{
             opacity: phase >= 2 ? 1 : 0,
             y: phase >= 2 ? 0 : 130,
@@ -298,7 +304,7 @@ export default function CommonThread() {
         <motion.img
           key="common-cinemo-person"
           animate={{
-            opacity: phase >= 3 ? 1 : 0,
+            opacity: phase === 3 ? 1 : 0,
             scale: phase >= 3 ? 1.16 : 0.76,
             x: "-50%",
             y: phase >= 3 ? "calc(-50% + 2px)" : "calc(-50% + 120px)",
@@ -329,7 +335,7 @@ export default function CommonThread() {
         <motion.img
           key="common-cinemo-title"
           animate={{
-            opacity: phase >= 3 ? 1 : 0,
+            opacity: phase === 3 ? 1 : 0,
             scale: phase >= 3 ? 1 : 0.78,
             x: "-50%",
             y: phase >= 3 ? 0 : 46,
@@ -338,6 +344,37 @@ export default function CommonThread() {
           draggable={false}
           initial={false}
           src="/common/cinemo-title.png"
+          transition={{ duration: 0.58, ease: [0.16, 1, 0.3, 1] }}
+        />
+
+        <motion.img
+          key="common-rishab-person"
+          animate={{
+            opacity: phase === 4 ? 1 : 0,
+            scale: phase >= 4 ? 1.18 : 0.76,
+            x: "-50%",
+            y: phase >= 4 ? "calc(-50% + 8px)" : "calc(-50% + 120px)",
+            filter: phase >= 4 ? "blur(0px)" : "blur(10px)",
+          }}
+          className="commonThreadMusicPerson commonThreadRishabPerson"
+          draggable={false}
+          initial={false}
+          src="/common/rishab.png"
+          transition={{ duration: 0.78, ease: [0.16, 1, 0.3, 1] }}
+        />
+
+        <motion.img
+          key="common-rishab-title"
+          animate={{
+            opacity: phase === 4 ? 1 : 0,
+            scale: phase >= 4 ? 1 : 0.78,
+            x: "-50%",
+            y: phase >= 4 ? 0 : 46,
+          }}
+          className="commonThreadMusicTitle commonThreadRishabTitle"
+          draggable={false}
+          initial={false}
+          src="/common/rishab-title.png"
           transition={{ duration: 0.58, ease: [0.16, 1, 0.3, 1] }}
         />
       </div>

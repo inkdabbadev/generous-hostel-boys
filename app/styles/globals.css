@@ -949,9 +949,10 @@ section {
   row-gap: clamp(18px, 2.4svh, 34px);
   padding: clamp(66px, 8.4svh, 108px) clamp(52px, 7vw, 150px) clamp(42px, 5.4svh, 70px);
   background:
-    linear-gradient(90deg, rgba(18, 3, 1, 0.3), rgba(18, 3, 1, 0.02) 48%, rgba(18, 3, 1, 0.26)),
-    url("/about/slide1/crowd-bg.png") center / cover no-repeat,
-    linear-gradient(132deg, #8d0902 0%, #e10600 51%, #700900 100%);
+    linear-gradient(90deg, rgba(18, 3, 1, 0.32), rgba(18, 3, 1, 0.04) 48%, rgba(18, 3, 1, 0.3)),
+    linear-gradient(132deg, rgba(141, 9, 2, 0.9) 0%, rgba(225, 6, 0, 0.82) 51%, rgba(112, 9, 0, 0.9) 100%),
+    url("/about/slide1/crowd-bg.png") center / cover no-repeat;
+  background-blend-mode: normal, multiply, normal;
   overflow: hidden;
 }
 
@@ -1066,14 +1067,15 @@ section {
 .aboutTheatricalSlide {
   display: grid;
   grid-template-rows: auto minmax(0, 1fr);
-  align-content: start;
+  align-content: center;
   justify-items: center;
-  row-gap: clamp(34px, 5.2svh, 76px);
-  padding: clamp(56px, 7.2svh, 92px) clamp(34px, 4.8vw, 96px) clamp(34px, 4.4svh, 58px);
+  row-gap: clamp(22px, 3.4svh, 44px);
+  padding: clamp(40px, 5.4svh, 70px) clamp(34px, 4.8vw, 96px);
   background:
-    linear-gradient(90deg, rgba(18, 3, 1, 0.24), rgba(18, 3, 1, 0.02) 50%, rgba(18, 3, 1, 0.22)),
-    url("/background.png") center / cover no-repeat,
-    linear-gradient(132deg, #8d0902 0%, #e10600 51%, #700900 100%);
+    linear-gradient(90deg, rgba(18, 3, 1, 0.3), rgba(18, 3, 1, 0.04) 50%, rgba(18, 3, 1, 0.28)),
+    linear-gradient(132deg, rgba(141, 9, 2, 0.9) 0%, rgba(225, 6, 0, 0.82) 51%, rgba(112, 9, 0, 0.9) 100%),
+    url("/about/slide2/crowd-bg.png") center / cover no-repeat;
+  background-blend-mode: normal, multiply, normal;
   overflow: hidden;
 }
 
@@ -1100,10 +1102,13 @@ section {
   position: relative;
   z-index: 2;
   display: grid;
-  grid-template-columns: repeat(4, minmax(132px, 1fr));
-  gap: clamp(16px, 2vw, 38px);
+  grid-template-columns: repeat(4, auto);
+  gap: clamp(14px, 1.6vw, 34px) clamp(18px, 2.15vw, 46px);
   align-content: center;
-  width: min(1760px, 86vw);
+  justify-content: center;
+  justify-items: center;
+  width: min(1420px, 84vw);
+  margin-inline: auto;
 }
 
 .aboutTheatricalPoster {
@@ -1112,11 +1117,11 @@ section {
   display: grid;
   place-items: center;
   justify-self: center;
-  width: clamp(155px, 12.8vw, 292px);
+  width: clamp(154px, 12.35vw, 270px);
   aspect-ratio: 2 / 3;
-  padding: clamp(7px, 0.55vw, 12px);
-  background: rgba(255, 255, 255, 0.98);
-  box-shadow: 0 28px 58px rgba(55, 4, 1, 0.34);
+  padding: 0;
+  background: transparent;
+  box-shadow: none;
   overflow: hidden;
   opacity: 0;
   transform: translate3d(0, 42px, 0) scale(0.94);
@@ -1126,8 +1131,8 @@ section {
   display: block;
   width: 100%;
   height: 100%;
-  object-fit: contain;
-  background: #160300;
+  object-fit: cover;
+  background: transparent;
   user-select: none;
 }
 
@@ -1354,8 +1359,8 @@ section {
   }
 
   .aboutTheatricalSlide {
-    row-gap: clamp(22px, 3svh, 42px);
-    padding: clamp(44px, 6svh, 70px) clamp(20px, 4vw, 46px) clamp(28px, 4svh, 42px);
+    row-gap: clamp(16px, 2.5svh, 30px);
+    padding: clamp(36px, 5.4svh, 58px) clamp(20px, 4vw, 46px);
   }
 
   .aboutTheatricalTitle {
@@ -1364,13 +1369,14 @@ section {
   }
 
   .aboutTheatricalGrid {
-    width: min(900px, 90vw);
-    gap: clamp(12px, 2vw, 22px);
+    width: min(770px, 88vw);
+    grid-template-columns: repeat(4, auto);
+    gap: clamp(10px, 1.55vw, 18px);
   }
 
   .aboutTheatricalPoster {
-    width: clamp(118px, 18vw, 190px);
-    padding: 7px;
+    width: clamp(110px, 16vw, 168px);
+    padding: 0;
   }
 
   .aboutInfrastructureCopy {
@@ -1467,14 +1473,14 @@ section {
   }
 
   .aboutTheatricalGrid {
-    width: min(420px, 92vw);
+    width: min(390px, 92vw);
     grid-template-columns: repeat(4, minmax(0, 1fr));
-    gap: 8px;
+    gap: 6px;
   }
 
   .aboutTheatricalPoster {
     width: 100%;
-    padding: 4px;
+    padding: 0;
   }
 
   .aboutInfrastructureCards {
@@ -1566,9 +1572,9 @@ section {
   }
 
   .aboutTheatricalSlide {
-    row-gap: clamp(18px, 3svh, 30px);
-    padding-top: clamp(32px, 5svh, 50px);
-    padding-bottom: clamp(20px, 3svh, 34px);
+    row-gap: clamp(12px, 2svh, 20px);
+    padding-top: clamp(28px, 4.4svh, 44px);
+    padding-bottom: clamp(18px, 2.8svh, 30px);
   }
 
   .aboutTheatricalTitle {
@@ -1576,8 +1582,8 @@ section {
   }
 
   .aboutTheatricalPoster {
-    width: clamp(135px, 11.8vw, 230px);
-    padding: 7px;
+    width: clamp(116px, 10.4vw, 204px);
+    padding: 0;
   }
 
   .aboutIndustryHeader h2 {
@@ -2772,6 +2778,15 @@ section {
   max-height: min(70vh, 680px);
 }
 
+.commonThreadRishabPerson {
+  width: min(32vw, 510px);
+  max-height: min(74vh, 720px);
+}
+
+.commonThreadRishabTitle {
+  width: min(37vw, 560px);
+}
+
 .whyThisFilm {
   position: relative;
   min-height: 100vh;
@@ -3852,6 +3867,35 @@ section {
     url("/background.png") center / 100% 100% no-repeat;
 }
 
+.postTitleCampaMarker {
+  width: 100%;
+  height: 0;
+  pointer-events: none;
+}
+
+.postTitleCampaBadge {
+  position: fixed;
+  top: var(--badge-desktop-top, 24px);
+  right: var(--badge-desktop-right, 34px);
+  z-index: 42;
+  width: var(--badge-desktop-width, 148px);
+  height: auto;
+  pointer-events: none;
+  user-select: none;
+  filter:
+    drop-shadow(0 9px 0 rgba(45, 4, 0, 0.38))
+    drop-shadow(0 0 18px rgba(255, 196, 0, 0.12));
+  transform-origin: top right;
+}
+
+.postTitleCampaBadge img {
+  display: block;
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+  user-select: none;
+}
+
 .titleScrollExperience {
   position: sticky;
   top: 0;
@@ -4577,7 +4621,14 @@ section {
 }
 
 .mediaPlan::before {
-  display: none;
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background: url("/marketingmedia/hostel-bg.png") center / cover no-repeat;
+  opacity: 0.16;
+  mix-blend-mode: screen;
+  pointer-events: none;
 }
 
 .mediaPlanShell {
@@ -7577,6 +7628,12 @@ section {
 
   .titleScrollPosterFrame {
     width: min(100%, calc((72vh - 3rem) * 0.8));
+  }
+
+  .postTitleCampaBadge {
+    top: var(--badge-mobile-top, 14px);
+    right: var(--badge-mobile-right, 14px);
+    width: var(--badge-mobile-width, 108px);
   }
 
   .adaptationProof {

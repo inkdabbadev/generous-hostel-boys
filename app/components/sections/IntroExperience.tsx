@@ -241,8 +241,6 @@ export default function IntroExperience() {
 
   const runnerProgress = 1 - Math.pow(1 - introProgress, 1.35);
   const titleRevealProgress = segment(runnerProgress, 0.66, 0.82);
-  const roadRevealRaw = segment(runnerProgress, 0.7, 0.8);
-  const roadRevealProgress = 1 - Math.pow(1 - roadRevealRaw, 3);
 
   const logoStyle = {
     opacity: 1,
@@ -250,8 +248,8 @@ export default function IntroExperience() {
   } satisfies CSSProperties;
 
   const roadTitleStyle = {
-    opacity: roadRevealProgress,
-    transform: `translate3d(-50%, ${28 - roadRevealProgress * 28}px, 0) scale(${0.88 + roadRevealProgress * 0.12})`,
+    opacity: titleRevealProgress,
+    transform: `translate3d(0, ${42 - titleRevealProgress * 42}px, 0) scale(${0.92 + titleRevealProgress * 0.20})`,
   } satisfies CSSProperties;
 
   const runnerStyle = {
@@ -292,13 +290,15 @@ export default function IntroExperience() {
             draggable={false}
           />
         </div>
-        <img
-          className="pointer-events-none absolute left-1/2 top-[clamp(268px,35.5vh,352px)] z-[3] block h-auto w-[min(1040px,82vw)] select-none transition-[transform,opacity,filter] duration-300 ease-out will-change-[transform,opacity] [filter:drop-shadow(0_18px_22px_rgba(0,0,0,0.42))] max-[640px]:top-[clamp(240px,36.5vh,306px)] max-[640px]:w-[min(520px,88vw)]"
-          src="/intro/road.png"
-          alt="Road to making history with the worst film ever made"
-          draggable={false}
-          style={roadTitleStyle}
-        />
+        <div className="pointer-events-none absolute left-1/2 top-[clamp(88px,23.2vh,182px)] z-[3] w-[min(1200px,90vw)] -translate-x-1/2 max-[640px]:top-[clamp(165px,25vh,217px)] max-[640px]:w-[min(580px,96vw)]">
+          <img
+            className="block h-auto w-full select-none transition-[transform,opacity,filter] duration-500 ease-out will-change-[transform,opacity] [filter:drop-shadow(0_18px_22px_rgba(0,0,0,0.42))]"
+            src="/intro/road.png"
+            alt="Road to making history with the worst film ever made"
+            draggable={false}
+            style={roadTitleStyle}
+          />
+        </div>
         <img
           className="pointer-events-none absolute bottom-[clamp(0px,1.8vh,18px)] left-[-62vw] z-[5] block h-auto w-[clamp(430px,44vw,790px)] select-none transition-transform duration-300 ease-out will-change-transform [filter:drop-shadow(0_22px_18px_rgba(0,0,0,0.36))] max-[640px]:bottom-0 max-[640px]:left-[-124vw] scale-[1.65] max-[640px]:w-[clamp(390px,98vw,580px)]"
           src="/intro/run.gif"

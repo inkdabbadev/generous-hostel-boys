@@ -149,7 +149,7 @@ const offlineSlideThreeChooseFourImages = [
 
 const offlineSlideFourImages = ["a1", "a2", "a3", "a4", "a5", "a6", "a7"] as const;
 
-const offlineImageSlides = ["img1", "img2", "img3", "img4", "img5", "img6"] as const;
+const offlineImageSlides = ["img1", "img2", "img3", "img4", "img5"] as const;
 
 function OfflinePowerFlow() {
   return (

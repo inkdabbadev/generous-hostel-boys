@@ -14,6 +14,7 @@ import {
   MovieMetrics,
   Noticeboard,
   PlotIntro,
+  PostTitleCampaBadge,
   PosterScroll,
   PremiumSlot,
   RegionalAudience,
@@ -58,11 +59,12 @@ export default function Home() {
       {/* <CoreCapabilities /> */}
       <RegionalAudience />
       <HostelGenreProof />
-      <MovieMetrics />
+      {/* <MovieMetrics /> */}
       <CommonThread />
       <WhyThisFilm />
       <Noticeboard />
       <TitleScrollAnimation />
+      <PostTitleCampaBadge />
       <AdaptationProof />
       <ActualAskIntro />
       <PlotIntro />

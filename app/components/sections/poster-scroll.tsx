@@ -219,7 +219,12 @@ export default function ScrollHero() {
                 }}
               >
                 {slide.lines.map((line) => (
-                  <span key={line} className="block">
+                  <span
+                    key={line}
+                    className={`block ${
+                      line === "Then The Brand Is Forgotten." ? "text-[#ffc400]" : ""
+                    }`}
+                  >
                     {line}
                   </span>
                 ))}

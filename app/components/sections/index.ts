@@ -15,6 +15,7 @@ export { default as Noticeboard } from "./Noticeboard";
 export { default as Noticeboard2 } from "./Noticeboard2";
 export { default as Noticeboard3 } from "./Noticeboard3";
 export { default as PlotIntro } from "./PlotIntro";
+export { default as PostTitleCampaBadge } from "./PostTitleCampaBadge";
 export { default as PremiumSlot } from "./PremiumSlot";
 export { default as PosterScroll } from "./poster-scroll";
 export { default as RegionalAudience } from "./RegionalAudience";
