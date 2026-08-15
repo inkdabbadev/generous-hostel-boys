@@ -4363,10 +4363,6 @@ section {
   z-index: 3;
 }
 
-.adaptationHostelC1Cover {
-  z-index: 4;
-}
-
 .adaptationHostelC2,
 .adaptationHostelC3 {
   z-index: 4;
@@ -4665,11 +4661,7 @@ section {
   display: grid;
   align-items: stretch;
   padding: 0;
-  background:
-    radial-gradient(circle at 52% 16%, rgba(255, 44, 18, 0.34), transparent 42%),
-    linear-gradient(180deg, rgba(86, 0, 0, 0.18) 0%, rgba(173, 6, 0, 0.48) 58%, rgba(239, 28, 5, 0.72) 100%),
-    linear-gradient(90deg, rgba(44, 0, 0, 0.54), rgba(211, 14, 3, 0.24), rgba(58, 0, 0, 0.5)),
-    url("/background.png") center / 100% 100% no-repeat;
+  background: #b91d08 url("/background.png") center / cover no-repeat;
   color: white;
   overflow: hidden;
   user-select: none;
@@ -4679,24 +4671,17 @@ section {
 .mediaPlan::before {
   content: "";
   position: absolute;
-  inset: 16% 0 0;
+  inset: 0;
   z-index: 0;
-  background:
-    linear-gradient(180deg, transparent 0%, rgba(208, 18, 5, 0.5) 24%, rgba(226, 27, 6, 0.78) 100%),
-    url("/marketingmedia/hostel-bg.png") center bottom / cover no-repeat;
-  opacity: 0.58;
-  mix-blend-mode: multiply;
+  background: url("/marketingmedia/hostel-bg.png") center bottom / cover no-repeat;
+  opacity: 0.2;
+  mix-blend-mode: luminosity;
+  filter: grayscale(1) contrast(1.1);
   pointer-events: none;
 }
 
 .mediaPlan::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  z-index: 1;
-  background:
-    linear-gradient(180deg, rgba(139, 0, 0, 0.2) 0%, transparent 42%, rgba(255, 34, 8, 0.2) 100%);
-  pointer-events: none;
+  content: none;
 }
 
 .mediaPlanShell {
@@ -5095,6 +5080,7 @@ section {
   --offline-close-size: 120px;
   --offline-shape-gap: 10px;
   --offline-shape-radius: 15px;
+  --history-panel-scale: 1;
   display: block;
   padding: 0;
   border: 0;
@@ -5106,11 +5092,16 @@ section {
 .historyOfflinePanel::before {
   content: "";
   position: absolute;
-  inset: 0;
+  left: 0;
+  top: 0;
   display: block;
+  width: 1790px;
+  height: 950px;
   background: linear-gradient(249.36deg, #ff0000 -7.22%, #990000 86.7%);
   clip-path: path("M 15 0 H 1645 Q 1660 0 1660 15 V 115 Q 1660 130 1675 130 H 1775 Q 1790 130 1790 145 V 935 Q 1790 950 1775 950 H 15 Q 0 950 0 935 V 15 Q 0 0 15 0 Z");
   pointer-events: none;
+  transform: scale(var(--history-panel-scale));
+  transform-origin: left top;
 }
 
 .historyOfflinePanel::after {
@@ -5286,11 +5277,16 @@ section {
 
 .historyOfflineStack {
   position: absolute;
-  inset: 0;
+  left: 0;
+  top: 0;
   z-index: 1;
+  width: 1790px;
+  height: 950px;
   overflow: hidden;
   border-radius: var(--offline-shape-radius);
   pointer-events: auto;
+  transform: scale(var(--history-panel-scale));
+  transform-origin: left top;
 }
 
 .historyOfflinePopupSlide {
@@ -6081,10 +6077,11 @@ section {
   top: 0;
   right: 0;
   z-index: 100;
-  width: var(--offline-close-size);
-  height: var(--offline-close-size);
+  width: 6.704%;
+  height: 12.632%;
   border-radius: var(--offline-shape-radius);
   background: linear-gradient(249.36deg, #ff0000 -7.22%, #990000 86.7%);
+  font-size: clamp(2.1rem, 2.8vw, 3.4rem);
 }
 
 .historyOfflinePanel .historyOnlineClose:hover,
@@ -6588,31 +6585,77 @@ section {
 }
 
 .mediaPlanDetailShell {
-  width: min(1840px, calc(100% - clamp(32px, 4.2vw, 76px)));
-  gap: clamp(16px, 1.7svh, 24px);
-  padding: clamp(22px, 3.2svh, 42px) 0;
+  width: min(1720px, calc(100% - clamp(36px, 5vw, 96px)));
+  gap: clamp(22px, 2.4svh, 36px);
+  padding: clamp(28px, 4svh, 56px) 0;
   place-items: stretch;
+  align-content: center;
+}
+
+.mediaPlanDetail .mediaPlanTableHeader {
+  justify-self: stretch;
+  width: min(1480px, 92%);
+  margin-left: clamp(8px, 2.4vw, 48px);
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: clamp(24px, 4vw, 72px);
+}
+
+.mediaPlanDetail .mediaPlanTableHeader > div {
+  display: grid;
+  gap: clamp(8px, 0.9svh, 12px);
+}
+
+.mediaPlanDetail .mediaPlanTableHeader span {
+  width: fit-content;
+  color: rgba(255, 255, 255, 0.88);
+  font-size: clamp(0.82rem, 0.92vw, 1.08rem);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
 }
 
 .mediaPlanTableHeader h2 {
   color: var(--gold);
-  font-size: clamp(3.7rem, 5.8vw, 6.7rem);
+  font-size: clamp(3.6rem, 5.45vw, 6.3rem);
   line-height: 0.86;
-  text-align: center;
+  text-align: left;
   filter: drop-shadow(0 8px 0 rgba(74, 11, 2, 0.42));
+}
+
+.mediaPlanDetail .mediaPlanTableHeader p {
+  margin: 0 0 0.12em;
+  color: var(--gold);
+  font-family: var(--font-figtree), sans-serif;
+  font-size: clamp(1.8rem, 2.45vw, 3.2rem);
+  font-weight: 900;
+  line-height: 0.9;
+  white-space: nowrap;
+  filter: drop-shadow(0 5px 0 rgba(74, 11, 2, 0.28));
+}
+
+.mediaPlanDetail .mediaPlanTableHeader p span {
+  margin: 0 0.1em;
+  color: rgba(255, 255, 255, 0.72);
+  font: inherit;
 }
 
 .mediaPlanTables {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: clamp(18px, 2vw, 34px);
+  grid-template-columns: minmax(0, 1fr);
+  gap: 0;
   align-items: start;
+  padding: 0;
+  background: transparent;
+  box-shadow: none;
+  animation: mediaPlanTablePageIn 420ms cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
 .mediaPlanTable {
   width: 100%;
   border-collapse: separate;
-  border-spacing: 0 6px;
+  border-spacing: 0 8px;
   table-layout: fixed;
   border: 0;
   background: transparent;
@@ -6621,18 +6664,18 @@ section {
 
 .mediaPlanTable th,
 .mediaPlanTable td {
-  padding: 7px 12px;
+  padding: clamp(10px, 1.12svh, 15px) clamp(16px, 1.45vw, 24px);
   border: 0;
   vertical-align: middle;
-  line-height: 1.1;
+  line-height: 1.16;
 }
 
 .mediaPlanTable th {
   position: sticky;
   top: 0;
-  background: rgba(255, 196, 0, 0.22);
+  background: rgba(255, 196, 0, 0.24);
   color: var(--gold);
-  font-size: clamp(0.72rem, 0.78vw, 0.94rem);
+  font-size: clamp(0.88rem, 0.94vw, 1.14rem);
   font-weight: 1000;
   text-align: left;
   text-transform: uppercase;
@@ -6640,48 +6683,53 @@ section {
 }
 
 .mediaPlanTable td {
-  background: rgba(20, 8, 4, 0.68);
+  background: rgba(28, 8, 3, 0.64);
   color: rgba(255, 255, 255, 0.94);
-  font-size: clamp(0.78rem, 0.82vw, 1rem);
-  font-weight: 760;
-  box-shadow:
-    inset 0 1px 0 rgba(255, 196, 0, 0.2),
-    inset 0 -1px 0 rgba(255, 196, 0, 0.12),
-    0 4px 10px rgba(60, 5, 1, 0.12);
+  font-size: clamp(1.08rem, 1.16vw, 1.42rem);
+  font-weight: 500;
+  box-shadow: none;
 }
 
 .mediaPlanTable tbody td:first-child {
-  border-left: 1px solid rgba(255, 196, 0, 0.46);
+  border-radius: 10px 0 0 10px;
   color: var(--gold);
-  font-size: clamp(0.9rem, 0.98vw, 1.14rem);
-  font-weight: 1000;
+  font-size: clamp(1.12rem, 1.2vw, 1.48rem);
+  font-weight: 800;
 }
 
 .mediaPlanTable tbody td:last-child {
-  border-right: 1px solid rgba(255, 196, 0, 0.46);
+  border-radius: 0 10px 10px 0;
   color: var(--gold);
-  font-weight: 1000;
+  font-weight: 700;
+}
+
+.mediaPlanTable thead th:first-child {
+  border-radius: 10px 0 0 10px;
+}
+
+.mediaPlanTable thead th:last-child {
+  border-radius: 0 10px 10px 0;
 }
 
 .mediaPlanTable th:nth-child(1),
 .mediaPlanTable td:nth-child(1) {
-  width: 44px;
+  width: clamp(62px, 5vw, 92px);
   text-align: center;
 }
 
 .mediaPlanTable th:nth-child(2),
 .mediaPlanTable td:nth-child(2) {
-  width: 54%;
+  width: 50%;
 }
 
 .mediaPlanTable th:nth-child(3),
 .mediaPlanTable td:nth-child(3) {
-  width: 34%;
+  width: 36%;
 }
 
 .mediaPlanTable th:nth-child(4),
 .mediaPlanTable td:nth-child(4) {
-  width: 58px;
+  width: clamp(72px, 5.4vw, 108px);
   text-align: center;
 }
 
@@ -6697,11 +6745,24 @@ section {
   background: rgba(255, 196, 0, 0.12);
 }
 
+@keyframes mediaPlanTablePageIn {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 22px, 0) scale(0.985);
+    filter: blur(8px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scale(1);
+    filter: blur(0);
+  }
+}
+
 /*
  * Visibility Plan table fit-to-viewport hardening.
- * The table holds 34 rows (two columns of 17). At the full design height
- * (1920x1080 @ 100% OS scale) it fits exactly, so these height media queries
- * are a deliberate NO-OP at >= 1000px tall -- the 100% layout is untouched.
+ * The table is split into three internal pages. These height gates keep each
+ * page readable and within the viewport on laptop-scaled displays.
  * On shorter viewports (Windows 125%/150% scaling, laptops) the vertical
  * rhythm shrinks step by step so every row stays inside the section instead
  * of being clipped by `overflow: hidden`.
@@ -6718,18 +6779,22 @@ section {
     padding-bottom: 0;
   }
 
+  .mediaPlanTables {
+    padding: 0;
+  }
+
   .mediaPlanDetail .mediaPlanTableHeader h2 {
-    font-size: clamp(2.9rem, 6.4svh, 5rem);
+    font-size: clamp(2.9rem, 6.2svh, 4.8rem);
   }
 
   .mediaPlanTable {
-    border-spacing: 0 4px;
+    border-spacing: 0 5px;
   }
 
   .mediaPlanTable th,
   .mediaPlanTable td {
-    padding-top: 4px;
-    padding-bottom: 4px;
+    padding-top: 7px;
+    padding-bottom: 7px;
   }
 }
 
@@ -6743,8 +6808,16 @@ section {
     gap: clamp(10px, 1.3svh, 16px);
   }
 
+  .mediaPlanDetail .mediaPlanTableHeader {
+    gap: 6px;
+  }
+
   .mediaPlanDetail .mediaPlanTableHeader h2 {
     font-size: clamp(2rem, 5.4svh, 3.6rem);
+  }
+
+  .mediaPlanTables {
+    padding: 0;
   }
 
   .mediaPlanTable {
@@ -6753,12 +6826,12 @@ section {
 
   .mediaPlanTable th,
   .mediaPlanTable td {
-    padding-top: 4px;
-    padding-bottom: 4px;
+    padding-top: 5px;
+    padding-bottom: 5px;
   }
 
   .mediaPlanTable td {
-    font-size: clamp(0.68rem, 0.74vw, 0.84rem);
+    font-size: clamp(0.86rem, 0.9vw, 1rem);
   }
 }
 
@@ -6772,6 +6845,10 @@ section {
     gap: 10px;
   }
 
+  .mediaPlanTables {
+    padding: 0;
+  }
+
   .mediaPlanDetail .mediaPlanTableHeader h2 {
     font-size: clamp(1.7rem, 4.8svh, 3rem);
   }
@@ -6782,14 +6859,14 @@ section {
 
   .mediaPlanTable th,
   .mediaPlanTable td {
-    padding-top: 3px;
-    padding-bottom: 3px;
+    padding-top: 4px;
+    padding-bottom: 4px;
     line-height: 1.06;
   }
 
   .mediaPlanTable td,
   .mediaPlanTable tbody td:first-child {
-    font-size: clamp(0.58rem, 0.64vw, 0.72rem);
+    font-size: clamp(0.72rem, 0.76vw, 0.88rem);
   }
 }
 
@@ -7849,6 +7926,20 @@ section {
   .mediaPlanTableHeader,
   .mediaPlanTables {
     grid-template-columns: 1fr;
+  }
+
+  .mediaPlanDetail .mediaPlanTableHeader {
+    width: 100%;
+    margin-left: 0;
+  }
+
+  .mediaPlanDetail .mediaPlanTableHeader h2 {
+    text-align: left;
+  }
+
+  .mediaPlanTables {
+    padding: 10px;
+    gap: 18px;
   }
 
   .mediaPlanImpactGrid {

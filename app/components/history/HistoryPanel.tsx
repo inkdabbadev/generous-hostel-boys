@@ -150,6 +150,25 @@ const offlineSlideThreeChooseFourImages = [
 const offlineSlideFourImages = ["a1", "a2", "a3", "a4", "a5", "a6", "a7"] as const;
 
 const offlineImageSlides = ["img1", "img2", "img3", "img4", "img5"] as const;
+const structuredPanelBaseWidth = 1790;
+const structuredPanelBaseHeight = 950;
+const structuredPanelAspect = structuredPanelBaseWidth / structuredPanelBaseHeight;
+
+function clampNumber(min: number, value: number, max: number) {
+  return Math.min(max, Math.max(min, value));
+}
+
+function getViewportSize() {
+  if (typeof window === "undefined") {
+    return { height: 0, width: 0 };
+  }
+
+  const viewport = window.visualViewport;
+  return {
+    height: viewport?.height ?? window.innerHeight,
+    width: viewport?.width ?? window.innerWidth,
+  };
+}
 
 function OfflinePowerFlow() {
   return (
@@ -890,8 +909,29 @@ export function HistoryPanel({ activePanel, onClose }: HistoryPanelProps) {
   const isIdeasPanel = activePanel === "ideas";
   const [onlineView, setOnlineView] = useState<"overview" | "details">("overview");
   const [iframeUrl, setIframeUrl] = useState<string | null>(null);
+  const [viewportSize, setViewportSize] = useState(getViewportSize);
   const isIframeOpen = Boolean(iframeUrl);
   const isStructuredPanel = isOnlinePanel || isOfflinePanel || isIdeasPanel;
+  const structuredPanelMetrics = viewportSize.width > 0 && viewportSize.height > 0
+    ? (() => {
+        const horizontalGap = clampNumber(52, viewportSize.width * 0.06, 128);
+        const verticalGap = clampNumber(52, viewportSize.height * 0.08, 116);
+        const availableWidth = Math.max(360, viewportSize.width - horizontalGap);
+        const availableHeight = Math.max(240, viewportSize.height - verticalGap);
+        const width = Math.min(
+          structuredPanelBaseWidth,
+          availableWidth,
+          availableHeight * structuredPanelAspect,
+        );
+        const height = width / structuredPanelAspect;
+
+        return {
+          height,
+          scale: width / structuredPanelBaseWidth,
+          width,
+        };
+      })()
+    : null;
   const structuredPanelClassName = `historyOnlinePanel historyOfflinePanel${isOnlinePanel ? " historyOnlineStructuredPanel" : ""}${isOnlinePanel && onlineView === "details" ? " historyOnlineDetailPanel" : ""}${isIdeasPanel ? " historyIdeasPanel" : ""}`;
   const panelClassName =
     isIframeOpen
@@ -900,14 +940,40 @@ export function HistoryPanel({ activePanel, onClose }: HistoryPanelProps) {
         ? structuredPanelClassName
         : "historyOnlinePanel";
   const panelStyle = isStructuredPanel && !isIframeOpen
-    ? ({
-        height: "min(950px, calc(100svh - clamp(52px, 8vh, 116px)), calc((100vw - clamp(52px, 6vw, 128px)) / 1.8842))",
-        left: "50%",
-        top: "50%",
-        translate: "-50% -50%",
-        width: "min(1790px, calc(100vw - clamp(52px, 6vw, 128px)), calc((100svh - clamp(52px, 8vh, 116px)) * 1.8842))",
-      } satisfies CSSProperties)
+    ? structuredPanelMetrics
+      ? ({
+          "--history-panel-scale": String(structuredPanelMetrics.scale),
+          height: `${structuredPanelMetrics.height}px`,
+          left: "50%",
+          top: "50%",
+          translate: "-50% -50%",
+          width: `${structuredPanelMetrics.width}px`,
+        } as CSSProperties)
+      : ({
+          "--history-panel-scale": "1",
+          height: "min(950px, calc(100svh - clamp(52px, 8vh, 116px)), calc((100vw - clamp(52px, 6vw, 128px)) / 1.8842))",
+          left: "50%",
+          top: "50%",
+          translate: "-50% -50%",
+          width: "min(1790px, calc(100vw - clamp(52px, 6vw, 128px)), calc((100svh - clamp(52px, 8vh, 116px)) * 1.8842))",
+        } as CSSProperties)
     : historyOnlineLayout.panel;
+
+  useEffect(() => {
+    const updateViewportSize = () => setViewportSize(getViewportSize());
+    const viewport = window.visualViewport;
+
+    updateViewportSize();
+    window.addEventListener("resize", updateViewportSize);
+    viewport?.addEventListener("resize", updateViewportSize);
+    viewport?.addEventListener("scroll", updateViewportSize);
+
+    return () => {
+      window.removeEventListener("resize", updateViewportSize);
+      viewport?.removeEventListener("resize", updateViewportSize);
+      viewport?.removeEventListener("scroll", updateViewportSize);
+    };
+  }, []);
 
   return (
     <motion.div

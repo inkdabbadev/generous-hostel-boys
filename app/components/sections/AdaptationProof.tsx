@@ -197,22 +197,6 @@ export default function AdaptationProof() {
                 src="/adaption/c1.png"
                 transition={{ delay: 0.03, duration: 0.5, ease: [0.16, 1.08, 0.3, 1] }}
               />
-              <motion.img
-                alt=""
-                animate={{
-                  opacity: 1,
-                  rotate: [-3, 1.5, 0],
-                  scale: [0.82, 1.08, 1],
-                  x: 0,
-                }}
-                aria-hidden="true"
-                className="adaptationHostelBg adaptationHostelC1Cover"
-                draggable={false}
-                initial={{ opacity: 0, rotate: -3, scale: 0.88, x: 56 }}
-                key="c1c"
-                src="/adaption/c1c.png"
-                transition={{ delay: 0.03, duration: 0.5, ease: [0.16, 1.12, 0.3, 1] }}
-              />
             </>
           ) : null}
           {stage === "hostelC2" ? (

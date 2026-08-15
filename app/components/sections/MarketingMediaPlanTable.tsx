@@ -1,3 +1,7 @@
+"use client";
+
+import { useEffect, useRef, useState } from "react";
+
 const mediaPlanRows = [
   {
     no: 1,
@@ -65,43 +69,115 @@ const mediaPlanRows = [
   },
 ];
 
-const splitIndex = Math.ceil(mediaPlanRows.length / 2);
-const mediaPlanColumns = [
-  mediaPlanRows.slice(0, splitIndex),
-  mediaPlanRows.slice(splitIndex),
+const rowsPerSlide = 12;
+const mediaPlanSlides = [
+  {
+    rows: mediaPlanRows.slice(0, rowsPerSlide),
+  },
+  {
+    rows: mediaPlanRows.slice(rowsPerSlide, rowsPerSlide * 2),
+  },
+  {
+    rows: mediaPlanRows.slice(rowsPerSlide * 2),
+  },
 ];
 
 export default function MarketingMediaPlanTable() {
+  const sectionRef = useRef<HTMLElement>(null);
+  const activeSlideRef = useRef(0);
+  const [activeSlide, setActiveSlide] = useState(0);
+  const currentSlide = mediaPlanSlides[activeSlide];
+
+  const setTableSlide = (nextSlide: number) => {
+    const clampedSlide = Math.max(0, Math.min(mediaPlanSlides.length - 1, nextSlide));
+    activeSlideRef.current = clampedSlide;
+    setActiveSlide(clampedSlide);
+  };
+
+  useEffect(() => {
+    const section = sectionRef.current;
+    if (!section) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (!entry.isIntersecting || entry.intersectionRatio < 0.1) {
+          setTableSlide(0);
+        }
+      },
+      { threshold: [0, 0.1] },
+    );
+
+    const onSectionJumpIntent = (event: Event) => {
+      const customEvent = event as CustomEvent<{
+        direction: 1 | -1;
+        section: HTMLElement;
+      }>;
+
+      if (customEvent.detail.section !== section) return;
+
+      const { direction } = customEvent.detail;
+      const maxSlide = mediaPlanSlides.length - 1;
+
+      if (direction === 1 && activeSlideRef.current < maxSlide) {
+        customEvent.preventDefault();
+        setTableSlide(activeSlideRef.current + 1);
+        return;
+      }
+
+      if (direction === -1 && activeSlideRef.current > 0) {
+        customEvent.preventDefault();
+        setTableSlide(activeSlideRef.current - 1);
+      }
+    };
+
+    observer.observe(section);
+    window.addEventListener("section-jump:intent", onSectionJumpIntent);
+
+    return () => {
+      observer.disconnect();
+      window.removeEventListener("section-jump:intent", onSectionJumpIntent);
+    };
+  }, []);
+
   return (
-    <section className="mediaPlan mediaPlanDetail" aria-labelledby="media-plan-table-title">
+    <section
+      className="mediaPlan mediaPlanDetail"
+      aria-labelledby="media-plan-table-title"
+      ref={sectionRef}
+    >
       <div className="mediaPlanShell mediaPlanDetailShell">
         <header className="mediaPlanTableHeader">
-          <h2 id="media-plan-table-title">Visibility Plan Breakdown</h2>
+          <div>
+            <h2 id="media-plan-table-title">Visibility Plan Breakdown</h2>
+          </div>
+          <p aria-label={`Table slide ${activeSlide + 1} of ${mediaPlanSlides.length}`}>
+            {String(activeSlide + 1).padStart(2, "0")}
+            <span>/</span>
+            {String(mediaPlanSlides.length).padStart(2, "0")}
+          </p>
         </header>
 
-        <div className="mediaPlanTables">
-          {mediaPlanColumns.map((rows, index) => (
-            <table className="mediaPlanTable" key={index === 0 ? "first" : "second"}>
-              <thead>
-                <tr>
-                  <th>S.No</th>
-                  <th>Particulars</th>
-                  <th>Count</th>
-                  <th>Days</th>
+        <div className="mediaPlanTables" key={activeSlide}>
+          <table className="mediaPlanTable">
+            <thead>
+              <tr>
+                <th>S.No</th>
+                <th>Particulars</th>
+                <th>Count</th>
+                <th>Days</th>
+              </tr>
+            </thead>
+            <tbody>
+              {currentSlide.rows.map((row) => (
+                <tr key={row.no}>
+                  <td>{row.no}</td>
+                  <td>{row.item}</td>
+                  <td>{row.count}</td>
+                  <td>{row.days}</td>
                 </tr>
-              </thead>
-              <tbody>
-                {rows.map((row) => (
-                  <tr key={row.no}>
-                    <td>{row.no}</td>
-                    <td>{row.item}</td>
-                    <td>{row.count}</td>
-                    <td>{row.days}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          ))}
+              ))}
+            </tbody>
+          </table>
         </div>
       </div>
     </section>
