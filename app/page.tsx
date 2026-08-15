@@ -66,8 +66,8 @@ export default function Home() {
       <TitleScrollAnimation />
       <PostTitleCampaBadge />
       <AdaptationProof />
-      <ActualAskIntro />
       <PlotIntro />
+      <ActualAskIntro />
       <MarketingMediaPlan />
       <HistorySection />
       <PremiumSlot />

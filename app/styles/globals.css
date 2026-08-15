@@ -816,6 +816,7 @@ section {
   right: clamp(42px, 6vw, 136px);
   top: clamp(76px, 13.5svh, 142px);
   z-index: 2;
+  text-align: center;
 }
 
 .aboutInfrastructureCopy h2 {
@@ -836,7 +837,7 @@ section {
 
 .aboutInfrastructureCopy p {
   max-width: min(1320px, 82vw);
-  margin: 0;
+  margin: 0 auto;
   color: rgba(255, 255, 255, 0.96);
   font-family: var(--font-figtree), sans-serif;
   font-size: clamp(1.55rem, 2.05vw, 2.55rem);
@@ -944,10 +945,10 @@ section {
 .aboutIndustrySlide {
   display: grid;
   grid-template-rows: auto auto auto auto;
-  align-content: start;
+  align-content: center;
   justify-items: center;
-  row-gap: clamp(18px, 2.4svh, 34px);
-  padding: clamp(66px, 8.4svh, 108px) clamp(52px, 7vw, 150px) clamp(42px, 5.4svh, 70px);
+  row-gap: clamp(16px, 2.05svh, 28px);
+  padding: clamp(42px, 5.8svh, 74px) clamp(52px, 7vw, 150px);
   background:
     linear-gradient(90deg, rgba(18, 3, 1, 0.32), rgba(18, 3, 1, 0.04) 48%, rgba(18, 3, 1, 0.3)),
     linear-gradient(132deg, rgba(141, 9, 2, 0.9) 0%, rgba(225, 6, 0, 0.82) 51%, rgba(112, 9, 0, 0.9) 100%),
@@ -967,7 +968,7 @@ section {
 
 .aboutIndustryHeader {
   position: relative;
-  width: min(1280px, 74vw);
+  width: min(1280px, 78vw);
   z-index: 2;
   text-align: center;
   justify-self: center;
@@ -994,7 +995,7 @@ section {
   color: rgba(255, 255, 255, 0.98);
   font-family: var(--font-figtree), sans-serif;
   font-size: clamp(2rem, 2.95vw, 4.05rem);
-  font-weight: 850;
+  font-weight: 650;
   line-height: 1;
   letter-spacing: 0;
   text-align: center;
@@ -1006,15 +1007,15 @@ section {
 .aboutIndustryHeader p {
   display: block;
   width: 100%;
-  margin: clamp(44px, 6.4svh, 76px) 0 0;
+  margin: clamp(34px, 5.1svh, 58px) 0 0;
   text-align: center;
 }
 
 .aboutProductionTitle {
   position: relative;
   z-index: 2;
-  width: min(1280px, 74vw);
-  padding-top: clamp(2px, 0.4svh, 8px);
+  width: min(1280px, 78vw);
+  padding-top: clamp(0px, 0.25svh, 5px);
   text-align: center;
   transform: translate3d(0, 26px, 0);
 }
@@ -1025,19 +1026,19 @@ section {
   display: grid;
   place-items: center;
   justify-self: center;
-  width: min(1280px, 74vw);
-  min-height: clamp(138px, 16svh, 196px);
-  padding: clamp(20px, 2.1vw, 36px) clamp(34px, 4vw, 76px);
-  border-radius: clamp(14px, 1vw, 20px);
-  background: #ffffff;
-  box-shadow: 0 30px 70px rgba(55, 4, 1, 0.28);
+  width: min(1280px, 78vw);
+  min-height: 0;
+  padding: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
   opacity: 0;
   transform: translate3d(0, 34px, 0) scale(0.96);
 }
 
 .aboutPartnerPanel img {
   display: block;
-  width: min(920px, 100%);
+  width: min(1180px, 100%);
   height: auto;
   max-height: none;
   object-fit: contain;
@@ -1121,6 +1122,10 @@ section {
   aspect-ratio: 2 / 3;
   padding: 0;
   background: transparent;
+  border-color: rgba(255, 255, 255, 0.96);
+  border-style: solid;
+  border-width: 0 clamp(3px, 0.28vw, 5px);
+  box-sizing: border-box;
   box-shadow: none;
   overflow: hidden;
   opacity: 0;
@@ -1441,8 +1446,8 @@ section {
 
   .aboutPartnerPanel {
     width: min(880px, 86vw);
-    min-height: clamp(116px, 16svh, 172px);
-    padding: clamp(18px, 3vw, 30px) clamp(22px, 4vw, 48px);
+    min-height: 0;
+    padding: 0;
   }
 
   .aboutProductionTitle {
@@ -1452,7 +1457,7 @@ section {
   }
 
   .aboutPartnerPanel img {
-    width: min(760px, 100%);
+    width: min(820px, 100%);
     max-height: none;
   }
 }
@@ -1547,9 +1552,9 @@ section {
 
   .aboutPartnerPanel {
     width: min(420px, 88vw);
-    min-height: clamp(92px, 13svh, 132px);
-    border-radius: 12px;
-    padding: clamp(14px, 3vw, 22px);
+    min-height: 0;
+    border-radius: 0;
+    padding: 0;
   }
 
   .aboutProductionTitle {
@@ -1600,13 +1605,13 @@ section {
   }
 
   .aboutPartnerPanel {
-    min-height: clamp(96px, 15svh, 128px);
-    padding-top: clamp(14px, 2svh, 22px);
-    padding-bottom: clamp(14px, 2svh, 22px);
+    min-height: 0;
+    padding-top: 0;
+    padding-bottom: 0;
   }
 
   .aboutPartnerPanel img {
-    width: min(720px, 100%);
+    width: min(800px, 100%);
     max-height: none;
   }
 }
@@ -4658,34 +4663,65 @@ section {
   min-height: 100vh;
   min-height: 100svh;
   display: grid;
-  align-items: center;
-  padding: clamp(28px, 3vw, 48px) clamp(32px, 4.8vw, 86px);
+  align-items: stretch;
+  padding: 0;
   background:
-    linear-gradient(90deg, rgba(11, 6, 4, 0.86), rgba(126, 19, 7, 0.5)),
+    radial-gradient(circle at 52% 16%, rgba(255, 44, 18, 0.34), transparent 42%),
+    linear-gradient(180deg, rgba(86, 0, 0, 0.18) 0%, rgba(173, 6, 0, 0.48) 58%, rgba(239, 28, 5, 0.72) 100%),
+    linear-gradient(90deg, rgba(44, 0, 0, 0.54), rgba(211, 14, 3, 0.24), rgba(58, 0, 0, 0.5)),
     url("/background.png") center / 100% 100% no-repeat;
   color: white;
   overflow: hidden;
   user-select: none;
+  isolation: isolate;
 }
 
 .mediaPlan::before {
   content: "";
   position: absolute;
-  inset: 0;
+  inset: 16% 0 0;
   z-index: 0;
-  background: url("/marketingmedia/hostel-bg.png") center / cover no-repeat;
-  opacity: 0.16;
-  mix-blend-mode: screen;
+  background:
+    linear-gradient(180deg, transparent 0%, rgba(208, 18, 5, 0.5) 24%, rgba(226, 27, 6, 0.78) 100%),
+    url("/marketingmedia/hostel-bg.png") center bottom / cover no-repeat;
+  opacity: 0.58;
+  mix-blend-mode: multiply;
+  pointer-events: none;
+}
+
+.mediaPlan::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background:
+    linear-gradient(180deg, rgba(139, 0, 0, 0.2) 0%, transparent 42%, rgba(255, 34, 8, 0.2) 100%);
   pointer-events: none;
 }
 
 .mediaPlanShell {
   position: relative;
-  z-index: 1;
-  width: min(1580px, 100%);
+  z-index: 2;
+  width: 100%;
+  min-height: 100vh;
+  min-height: 100svh;
   margin: 0 auto;
   display: grid;
-  gap: clamp(28px, 3.2vw, 52px);
+  place-items: center;
+  padding: 0;
+}
+
+.mediaPlanTextArtwork {
+  display: block;
+  width: min(1574px, 96vw);
+  max-height: min(493px, 82svh);
+  height: auto;
+  object-fit: contain;
+  object-position: center;
+  margin: auto;
+  user-select: none;
+  pointer-events: none;
+  filter: drop-shadow(0 16px 0 rgba(72, 4, 1, 0.32));
 }
 
 .mediaPlanTableHeader {
@@ -4715,19 +4751,23 @@ section {
 .mediaPlanImpactGrid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
+  align-items: stretch;
   gap: 0;
-  min-height: clamp(560px, 72vh, 760px);
-  overflow: visible;
+  width: 100%;
+  min-height: 100vh;
+  min-height: 100svh;
+  margin: 0 auto;
+  padding: 0 0 clamp(18px, 3.2svh, 34px);
+  overflow: hidden;
 }
 
 .mediaPlanImpactCard {
   position: relative;
-  min-height: 100%;
   display: grid;
-  grid-template-rows: minmax(150px, 0.58fr) auto auto;
-  align-content: center;
-  gap: clamp(18px, 2vw, 28px);
-  padding: clamp(26px, 3vw, 50px) clamp(24px, 2.7vw, 46px);
+  grid-template-rows: clamp(330px, 51svh, 430px) clamp(170px, 24svh, 210px) 1fr;
+  align-content: stretch;
+  gap: 0;
+  padding: 0;
   border: 0;
   background: transparent;
   box-shadow: none;
@@ -4735,18 +4775,16 @@ section {
   min-width: 0;
 }
 
-.mediaPlanImpactCard::before {
-  content: "";
-  position: absolute;
-  right: 0;
-  top: 8%;
-  bottom: 8%;
-  width: 1px;
-  background: linear-gradient(180deg, transparent, rgba(255, 196, 0, 0.78), transparent);
-  pointer-events: none;
+.mediaPlanImpactCard:nth-child(2) {
+  padding-left: clamp(28px, 5.2vw, 160px);
 }
 
-.mediaPlanImpactCard:last-child::before {
+.mediaPlanImpactCard:nth-child(3) {
+  padding-left: clamp(42px, 7vw, 210px);
+}
+
+.mediaPlanImpactCard::before {
+  content: none;
   display: none;
 }
 
@@ -4757,20 +4795,40 @@ section {
   text-transform: uppercase;
 }
 
+.mediaPlanValue {
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-start;
+  min-height: 0;
+  overflow: visible;
+}
+
 .mediaPlanImpactCard strong {
+  display: block;
   color: var(--gold);
   font-family: var(--font-figtree), sans-serif;
   max-width: 100%;
-  font-size: var(--media-plan-value-size, clamp(4.6rem, 7.6vw, 9.4rem));
+  font-size: var(--media-plan-value-size, clamp(10rem, 17.6vw, 24rem));
   font-weight: 1000;
-  line-height: 0.72;
+  line-height: 0.86;
   text-transform: uppercase;
-  filter: drop-shadow(0 12px 0 rgba(74, 11, 2, 0.46));
+  filter: none;
   overflow-wrap: anywhere;
 }
 
-.mediaPlanImpactCard:nth-child(3) {
-  padding-inline: clamp(18px, 2.1vw, 34px);
+.mediaPlanValueImage {
+  display: block;
+  width: clamp(14rem, 20vw, 29rem);
+  max-width: 100%;
+  height: auto;
+  object-fit: contain;
+  filter: none;
+  user-select: none;
+  pointer-events: none;
+}
+
+.mediaPlanImpactCard:nth-child(3) .mediaPlanValue {
+  min-height: 0;
 }
 
 .mediaPlanImpactCard:nth-child(3) strong {
@@ -4782,11 +4840,12 @@ section {
   margin: 0;
   color: white;
   max-width: 92%;
-  font-size: clamp(2.1rem, 3.25vw, 4.35rem);
+  font-size: clamp(4rem, 4.4vw, 6.25rem);
   font-weight: 1000;
-  line-height: 0.84;
+  line-height: 1.08;
   text-transform: uppercase;
   overflow-wrap: anywhere;
+  filter: none;
 }
 
 .mediaPlanImpactCard h3 span {
@@ -4799,16 +4858,42 @@ section {
 }
 
 .mediaPlanImpactCard:nth-child(3) h3 {
-  font-size: clamp(2.45rem, 3.7vw, 4.85rem);
+  font-size: clamp(4rem, 4.4vw, 6.25rem);
 }
 
 .mediaPlanImpactCard p {
-  max-width: 470px;
+  max-width: min(92%, 820px);
   margin: 0;
-  color: rgba(255, 255, 255, 0.82);
-  font-size: clamp(0.9rem, 1.06vw, 1.14rem);
-  font-weight: 850;
-  line-height: 1.34;
+  color: #ffffff;
+  font-size: clamp(2rem, 1.8vw, 3rem);
+  font-weight: 760;
+  line-height: 1.16;
+  text-wrap: balance;
+  filter: none;
+}
+
+@media (max-width: 1180px) {
+  .mediaPlanImpactGrid {
+    gap: 0;
+    padding-inline: clamp(20px, 3vw, 44px);
+  }
+
+  .mediaPlanValue {
+    min-height: 0;
+  }
+
+  .mediaPlanImpactCard:nth-child(3) .mediaPlanValue {
+    min-height: 0;
+  }
+
+  .mediaPlanImpactCard h3,
+  .mediaPlanImpactCard:nth-child(3) h3 {
+    font-size: clamp(2.3rem, 4.2vw, 4.7rem);
+  }
+
+  .mediaPlanImpactCard p {
+    font-size: clamp(1.15rem, 1.8vw, 1.65rem);
+  }
 }
 
 .historySection {
@@ -6503,26 +6588,31 @@ section {
 }
 
 .mediaPlanDetailShell {
-  width: min(1720px, 100%);
-  gap: clamp(18px, 2vw, 28px);
+  width: min(1840px, calc(100% - clamp(32px, 4.2vw, 76px)));
+  gap: clamp(16px, 1.7svh, 24px);
+  padding: clamp(22px, 3.2svh, 42px) 0;
+  place-items: stretch;
 }
 
 .mediaPlanTableHeader h2 {
-  color: white;
-  font-size: clamp(3rem, 5vw, 5.8rem);
-  filter: drop-shadow(0 9px 0 rgba(74, 11, 2, 0.46));
+  color: var(--gold);
+  font-size: clamp(3.7rem, 5.8vw, 6.7rem);
+  line-height: 0.86;
+  text-align: center;
+  filter: drop-shadow(0 8px 0 rgba(74, 11, 2, 0.42));
 }
 
 .mediaPlanTables {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: clamp(16px, 1.8vw, 26px);
+  gap: clamp(18px, 2vw, 34px);
+  align-items: start;
 }
 
 .mediaPlanTable {
   width: 100%;
   border-collapse: separate;
-  border-spacing: 0 7px;
+  border-spacing: 0 6px;
   table-layout: fixed;
   border: 0;
   background: transparent;
@@ -6531,18 +6621,18 @@ section {
 
 .mediaPlanTable th,
 .mediaPlanTable td {
-  padding: 8px 10px;
+  padding: 7px 12px;
   border: 0;
   vertical-align: middle;
-  line-height: 1.12;
+  line-height: 1.1;
 }
 
 .mediaPlanTable th {
   position: sticky;
   top: 0;
-  background: rgba(255, 196, 0, 0.16);
+  background: rgba(255, 196, 0, 0.22);
   color: var(--gold);
-  font-size: clamp(0.62rem, 0.68vw, 0.78rem);
+  font-size: clamp(0.72rem, 0.78vw, 0.94rem);
   font-weight: 1000;
   text-align: left;
   text-transform: uppercase;
@@ -6550,22 +6640,25 @@ section {
 }
 
 .mediaPlanTable td {
-  background: rgba(19, 15, 12, 0.52);
-  color: rgba(255, 255, 255, 0.9);
-  font-size: clamp(0.68rem, 0.72vw, 0.86rem);
-  font-weight: 850;
-  box-shadow: inset 0 1px 0 rgba(255, 196, 0, 0.18), inset 0 -1px 0 rgba(255, 196, 0, 0.1);
+  background: rgba(20, 8, 4, 0.68);
+  color: rgba(255, 255, 255, 0.94);
+  font-size: clamp(0.78rem, 0.82vw, 1rem);
+  font-weight: 760;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 196, 0, 0.2),
+    inset 0 -1px 0 rgba(255, 196, 0, 0.12),
+    0 4px 10px rgba(60, 5, 1, 0.12);
 }
 
 .mediaPlanTable tbody td:first-child {
-  border-left: 1px solid rgba(255, 196, 0, 0.32);
+  border-left: 1px solid rgba(255, 196, 0, 0.46);
   color: var(--gold);
-  font-size: clamp(0.78rem, 0.86vw, 1rem);
+  font-size: clamp(0.9rem, 0.98vw, 1.14rem);
   font-weight: 1000;
 }
 
 .mediaPlanTable tbody td:last-child {
-  border-right: 1px solid rgba(255, 196, 0, 0.32);
+  border-right: 1px solid rgba(255, 196, 0, 0.46);
   color: var(--gold);
   font-weight: 1000;
 }
@@ -6620,21 +6713,23 @@ section {
   }
 
   .mediaPlanDetailShell {
-    gap: clamp(12px, 1.6svh, 22px);
+    gap: clamp(10px, 1.3svh, 18px);
+    padding-top: 0;
+    padding-bottom: 0;
   }
 
   .mediaPlanDetail .mediaPlanTableHeader h2 {
-    font-size: clamp(2.4rem, 6.4svh, 4.6rem);
+    font-size: clamp(2.9rem, 6.4svh, 5rem);
   }
 
   .mediaPlanTable {
-    border-spacing: 0 5px;
+    border-spacing: 0 4px;
   }
 
   .mediaPlanTable th,
   .mediaPlanTable td {
-    padding-top: 5px;
-    padding-bottom: 5px;
+    padding-top: 4px;
+    padding-bottom: 4px;
   }
 }
 
@@ -6663,7 +6758,7 @@ section {
   }
 
   .mediaPlanTable td {
-    font-size: clamp(0.64rem, 0.7vw, 0.8rem);
+    font-size: clamp(0.68rem, 0.74vw, 0.84rem);
   }
 }
 
@@ -7746,7 +7841,7 @@ section {
   }
 
   .mediaPlan {
-    padding: 48px 16px;
+    padding: 0;
     overflow: visible;
   }
 
@@ -7758,6 +7853,45 @@ section {
 
   .mediaPlanImpactGrid {
     min-height: auto;
+    padding: 72px 20px;
+    gap: 48px;
+    overflow: visible;
+  }
+
+  .mediaPlanValue,
+  .mediaPlanImpactCard:nth-child(3) .mediaPlanValue {
+    min-height: 0;
+  }
+
+  .mediaPlanImpactCard {
+    grid-template-rows: auto;
+    gap: 16px;
+    padding-left: 0;
+  }
+
+  .mediaPlanImpactCard:nth-child(2),
+  .mediaPlanImpactCard:nth-child(3) {
+    padding-left: 0;
+  }
+
+  .mediaPlanImpactCard strong {
+    font-size: clamp(7rem, 34vw, 12rem);
+  }
+
+  .mediaPlanValueImage {
+    width: clamp(8.2rem, 39vw, 13rem);
+  }
+
+  .mediaPlanImpactCard h3,
+  .mediaPlanImpactCard:nth-child(3) h3 {
+    font-size: clamp(2.35rem, 12vw, 4rem);
+  }
+
+  .mediaPlanImpactCard p {
+    max-width: 34rem;
+    font-size: clamp(1rem, 4.8vw, 1.22rem);
+    font-weight: 500;
+    line-height: 1.28;
   }
 
   .mediaPlanTableHeader h2 {
@@ -7784,6 +7918,11 @@ main :is(h1, h2, h3),
 .titleStageCopy h2,
 .posterTitleMark {
   font-weight: 900;
+}
+
+.mediaPlanImpactCard h3,
+.mediaPlanImpactCard h3 span {
+  font-weight: 1000;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -8348,8 +8487,9 @@ body {
   height: 95%;
   min-width: 0;
   overflow: hidden;
-  clip-path: inset(0 5% round 3%);
+  clip-path: inset(1.5% 6% round 4%);
   background: transparent;
+  contain: paint;
 }
 
 .premiumAssetReel:nth-child(1) {
@@ -8389,15 +8529,26 @@ body {
   inset: 0;
   width: 100%;
   height: 1100%;
+  transform: translate3d(0, 0, 0);
+  backface-visibility: hidden;
   will-change: transform, filter;
 }
 
 .premiumAssetStrip.isSpinning {
-  animation: premiumAssetRoll 900ms cubic-bezier(0.2, 0.64, 0.25, 1) var(--asset-delay) both;
+  animation: premiumAssetRoll 1040ms cubic-bezier(0.16, 0.72, 0.22, 1) var(--asset-delay) both;
+}
+
+.premiumAssetStrip.isSettled {
+  transform: translate3d(0, -90.9090909%, 0);
+  filter: blur(0);
 }
 
 .premiumAssetStrip.isSpinning.isReverse {
   animation-name: premiumAssetRollReverse;
+}
+
+.premiumAssetStrip.isSettled.isReverse {
+  transform: translate3d(0, 0, 0);
 }
 
 .premiumAssetCell {
@@ -8405,7 +8556,10 @@ body {
   height: 100%;
   display: grid;
   place-items: center;
+  padding: 5.5% 7.5%;
   overflow: hidden;
+  clip-path: inset(0 round 4%);
+  contain: paint;
 }
 
 .premiumAssetStrip .premiumAssetCell {
@@ -8415,22 +8569,24 @@ body {
 .premiumAssetCell img {
   display: block;
   width: auto;
-  height: 50%;
+  height: 54%;
   max-width: 68%;
-  max-height: 50%;
+  max-height: 54%;
   place-self: center;
   object-fit: contain;
   object-position: center;
-  transform: translate(var(--asset-x), var(--asset-y));
+  transform: translate3d(var(--asset-x), var(--asset-y), 0) scale(var(--asset-image-scale, 1));
   transform-origin: center;
+  backface-visibility: hidden;
+  will-change: transform;
 }
 
 /* The Total Impressions "1" has tighter SVG bounds and looks optically larger. */
 .premiumAssetCell img[src$="/10%20CR/Asset%2065.svg"],
 .premiumAssetCell img[src$="/10%20Lakhs/Asset%2045.svg"] {
-  height: 43%;
-  max-height: 43%;
-  --asset-y: -7%;
+  height: 48%;
+  max-height: 48%;
+  --asset-y: -5%;
 }
 
 .premiumAssetCell img[src$="/9%20CR/Asset%2010.svg"],
@@ -8438,7 +8594,7 @@ body {
 .premiumAssetCell img[src$="/10%20CR/Asset%2064.svg"],
 .premiumAssetCell img[src$="/20%20CR/Asset%2072.svg"],
 .premiumAssetCell img[src$="/3%20CR/Asset%2077.svg"] {
-  --asset-image-scale: 1.08;
+  --asset-image-scale: 1.1;
 }
 
 .premiumAssetCell img[src$="/60%20days/Asset%203.svg"],
@@ -8448,7 +8604,7 @@ body {
 .premiumAssetCell img[src$="/3%20CR/Asset%2075.svg"],
 .premiumAssetCell img[src$="/8K%2B/Asset%2053.svg"],
 .premiumAssetCell img[src$="/Infinity/Asset%2082.svg"] {
-  --asset-image-scale: 1.1;
+  --asset-image-scale: 1.08;
 }
 
 .premiumAssetCell img[src$="/8K%2B/Asset%2057.svg"],
@@ -8457,31 +8613,31 @@ body {
 }
 
 /* Optical SVG normalization: compensate for artwork padding inside each file. */
-.premiumAssetCell img[src$="/60%20days/Asset%203.svg"] { --asset-image-scale: 1.22; }
-.premiumAssetCell img[src$="/60%20days/Asset%204.svg"] { --asset-image-scale: 1.1; }
+.premiumAssetCell img[src$="/60%20days/Asset%203.svg"] { --asset-image-scale: 1.14; }
+.premiumAssetCell img[src$="/60%20days/Asset%204.svg"] { --asset-image-scale: 1.08; }
 
-.premiumAssetCell img[src$="/9%20CR/Asset%208.svg"] { --asset-image-scale: 1.55; }
-.premiumAssetCell img[src$="/9%20CR/Asset%2010.svg"] { --asset-image-scale: 1.08; }
+.premiumAssetCell img[src$="/9%20CR/Asset%208.svg"] { --asset-image-scale: 1.24; }
+.premiumAssetCell img[src$="/9%20CR/Asset%2010.svg"] { --asset-image-scale: 1.1; }
 
-.premiumAssetCell img[src$="/5%20CR/Asset%2013.svg"] { --asset-image-scale: 1.34; }
-.premiumAssetCell img[src$="/5%20CR/Asset%2017.svg"] { --asset-image-scale: 1.08; }
+.premiumAssetCell img[src$="/5%20CR/Asset%2013.svg"] { --asset-image-scale: 1.2; }
+.premiumAssetCell img[src$="/5%20CR/Asset%2017.svg"] { --asset-image-scale: 1.1; }
 
-.premiumAssetCell img[src$="/10%20CR/Asset%2064.svg"] { --asset-image-scale: 1.08; }
+.premiumAssetCell img[src$="/10%20CR/Asset%2064.svg"] { --asset-image-scale: 1.1; }
 
-.premiumAssetCell img[src$="/20x/Asset%2022.svg"] { --asset-image-scale: 1.68; }
+.premiumAssetCell img[src$="/20x/Asset%2022.svg"] { --asset-image-scale: 1.28; }
 
-.premiumAssetCell img[src$="/20%20CR/Asset%2072.svg"] { --asset-image-scale: 1.08; }
+.premiumAssetCell img[src$="/20%20CR/Asset%2072.svg"] { --asset-image-scale: 1.1; }
 
-.premiumAssetCell img[src$="/3%20CR/Asset%2077.svg"] { --asset-image-scale: 1.08; }
-.premiumAssetCell img[src$="/3%20CR/Asset%2075.svg"] { --asset-image-scale: 1.34; }
+.premiumAssetCell img[src$="/3%20CR/Asset%2077.svg"] { --asset-image-scale: 1.1; }
+.premiumAssetCell img[src$="/3%20CR/Asset%2075.svg"] { --asset-image-scale: 1.2; }
 
-.premiumAssetCell img[src$="/10%20Lakhs/Asset%2043.svg"] { --asset-image-scale: 1.3; }
+.premiumAssetCell img[src$="/10%20Lakhs/Asset%2043.svg"] { --asset-image-scale: 1.18; }
 
-.premiumAssetCell img[src$="/8K%2B/Asset%2053.svg"] { --asset-image-scale: 1.2; }
+.premiumAssetCell img[src$="/8K%2B/Asset%2053.svg"] { --asset-image-scale: 1.12; }
 .premiumAssetCell img[src$="/8K%2B/Asset%2057.svg"],
 .premiumAssetCell img[src$="/8K%2B/Asset%2056.svg"] { --asset-image-scale: 0.82; }
 
-.premiumAssetCell img[src$="/Infinity/Asset%2082.svg"] { --asset-image-scale: 1.4; }
+.premiumAssetCell img[src$="/Infinity/Asset%2082.svg"] { --asset-image-scale: 1.22; }
 
 .premiumAssetOverlay {
   position: absolute;
@@ -8525,15 +8681,15 @@ body {
 }
 
 @keyframes premiumAssetRoll {
-  0% { transform: translateY(0); filter: blur(0); }
+  0% { transform: translate3d(0, 0, 0); filter: blur(0); }
   42% { filter: blur(7px); }
-  100% { transform: translateY(-90.909%); filter: blur(0); }
+  100% { transform: translate3d(0, -90.9090909%, 0); filter: blur(0); }
 }
 
 @keyframes premiumAssetRollReverse {
-  0% { transform: translateY(-90.909%); filter: blur(0); }
+  0% { transform: translate3d(0, -90.9090909%, 0); filter: blur(0); }
   42% { filter: blur(7px); }
-  100% { transform: translateY(0); filter: blur(0); }
+  100% { transform: translate3d(0, 0, 0); filter: blur(0); }
 }
 
 @keyframes premiumSlotHeadingReveal {

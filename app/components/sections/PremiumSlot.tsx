@@ -127,6 +127,7 @@ export default function PremiumSlot() {
   const [current, setCurrent] = useState(initialAssets);
   const [spinAssets, setSpinAssets] = useState<string[][]>([]);
   const [spinning, setSpinning] = useState(false);
+  const [reelsSettled, setReelsSettled] = useState(false);
   const [rollDirection, setRollDirection] = useState<1 | -1>(1);
   const [spinKey, setSpinKey] = useState(0);
   const sectionRef = useRef<HTMLElement>(null);
@@ -149,6 +150,7 @@ export default function PremiumSlot() {
     setStage(targetStage);
     hasSpunRef.current = true;
     spinInputLockUntilRef.current = performance.now() + 1700;
+    setReelsSettled(false);
     setSpinning(true);
     setRollDirection(direction);
     setSpinAssets(
@@ -163,6 +165,7 @@ export default function PremiumSlot() {
     spinTimeoutRef.current = window.setTimeout(() => {
       setCurrent(finals);
       setSpinning(false);
+      setReelsSettled(true);
       spinTimeoutRef.current = null;
     }, 1500);
   }, [machineReady]);
@@ -200,6 +203,7 @@ export default function PremiumSlot() {
       setCurrent(initialAssets);
       setSpinAssets([]);
       setSpinning(false);
+      setReelsSettled(false);
       setRollDirection(1);
     };
 
@@ -369,14 +373,14 @@ export default function PremiumSlot() {
           <div className="premiumAssetMachine">
             <div className="premiumAssetReels" aria-live="polite">
               {current.map((asset, reelIndex) => {
-                const strip = spinning ? spinAssets[reelIndex] : null;
+                const strip = spinning || reelsSettled ? spinAssets[reelIndex] : null;
                 const style = { "--asset-delay": `${reelIndex * 120}ms` } as CSSProperties;
 
                 return (
                   <div className="premiumAssetReel" key={reelIndex} style={style}>
                     {strip ? (
                       <div
-                        className={`premiumAssetStrip isSpinning${rollDirection === -1 ? " isReverse" : ""}`}
+                        className={`premiumAssetStrip ${spinning ? "isSpinning" : "isSettled"}${rollDirection === -1 ? " isReverse" : ""}`}
                         key={`${spinKey}-${reelIndex}`}
                       >
                         {strip.map((item, itemIndex) => (
