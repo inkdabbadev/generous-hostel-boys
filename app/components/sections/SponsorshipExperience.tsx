@@ -35,14 +35,14 @@ export default function SponsorshipExperience() {
       aria-label="Sposership"
     >
       <img
-        className="sponsorshipText pointer-events-none absolute left-1/2 top-[clamp(102px,18vh,216px)] z-[3] block w-[min(980px,82vw)] select-none"
+        className="sponsorshipText pointer-events-none absolute left-1/2 top-[clamp(calc(102*var(--u)),18vh,calc(216*var(--u)))] z-[3] block w-[min(calc(980*var(--u)),82vw)] select-none"
         src="/sponsership/text.svg"
         alt=""
         aria-hidden="true"
         draggable={false}
       />
       <img
-        className="sponsorshipEcho pointer-events-none absolute bottom-[clamp(0px,1.8vh,18px)] left-0 z-[4] block h-auto w-[clamp(580px,64vw,1120px)] select-none max-[640px]:bottom-0 max-[640px]:w-[clamp(560px,156vw,940px)]"
+        className="sponsorshipEcho pointer-events-none absolute bottom-[clamp(0px,1.8vh,calc(18*var(--u)))] left-0 z-[4] block h-auto w-[clamp(calc(580*var(--u)),64vw,calc(1120*var(--u)))] select-none max-[640px]:bottom-0 max-[640px]:w-[clamp(calc(560*var(--u)),156vw,calc(940*var(--u)))]"
         src="/sponsership/echo-with-echo.gif"
         alt=""
         aria-hidden="true"

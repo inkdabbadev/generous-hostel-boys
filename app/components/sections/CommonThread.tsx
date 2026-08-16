@@ -184,7 +184,7 @@ export default function CommonThread() {
         <motion.div
           animate={{
             opacity: phase >= 1 ? (phase >= 2 ? 0.92 : 1) : 0,
-            backdropFilter: phase >= 1 ? (phase >= 2 ? "blur(0px)" : "blur(7px)") : "blur(0px)",
+            backdropFilter: phase >= 1 ? (phase >= 2 ? "blur(0px)" : "blur(calc(7*var(--u)))") : "blur(0px)",
           }}
           className="commonThreadFocusVeil"
           initial={false}
@@ -201,7 +201,7 @@ export default function CommonThread() {
               phase >= 2
                 ? "blur(0px) brightness(0.82)"
                 : phase >= 1
-                  ? "blur(2.4px) brightness(0.74)"
+                  ? "blur(calc(2.4*var(--u))) brightness(0.74)"
                   : "blur(0px) brightness(1)",
           }}
           className="commonThreadBackdropPoster commonThreadBackdropLeft"
@@ -225,7 +225,7 @@ export default function CommonThread() {
               phase >= 2
                 ? "blur(0px) brightness(0.82)"
                 : phase >= 1
-                  ? "blur(2.4px) brightness(0.74)"
+                  ? "blur(calc(2.4*var(--u))) brightness(0.74)"
                   : "blur(0px) brightness(1)",
           }}
           className="commonThreadBackdropPoster commonThreadBackdropRight"
@@ -245,8 +245,8 @@ export default function CommonThread() {
             opacity: phase === 1 ? 1 : 0,
             scale: phase >= 2 ? 1.08 : phase >= 1 ? 1 : 0.78,
             x: "-50%",
-            y: phase >= 2 ? "calc(-50% - 42px)" : phase >= 1 ? "-50%" : "calc(-50% + 34px)",
-            filter: phase >= 2 ? "blur(1.8px) brightness(0.72)" : phase >= 1 ? "blur(0px)" : "blur(8px)",
+            y: phase >= 2 ? "calc(-50% - calc(42*var(--u)))" : phase >= 1 ? "-50%" : "calc(-50% + calc(34*var(--u)))",
+            filter: phase >= 2 ? "blur(calc(1.8*var(--u))) brightness(0.72)" : phase >= 1 ? "blur(0px)" : "blur(calc(8*var(--u)))",
           }}
           className="commonThreadTextAsset"
           draggable={false}
@@ -291,8 +291,8 @@ export default function CommonThread() {
             opacity: phase === 2 ? 1 : 0,
             scale: phase >= 2 ? 1.68 : 0.72,
             x: "-50%",
-            y: phase >= 2 ? "calc(-50% + 4px)" : "calc(-50% + 120px)",
-            filter: phase >= 2 ? "blur(0px)" : "blur(10px)",
+            y: phase >= 2 ? "calc(-50% + calc(4*var(--u)))" : "calc(-50% + calc(120*var(--u)))",
+            filter: phase >= 2 ? "blur(0px)" : "blur(calc(10*var(--u)))",
           }}
           className="commonThreadMusicPerson"
           draggable={false}
@@ -307,8 +307,8 @@ export default function CommonThread() {
             opacity: phase === 3 ? 1 : 0,
             scale: phase >= 3 ? 1.16 : 0.76,
             x: "-50%",
-            y: phase >= 3 ? "calc(-50% + 2px)" : "calc(-50% + 120px)",
-            filter: phase >= 3 ? "blur(0px)" : "blur(10px)",
+            y: phase >= 3 ? "calc(-50% + calc(2*var(--u)))" : "calc(-50% + calc(120*var(--u)))",
+            filter: phase >= 3 ? "blur(0px)" : "blur(calc(10*var(--u)))",
           }}
           className="commonThreadMusicPerson commonThreadCinemoPerson"
           draggable={false}
@@ -353,8 +353,8 @@ export default function CommonThread() {
             opacity: phase === 4 ? 1 : 0,
             scale: phase >= 4 ? 1.18 : 0.76,
             x: "-50%",
-            y: phase >= 4 ? "calc(-50% + 8px)" : "calc(-50% + 120px)",
-            filter: phase >= 4 ? "blur(0px)" : "blur(10px)",
+            y: phase >= 4 ? "calc(-50% + calc(8*var(--u)))" : "calc(-50% + calc(120*var(--u)))",
+            filter: phase >= 4 ? "blur(0px)" : "blur(calc(10*var(--u)))",
           }}
           className="commonThreadMusicPerson commonThreadRishabPerson"
           draggable={false}

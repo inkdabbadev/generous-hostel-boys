@@ -53,7 +53,7 @@ export default function Noticeboard3() {
         initial="hidden"
         transition={{ delay: 0.04, duration: 0.58, ease: [0.16, 1, 0.3, 1] }}
         variants={{
-          hidden: { opacity: 0, y: -34, scale: 0.94, filter: "blur(10px)" },
+          hidden: { opacity: 0, y: -34, scale: 0.94, filter: "blur(calc(10*var(--u)))" },
           show: { opacity: 1, y: 0, scale: 1, filter: "blur(0px)" },
         }}
       >
@@ -80,7 +80,7 @@ export default function Noticeboard3() {
                 opacity: 0,
                 scale: 0.96,
                 y: 42,
-                filter: "blur(10px) brightness(1.18)",
+                filter: "blur(calc(10*var(--u))) brightness(1.18)",
               },
               show: {
                 opacity: 1,
@@ -111,7 +111,7 @@ export default function Noticeboard3() {
                 opacity: 0,
                 scale: 1.08,
                 y: -26,
-                filter: "blur(8px) brightness(1.2)",
+                filter: "blur(calc(8*var(--u))) brightness(1.2)",
               },
               show: {
                 opacity: 1,

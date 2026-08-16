@@ -40,7 +40,7 @@ export default function ScrollHero() {
         y: "60vh",
         opacity: 0,
         scale: 0.92,
-        filter: "blur(10px)",
+        filter: "blur(calc(10*var(--u)))",
       });
     };
 
@@ -73,7 +73,7 @@ export default function ScrollHero() {
 
         timeline.fromTo(
           element,
-          { y: "60vh", opacity: 0, scale: 0.92, filter: "blur(10px)" },
+          { y: "60vh", opacity: 0, scale: 0.92, filter: "blur(calc(10*var(--u)))" },
           {
             y: "0vh",
             opacity: 1,
@@ -92,7 +92,7 @@ export default function ScrollHero() {
             y: "-34vh",
             opacity: 0,
             scale: 0.96,
-            filter: "blur(6px)",
+            filter: "blur(calc(6*var(--u)))",
             duration: 0.75,
             ease: "power1.in",
           });

@@ -26,7 +26,7 @@ export default function HistorySection() {
   return (
     <motion.section
       aria-label="History"
-      className="historySection"
+      className={`historySection${activePanel ? " hasActivePanel" : ""}`}
       initial="hidden"
       viewport={{ once: true, amount: 0.5 }}
       whileInView="show"
@@ -47,7 +47,16 @@ export default function HistorySection() {
         src="/history/warden.png"
         style={historyLayout.warden}
       />
-      <h2 className="historyMarketingText" style={historyLayout.marketingText}>
+      {/* This decorative backdrop heading is meant to always sit fully behind
+          an open panel. At smaller effective viewports (e.g. 125% Windows
+          display scaling) the modal panel shrinks proportionally more than
+          this vh-sized text does, so it can peek out above the panel's top
+          edge. Hiding it outright while a panel is open is more robust than
+          relying on it happening to be geometrically covered. */}
+      <h2
+        aria-hidden={activePanel ? true : undefined}
+        className="historyMarketingText"
+        style={historyLayout.marketingText}>
         <span>Marketing</span>
         <motion.img
           alt=""

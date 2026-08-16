@@ -78,14 +78,14 @@ export default function GridSlideExperience() {
       className="relative flex min-h-screen items-center justify-center overflow-hidden bg-[linear-gradient(90deg,rgba(8,4,2,0.72),rgba(120,13,6,0.76)),url('/background.png')] bg-[length:100%_100%] bg-center bg-no-repeat p-4 text-white md:p-8"
       aria-label="Grid slide"
     >
-      <div className="grid w-[125vw] max-w-[1750px] grid-cols-12 auto-rows-[93.75px] gap-4 md:auto-rows-[112.5px] md:gap-5">
+      <div className="grid w-[125vw] max-w-[calc(1750*var(--u))] grid-cols-12 auto-rows-[calc(93.75*var(--u))] gap-4 md:auto-rows-[calc(112.5*var(--u))] md:gap-5">
         {galleryItems.map((item, index) => (
           <div
             key={item.id}
             ref={(node) => {
               itemsRef.current[index] = node;
             }}
-            className={`relative overflow-hidden rounded-[8px] border-2 border-transparent shadow-lg ${item.className}`}
+            className={`relative overflow-hidden rounded-[calc(8*var(--u))] border-2 border-transparent shadow-lg ${item.className}`}
           >
             <Image
               src={item.src}

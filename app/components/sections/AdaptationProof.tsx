@@ -285,7 +285,7 @@ export default function AdaptationProof() {
               opacity: 0,
               scale: stage === "years" ? 0.9 : 0.96,
               y: stage === "years" ? 34 : 30,
-              filter: "blur(10px)",
+              filter: "blur(calc(10*var(--u)))",
             }}
             key={stage}
             transition={{
@@ -340,7 +340,7 @@ export default function AdaptationProof() {
               opacity: 0,
               scale: stage === "years" ? 1.18 : 1.04,
               y: stage === "years" ? 18 : 96,
-              filter: "blur(14px) brightness(1.2)",
+              filter: "blur(calc(14*var(--u))) brightness(1.2)",
             }}
             key="why1-plate"
             src="/adaption/why1.png"

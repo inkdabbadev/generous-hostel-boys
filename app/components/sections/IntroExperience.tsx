@@ -280,17 +280,17 @@ export default function IntroExperience() {
           aria-hidden="true"
         />
         <div
-          className="absolute left-1/2 top-[clamp(88px,13vh,136px)] z-[4] grid w-[min(590px,66vw)] place-items-center transition-[transform,opacity] duration-500 ease-out will-change-[transform,opacity] max-[640px]:top-[82px] max-[640px]:w-[min(330px,72vw)]"
+          className="absolute left-1/2 top-[clamp(calc(88*var(--u)),13vh,calc(136*var(--u)))] z-[4] grid w-[min(calc(590*var(--u)),66vw)] place-items-center transition-[transform,opacity] duration-500 ease-out will-change-[transform,opacity] max-[640px]:top-[calc(82*var(--u))] max-[640px]:w-[min(calc(330*var(--u)),72vw)]"
           style={logoStyle}
         >
           <img
-            className="block h-auto w-full max-w-[630px] select-none"
+            className="block h-auto w-full max-w-[calc(630*var(--u))] select-none"
             src="/logo.svg"
             alt="GENEROUS Entertainments"
             draggable={false}
           />
         </div>
-        <div className="pointer-events-none absolute left-1/2 top-[clamp(88px,23.2vh,182px)] z-[3] w-[min(1200px,90vw)] -translate-x-1/2 max-[640px]:top-[clamp(165px,25vh,217px)] max-[640px]:w-[min(580px,96vw)]">
+        <div className="pointer-events-none absolute left-1/2 top-[clamp(calc(88*var(--u)),23.2vh,calc(182*var(--u)))] z-[3] w-[min(calc(1200*var(--u)),90vw)] -translate-x-1/2 max-[640px]:top-[clamp(calc(165*var(--u)),25vh,calc(217*var(--u)))] max-[640px]:w-[min(calc(580*var(--u)),96vw)]">
           <img
             className="block h-auto w-full select-none transition-[transform,opacity,filter] duration-500 ease-out will-change-[transform,opacity] [filter:drop-shadow(0_18px_22px_rgba(0,0,0,0.42))]"
             src="/intro/road.png"
@@ -300,7 +300,7 @@ export default function IntroExperience() {
           />
         </div>
         <img
-          className="pointer-events-none absolute bottom-[clamp(0px,1.8vh,18px)] left-[-62vw] z-[5] block h-auto w-[clamp(430px,44vw,790px)] select-none transition-transform duration-300 ease-out will-change-transform [filter:drop-shadow(0_22px_18px_rgba(0,0,0,0.36))] max-[640px]:bottom-0 max-[640px]:left-[-124vw] scale-[1.65] max-[640px]:w-[clamp(390px,98vw,580px)]"
+          className="pointer-events-none absolute bottom-[clamp(0px,1.8vh,calc(18*var(--u)))] left-[-62vw] z-[5] block h-auto w-[clamp(calc(430*var(--u)),44vw,calc(790*var(--u)))] select-none transition-transform duration-300 ease-out will-change-transform [filter:drop-shadow(0_22px_18px_rgba(0,0,0,0.36))] max-[640px]:bottom-0 max-[640px]:left-[-124vw] scale-[1.65] max-[640px]:w-[clamp(calc(390*var(--u)),98vw,calc(580*var(--u)))]"
           src="/intro/run.gif"
           alt=""
           aria-hidden="true"

@@ -19,7 +19,7 @@ export default function MarketingMediaPlan() {
           src="/marketingmedia/texts.png"
           transition={{ duration: 0.72, ease: [0.16, 1, 0.3, 1] }}
           variants={{
-            hidden: { opacity: 0, y: 44, scale: 0.96, filter: "blur(12px)" },
+            hidden: { opacity: 0, y: 44, scale: 0.96, filter: "blur(calc(12*var(--u)))" },
             show: { opacity: 1, y: 0, scale: 1, filter: "blur(0px)" },
           }}
         />

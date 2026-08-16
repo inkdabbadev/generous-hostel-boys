@@ -30,24 +30,28 @@ export const historyLayout = {
     objectFit: "contain",
   },
   makeHistoryText: {
-    left: "20vw",
+    left: "17vw",
     top: "18.8vh",
     width: "36vw",
   },
+  // Sticky notes sit below the "How to make history?" headline. Their `top`
+  // values must clear that text's bottom edge (~38.9vh) — the notes are
+  // rotated, so their rendered bounding box starts 1-2vh ABOVE the `top`
+  // set here, which is what previously let them collide with the text.
   stickyOnline: {
     left: "10vw",
-    top: "38vh",
-    width: "19vw",
+    top: "44vh",
+    width: "17.5vw",
   },
   stickyOfflineRight: {
-    left: "30.4vw",
-    top: "38vh",
-    width: "20.4vw",
+    left: "31vw",
+    top: "44vh",
+    width: "18.5vw",
   },
   stickyOfflineBottom: {
-    left: "20vw",
-    top: "65vh",
-    width: "18.2vw",
+    left: "22vw",
+    top: "69vh",
+    width: "16.5vw",
   },
 } satisfies Record<string, CSSProperties>;
 
@@ -179,15 +183,15 @@ export const onlineFeatureCards = [
 
 export const historyOnlineLayout = {
   panel: {
-    inset: "clamp(18px, 2.4vw, 42px)",
+    inset: "clamp(calc(18*var(--u)), 2.4vw, calc(42*var(--u)))",
   },
   inner: {
-    width: "min(1840px, 100%)",
-    padding: "clamp(34px, 4vh, 56px) clamp(32px, 3.6vw, 66px) clamp(32px, 4vh, 58px)",
-    gap: "clamp(22px, 3.4vh, 36px)",
+    width: "min(calc(1840*var(--u)), 100%)",
+    padding: "clamp(calc(34*var(--u)), 4vh, calc(56*var(--u))) clamp(calc(32*var(--u)), 3.6vw, calc(66*var(--u))) clamp(calc(32*var(--u)), 4vh, calc(58*var(--u)))",
+    gap: "clamp(calc(22*var(--u)), 3.4vh, calc(36*var(--u)))",
   },
   grid: {
-    gap: "clamp(42px, 6.8vh, 84px) clamp(28px, 3.4vw, 62px)",
+    gap: "clamp(calc(42*var(--u)), 6.8vh, calc(84*var(--u))) clamp(calc(28*var(--u)), 3.4vw, calc(62*var(--u)))",
   },
   paper: {
     width: "100%",

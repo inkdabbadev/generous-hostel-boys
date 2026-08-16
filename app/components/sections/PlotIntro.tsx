@@ -39,7 +39,7 @@ export default function PlotIntro() {
                 y: 36,
                 rotateX: -22,
                 scale: 0.96,
-                filter: "blur(10px)",
+                filter: "blur(calc(10*var(--u)))",
               },
               show: {
                 opacity: 1,
@@ -71,8 +71,8 @@ export default function PlotIntro() {
           scale: 0.74,
           rotate: -4,
           rotateX: 18,
-          filter: "blur(18px) saturate(1.35)",
-          clipPath: "inset(18% 12% 18% 12% round 18px)",
+          filter: "blur(calc(18*var(--u))) saturate(1.35)",
+          clipPath: "inset(18% 12% 18% 12% round calc(18*var(--u)))",
         }}
         src="/plot/comic.png"
         transition={{

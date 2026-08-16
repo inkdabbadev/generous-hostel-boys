@@ -6,12 +6,12 @@ import type { CSSProperties } from "react";
 import { useEffect, useRef, useState } from "react";
 
 const badgeControls = {
-  desktopTop: "clamp(16px, 2.1vw, 34px)",
-  desktopRight: "clamp(18px, 2.6vw, 46px)",
-  desktopWidth: "clamp(108px, 9vw, 168px)",
-  mobileTop: "14px",
-  mobileRight: "14px",
-  mobileWidth: "108px",
+  desktopTop: "clamp(calc(16*var(--u)), 2.1vw, calc(34*var(--u)))",
+  desktopRight: "clamp(calc(18*var(--u)), 2.6vw, calc(46*var(--u)))",
+  desktopWidth: "clamp(calc(108*var(--u)), 9vw, calc(168*var(--u)))",
+  mobileTop: "calc(14*var(--u))",
+  mobileRight: "calc(14*var(--u))",
+  mobileWidth: "calc(108*var(--u))",
 };
 
 export default function PostTitleCampaBadge() {

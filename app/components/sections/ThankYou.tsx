@@ -20,8 +20,8 @@ const thankYouControls = {
     entranceDuration: "1.45s",
   },
   van: {
-    desktopWidth: "clamp(540px, 48vw, 980px)",
-    mobileWidth: "clamp(360px, 92vw, 620px)",
+    desktopWidth: "clamp(calc(540*var(--u)), 48vw, calc(980*var(--u)))",
+    mobileWidth: "clamp(calc(360*var(--u)), 92vw, calc(620*var(--u)))",
     desktopBottom: "clamp(1.1rem, 3.2vh, 2.7rem)",
     mobileBottom: "3vh",
     duration: "9s",
@@ -133,7 +133,7 @@ export default function ThankYou() {
           z-index: 10;
           padding-top: var(--thank-text-top);
           opacity: 0;
-          filter: blur(10px);
+          filter: blur(calc(10*var(--u)));
           transform: translate3d(0, 3.4rem, 0) scale(0.94);
         }
 
@@ -178,7 +178,7 @@ export default function ThankYou() {
           0%,
           48% {
             opacity: 0;
-            filter: blur(10px);
+            filter: blur(calc(10*var(--u)));
             transform: translate3d(0, 3.4rem, 0) scale(0.94);
           }
           58% {

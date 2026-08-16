@@ -298,7 +298,7 @@ export default function ActualAskIntro() {
                   hidden: {
                     opacity: 0,
                     y: 28,
-                    filter: "blur(5px)",
+                    filter: "blur(calc(5*var(--u)))",
                   },
                   show: {
                     opacity: 1,
@@ -339,7 +339,7 @@ export default function ActualAskIntro() {
                   hidden: {
                     opacity: 0,
                     y: index % 2 === 0 ? 30 : 22,
-                    filter: "blur(6px)",
+                    filter: "blur(calc(6*var(--u)))",
                   },
                   show: {
                     opacity: 1,

@@ -25,11 +25,11 @@ type OnlineTextControl = {
 };
 
 const defaultOnlineTextControl: OnlineTextControl = {
-  hoverZ: "54px",
+  hoverZ: "calc(54*var(--u))",
   width: "82%",
   x: "-50%",
   y: "-43%",
-  z: "46px",
+  z: "calc(46*var(--u))",
 };
 
 const onlineTextControls: Record<number, Partial<OnlineTextControl>> = {
@@ -884,6 +884,13 @@ function IdeasPopupMain() {
   const isDetailView = ideasView !== "main";
 
   return (
+    // The panel's layout scale lives on this plain wrapper, NOT on the
+    // motion.div children below. Framer Motion writes `transform` as an
+    // inline style to animate `y`, which overrides any CSS `transform`
+    // on the same element — and once `y` settles at 0 it writes
+    // `transform: none`, silently wiping the scale. Keeping the scale on
+    // an element Framer Motion doesn't control makes the two independent.
+    <div className="historyIdeasScaleWrap">
     <AnimatePresence mode="wait">
       {isDetailView ? (
         <motion.div
@@ -965,6 +972,7 @@ function IdeasPopupMain() {
         </motion.div>
       )}
     </AnimatePresence>
+    </div>
   );
 }
 
@@ -980,6 +988,11 @@ export function HistoryPanel({ activePanel, onClose }: HistoryPanelProps) {
   const isStructuredPanel = isOnlinePanel || isOfflinePanel || isIdeasPanel;
   const structuredPanelMetrics = viewportSize.width > 0 && viewportSize.height > 0
     ? (() => {
+        // "Contain" fit: the fixed 1790x950 canvas is scaled down to sit
+        // fully inside the viewport with a margin, so the panel reads as a
+        // floating card over the room/warden background. The scale is the
+        // SMALLER of the two ratios so the whole canvas stays visible and
+        // its aspect ratio is preserved (never cropped, never distorted).
         const horizontalGap = clampNumber(52, viewportSize.width * 0.06, 128);
         const verticalGap = clampNumber(52, viewportSize.height * 0.08, 116);
         const availableWidth = Math.max(360, viewportSize.width - horizontalGap);
@@ -1017,11 +1030,11 @@ export function HistoryPanel({ activePanel, onClose }: HistoryPanelProps) {
         } as CSSProperties)
       : ({
           "--history-panel-scale": "1",
-          height: "min(950px, calc(100svh - clamp(52px, 8vh, 116px)), calc((100vw - clamp(52px, 6vw, 128px)) / 1.8842))",
+          height: "min(calc(950*var(--u)), calc(100svh - clamp(calc(52*var(--u)), 8vh, calc(116*var(--u)))), calc((100vw - clamp(calc(52*var(--u)), 6vw, calc(128*var(--u)))) / 1.8842))",
           left: "50%",
           top: "50%",
           translate: "-50% -50%",
-          width: "min(1790px, calc(100vw - clamp(52px, 6vw, 128px)), calc((100svh - clamp(52px, 8vh, 116px)) * 1.8842))",
+          width: "min(calc(1790*var(--u)), calc(100vw - clamp(calc(52*var(--u)), 6vw, calc(128*var(--u)))), calc((100svh - clamp(calc(52*var(--u)), 8vh, calc(116*var(--u)))) * 1.8842))",
         } as CSSProperties)
     : historyOnlineLayout.panel;
 
