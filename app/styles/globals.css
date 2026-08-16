@@ -1184,8 +1184,8 @@ section {
 .aboutWhoSlide {
   display: grid;
   grid-template-rows: auto minmax(0, 1fr) auto;
-  row-gap: clamp(14px, 2svh, 30px);
-  padding: clamp(24px, 4.2svh, 60px) clamp(28px, 5vw, 96px);
+  row-gap: clamp(10px, 1.55svh, 24px);
+  padding: clamp(20px, 3.2svh, 46px) clamp(28px, 5vw, 96px);
   background:
     linear-gradient(180deg, rgba(18, 3, 1, 0.4) 0%, rgba(18, 3, 1, 0.2) 38%, rgba(18, 3, 1, 0.62) 100%),
     url("/about/crowd.png") center 32% / cover no-repeat,
@@ -1197,7 +1197,7 @@ section {
 
 .aboutWhoTitle {
   grid-row: 1;
-  margin: clamp(18px, 3svh, 44px) 0 0;
+  margin: clamp(10px, 2svh, 28px) 0 0;
   justify-self: start;
   color: var(--gold);
   font-family: var(--font-figtree), sans-serif;
@@ -1222,7 +1222,7 @@ section {
   display: grid;
   align-content: center;
   justify-items: center;
-  gap: clamp(24px, 4.6svh, 50px);
+  gap: clamp(18px, 3.2svh, 38px);
 }
 
 .aboutLogo {
@@ -1241,7 +1241,7 @@ section {
 
 .aboutCopyBlock {
   display: grid;
-  gap: clamp(20px, 3svh, 34px);
+  gap: clamp(14px, 2.2svh, 26px);
   max-width: min(1280px, 78vw);
   justify-items: center;
   text-align: center;
@@ -1273,7 +1273,7 @@ section {
 .aboutStatsRow {
   grid-row: 3;
   justify-self: center;
-  transform: translateY(clamp(-38px, -4svh, -18px));
+  transform: translateY(clamp(-28px, -2.8svh, -10px));
 }
 
 .aboutStatsImg {
@@ -5123,7 +5123,21 @@ section {
 }
 
 .historyOnlineStructuredPanel .historyOnlineInner {
+  position: absolute;
+  left: 0;
+  top: 0;
   z-index: 2;
+  width: 1790px !important;
+  height: 950px;
+  padding: 52px 84px 64px !important;
+  gap: 34px !important;
+  transform: scale(var(--history-panel-scale));
+  transform-origin: left top;
+}
+
+.historyOnlineStructuredPanel .historyOnlineInner h3 {
+  font-size: 150px;
+  line-height: 0.78;
 }
 
 .historyOnlineStructuredPanel.historyOnlineDetailPanel {
@@ -5132,13 +5146,18 @@ section {
 
 .historyIdeasMain {
   position: absolute;
-  inset: 0;
+  left: 0;
+  top: 0;
   z-index: 2;
+  width: 1790px;
+  height: 950px;
   display: grid;
   grid-template-rows: auto 1fr;
   justify-items: center;
   padding-top: 44px;
   pointer-events: none;
+  transform: scale(var(--history-panel-scale));
+  transform-origin: left top;
 }
 
 .historyIdeasMain h3 {
@@ -5215,10 +5234,15 @@ section {
 
 .historyIdeasDetail {
   position: absolute;
-  inset: 0;
+  left: 0;
+  top: 0;
   z-index: 2;
-  overflow: visible;
+  width: 1790px;
+  height: 950px;
+  overflow: hidden;
   pointer-events: auto;
+  transform: scale(var(--history-panel-scale));
+  transform-origin: left top;
 }
 
 .historyIdeasDetail::before {
@@ -5227,7 +5251,7 @@ section {
   inset: 0;
   z-index: 0;
   background: url("/background.png") center / cover no-repeat;
-  clip-path: path("M 145 0 H 1645 Q 1660 0 1660 15 V 115 Q 1660 130 1675 130 H 1775 Q 1790 130 1790 145 V 935 Q 1790 950 1775 950 H 15 Q 0 950 0 935 V 145 Q 0 130 15 130 H 115 Q 130 130 130 115 V 15 Q 130 0 145 0 Z");
+  clip-path: path("M 15 0 H 1645 Q 1660 0 1660 15 V 115 Q 1660 130 1675 130 H 1775 Q 1790 130 1790 145 V 935 Q 1790 950 1775 950 H 15 Q 0 950 0 935 V 15 Q 0 0 15 0 Z");
 }
 
 .historyIdeasDetailImage {
@@ -5238,24 +5262,28 @@ section {
   width: 100%;
   height: 100%;
   object-fit: fill;
-  clip-path: path("M 145 0 H 1645 Q 1660 0 1660 15 V 115 Q 1660 130 1675 130 H 1775 Q 1790 130 1790 145 V 935 Q 1790 950 1775 950 H 15 Q 0 950 0 935 V 145 Q 0 130 15 130 H 115 Q 130 130 130 115 V 15 Q 130 0 145 0 Z");
+  clip-path: path("M 15 0 H 1645 Q 1660 0 1660 15 V 115 Q 1660 130 1675 130 H 1775 Q 1790 130 1790 145 V 935 Q 1790 950 1775 950 H 15 Q 0 950 0 935 V 15 Q 0 0 15 0 Z");
   pointer-events: none;
   user-select: none;
 }
 
 .historyIdeasBackTile {
   position: absolute;
-  top: 0;
-  left: 0;
+  top: 30px;
+  left: 30px;
   z-index: 3;
   display: grid;
-  width: var(--offline-close-size);
-  height: var(--offline-close-size);
+  width: 92px;
+  height: 92px;
   padding: 0;
   place-items: center;
   border: 0;
-  border-radius: var(--offline-shape-radius);
-  background: linear-gradient(249.36deg, #ff0000 -7.22%, #990000 86.7%);
+  border-radius: 14px;
+  background: rgba(173, 0, 0, 0.78);
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 255, 255, 0.08),
+    0 14px 28px rgba(70, 0, 0, 0.18);
+  backdrop-filter: blur(4px);
   cursor: pointer;
   transition: transform 170ms ease, filter 170ms ease;
 }
@@ -5268,11 +5296,11 @@ section {
 }
 
 .historyIdeasBackTile span {
-  width: 34px;
-  height: 34px;
-  border-bottom: 9px solid white;
-  border-left: 9px solid white;
-  transform: translateX(7px) rotate(45deg);
+  width: 30px;
+  height: 30px;
+  border-bottom: 8px solid white;
+  border-left: 8px solid white;
+  transform: translateX(6px) rotate(45deg);
 }
 
 .historyOfflineStack {
@@ -5418,14 +5446,64 @@ section {
 
 .historyOfflineImageSlideAsset {
   position: absolute;
-  inset: 0;
+  inset: -2px;
   z-index: 2;
   display: block;
-  width: 100%;
-  height: 100%;
+  width: calc(100% + 4px);
+  height: calc(100% + 4px);
   object-fit: fill;
   pointer-events: none;
   user-select: none;
+}
+
+.historyOfflineImageStats {
+  position: absolute;
+  left: 55px;
+  bottom: 30px;
+  z-index: 4;
+  width: 1680px;
+  min-height: 150px;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  align-items: center;
+  gap: 34px;
+  padding: 18px 42px 24px;
+  background: transparent;
+  border-radius: 0;
+  color: white;
+  font-family: var(--font-figtree), sans-serif;
+  text-align: center;
+  text-transform: uppercase;
+  pointer-events: none;
+  user-select: none;
+}
+
+.historyOfflineImageStat {
+  display: grid;
+  justify-items: center;
+  align-content: center;
+  min-width: 0;
+  gap: 16px;
+}
+
+.historyOfflineImageStat strong {
+  color: var(--gold);
+  font-size: 104px;
+  font-weight: 1000;
+  line-height: 0.72;
+  letter-spacing: 0;
+  white-space: nowrap;
+  text-shadow: 0 10px 0 rgba(82, 0, 0, 0.18);
+}
+
+.historyOfflineImageStat span {
+  color: white;
+  font-size: 36px;
+  font-weight: 1000;
+  line-height: 0.9;
+  letter-spacing: 0;
+  white-space: nowrap;
+  text-shadow: 0 7px 0 rgba(0, 0, 0, 0.3);
 }
 
 .historyOfflineSlideThreeTitle {
@@ -6213,9 +6291,29 @@ section {
 
 .historyOnlineOverview {
   position: relative;
-  min-height: clamp(430px, 60vh, 690px);
+  min-height: 0;
+  height: 100%;
   display: grid;
   align-content: start;
+}
+
+.historyOnlineStructuredPanel .historyOnlineGrid {
+  gap: 84px 62px !important;
+  padding: 22px 18px 0;
+}
+
+.historyOnlineStructuredPanel .historyOnlineCardText strong {
+  font-size: 46px;
+}
+
+.historyOnlineStructuredPanel .historyOnlineCardText em {
+  font-size: 23px;
+}
+
+.historyOnlineStructuredPanel .historyOnlineMore {
+  right: 18px;
+  bottom: 12px;
+  font-size: 56px;
 }
 
 .historyOnlineGrid .historyOnlineCard:nth-child(1) {
@@ -6275,7 +6373,8 @@ section {
   z-index: 4;
   display: grid;
   justify-items: center;
-  width: 86%;
+  width: var(--online-text-width, 82%);
+  overflow: hidden;
   color: #e60000;
   font-family: var(--font-figtree), sans-serif;
   font-weight: 1000;
@@ -6585,17 +6684,25 @@ section {
 }
 
 .mediaPlanDetailShell {
-  width: min(1720px, calc(100% - clamp(36px, 5vw, 96px)));
-  gap: clamp(22px, 2.4svh, 36px);
-  padding: clamp(28px, 4svh, 56px) 0;
+  width: min(1660px, calc(100% - clamp(34px, 4.2vw, 82px)));
+  min-height: 100svh;
+  grid-template-rows: auto minmax(0, 1fr);
+  gap: clamp(14px, 1.6svh, 24px);
+  padding: clamp(20px, 2.6svh, 34px) 0;
   place-items: stretch;
   align-content: center;
 }
 
+.historyOnlineGrid .historyOnlineCard:nth-child(4) .historyOnlineCardText strong,
+.historyOnlineGrid .historyOnlineCard:nth-child(6) .historyOnlineCardText strong,
+.historyOnlineGrid .historyOnlineCard:nth-child(7) .historyOnlineCardText strong {
+  font-size: 40px;
+}
+
 .mediaPlanDetail .mediaPlanTableHeader {
   justify-self: stretch;
-  width: min(1480px, 92%);
-  margin-left: clamp(8px, 2.4vw, 48px);
+  width: min(1420px, 92%);
+  margin-left: clamp(4px, 2vw, 36px);
   display: flex;
   align-items: end;
   justify-content: space-between;
@@ -6618,7 +6725,7 @@ section {
 
 .mediaPlanTableHeader h2 {
   color: var(--gold);
-  font-size: clamp(3.6rem, 5.45vw, 6.3rem);
+  font-size: clamp(3rem, 4.7vw, 5.45rem);
   line-height: 0.86;
   text-align: left;
   filter: drop-shadow(0 8px 0 rgba(74, 11, 2, 0.42));
@@ -6645,8 +6752,10 @@ section {
   display: grid;
   grid-template-columns: minmax(0, 1fr);
   gap: 0;
-  align-items: start;
+  align-items: stretch;
   padding: 0;
+  min-height: 0;
+  height: min(72svh, 700px);
   background: transparent;
   box-shadow: none;
   animation: mediaPlanTablePageIn 420ms cubic-bezier(0.16, 1, 0.3, 1) both;
@@ -6654,8 +6763,9 @@ section {
 
 .mediaPlanTable {
   width: 100%;
+  height: 100%;
   border-collapse: separate;
-  border-spacing: 0 8px;
+  border-spacing: 0 7px;
   table-layout: fixed;
   border: 0;
   background: transparent;
@@ -6664,7 +6774,7 @@ section {
 
 .mediaPlanTable th,
 .mediaPlanTable td {
-  padding: clamp(10px, 1.12svh, 15px) clamp(16px, 1.45vw, 24px);
+  padding: clamp(10px, 1svh, 14px) clamp(15px, 1.35vw, 22px);
   border: 0;
   vertical-align: middle;
   line-height: 1.16;
@@ -6675,7 +6785,7 @@ section {
   top: 0;
   background: rgba(255, 196, 0, 0.24);
   color: var(--gold);
-  font-size: clamp(0.88rem, 0.94vw, 1.14rem);
+  font-size: clamp(0.82rem, 0.88vw, 1.04rem);
   font-weight: 1000;
   text-align: left;
   text-transform: uppercase;
@@ -6685,7 +6795,7 @@ section {
 .mediaPlanTable td {
   background: rgba(28, 8, 3, 0.64);
   color: rgba(255, 255, 255, 0.94);
-  font-size: clamp(1.08rem, 1.16vw, 1.42rem);
+  font-size: clamp(1rem, 1.04vw, 1.3rem);
   font-weight: 500;
   box-shadow: none;
 }
@@ -6693,7 +6803,7 @@ section {
 .mediaPlanTable tbody td:first-child {
   border-radius: 10px 0 0 10px;
   color: var(--gold);
-  font-size: clamp(1.12rem, 1.2vw, 1.48rem);
+  font-size: clamp(1.04rem, 1.08vw, 1.34rem);
   font-weight: 800;
 }
 
@@ -6761,7 +6871,7 @@ section {
 
 /*
  * Visibility Plan table fit-to-viewport hardening.
- * The table is split into three internal pages. These height gates keep each
+ * The table is split into compact internal pages. These height gates keep each
  * page readable and within the viewport on laptop-scaled displays.
  * On shorter viewports (Windows 125%/150% scaling, laptops) the vertical
  * rhythm shrinks step by step so every row stays inside the section instead
@@ -6784,7 +6894,7 @@ section {
   }
 
   .mediaPlanDetail .mediaPlanTableHeader h2 {
-    font-size: clamp(2.9rem, 6.2svh, 4.8rem);
+    font-size: clamp(2.6rem, 5.6svh, 4.3rem);
   }
 
   .mediaPlanTable {
@@ -6793,8 +6903,8 @@ section {
 
   .mediaPlanTable th,
   .mediaPlanTable td {
-    padding-top: 7px;
-    padding-bottom: 7px;
+    padding-top: 6px;
+    padding-bottom: 6px;
   }
 }
 
@@ -6813,7 +6923,7 @@ section {
   }
 
   .mediaPlanDetail .mediaPlanTableHeader h2 {
-    font-size: clamp(2rem, 5.4svh, 3.6rem);
+    font-size: clamp(1.9rem, 5svh, 3.2rem);
   }
 
   .mediaPlanTables {
@@ -6826,12 +6936,12 @@ section {
 
   .mediaPlanTable th,
   .mediaPlanTable td {
-    padding-top: 5px;
-    padding-bottom: 5px;
+    padding-top: 4px;
+    padding-bottom: 4px;
   }
 
   .mediaPlanTable td {
-    font-size: clamp(0.86rem, 0.9vw, 1rem);
+    font-size: clamp(0.8rem, 0.86vw, 0.96rem);
   }
 }
 

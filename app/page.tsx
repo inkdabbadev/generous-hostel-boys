@@ -33,7 +33,7 @@ export default function Home() {
       <SponsorshipExperience />
       <PosterScroll />
       <BathroomExperience />
-      <GridSlideExperience />
+      {/* <GridSlideExperience /> */}
 
       {/* <section className="hero">
         <div className="heroImage" aria-hidden="true" />
@@ -57,7 +57,6 @@ export default function Home() {
       </section> */}
       {/* AboutExperience (Who We Are / Infrastructure / Industry / Theatrical Distribution)
           has moved to the standalone "who-we-are" project. Hidden here, not removed. */}
-      {/* <AboutExperience /> */}
       {/* <CoreCapabilities /> */}
       <RegionalAudience />
       <HostelGenreProof />
@@ -73,6 +72,7 @@ export default function Home() {
       <MarketingMediaPlan />
       <HistorySection />
       <PremiumSlot />
+      {/* <AboutExperience /> */}
       <MarketingMediaPlanTable />
       <ThankYou />
     </main>

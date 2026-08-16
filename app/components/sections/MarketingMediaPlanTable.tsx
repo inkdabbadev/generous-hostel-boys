@@ -69,18 +69,13 @@ const mediaPlanRows = [
   },
 ];
 
-const rowsPerSlide = 12;
-const mediaPlanSlides = [
-  {
-    rows: mediaPlanRows.slice(0, rowsPerSlide),
-  },
-  {
-    rows: mediaPlanRows.slice(rowsPerSlide, rowsPerSlide * 2),
-  },
-  {
-    rows: mediaPlanRows.slice(rowsPerSlide * 2),
-  },
-];
+const rowsPerSlide = 9;
+const mediaPlanSlides = Array.from(
+  { length: Math.ceil(mediaPlanRows.length / rowsPerSlide) },
+  (_, index) => ({
+    rows: mediaPlanRows.slice(index * rowsPerSlide, (index + 1) * rowsPerSlide),
+  }),
+);
 
 export default function MarketingMediaPlanTable() {
   const sectionRef = useRef<HTMLElement>(null);
