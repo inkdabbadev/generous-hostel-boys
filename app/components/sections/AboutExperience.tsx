@@ -49,29 +49,83 @@ export default function AboutExperience() {
       return;
     }
 
+    let wasVisible = false;
+
     const observer = new IntersectionObserver(
       ([entry]) => {
         const nextIsVisible = entry.isIntersecting;
         setIsVisible(nextIsVisible);
 
-        if (nextIsVisible && entry.intersectionRatio >= 0.55) {
-          const rect = section.getBoundingClientRect();
-          const isNearlyActive = Math.abs(rect.top) <= window.innerHeight * 0.42;
-
-          if (isNearlyActive && Math.abs(rect.top) > 2) {
-            window.scrollTo({
-              top: section.offsetTop,
-              behavior: "auto",
-            });
-          }
+        // Leaving the section (in either direction) resets the internal
+        // slide so re-entering later always starts from "Who We Are".
+        if (wasVisible && !nextIsVisible && phaseRef.current !== 0) {
+          phaseRef.current = 0;
+          setPhase(0);
         }
+
+        wasVisible = nextIsVisible;
       },
-      { threshold: [0.35, 0.55] }
+      { threshold: 0 }
     );
 
     observer.observe(section);
 
-    return () => observer.disconnect();
+    // Correct alignment only once scrolling has actually settled (not
+    // while a smooth-scroll handoff is still animating — checking mid-flight
+    // races with it and can leave the page a bit short/long, e.g. a sliver
+    // of the next section peeking in). `scrollend` fires once per scroll
+    // gesture, so this can run at most once per stop; a single corrective
+    // `scrollTo` here can't loop (the next 'scrollend' it causes will find
+    // the section already aligned and do nothing).
+    const snapToTopIfDominant = () => {
+      const rect = section.getBoundingClientRect();
+      const isDominant = rect.top < window.innerHeight * 0.5 && rect.bottom > window.innerHeight * 0.5;
+      const drift = Math.abs(rect.top);
+
+      if (!isDominant || drift <= 2 || drift > window.innerHeight * 0.5) {
+        return;
+      }
+
+      // A small drift (a few px to maybe a couple dozen) reads as a jarring
+      // teleport if snapped instantly. Animate it as a quick, smooth micro
+      // -adjustment instead — short enough to feel like the scroll just
+      // finishing its settle, not a separate visible correction.
+      window.scrollTo({
+        top: section.offsetTop,
+        behavior: drift <= 24 ? "smooth" : "auto",
+      });
+    };
+
+    let debounceTimer: number | null = null;
+    const onScrollSettleFallback = () => {
+      if (debounceTimer !== null) {
+        window.clearTimeout(debounceTimer);
+      }
+
+      debounceTimer = window.setTimeout(snapToTopIfDominant, 60);
+    };
+
+    const supportsScrollEnd = "onscrollend" in window;
+
+    if (supportsScrollEnd) {
+      window.addEventListener("scrollend", snapToTopIfDominant);
+    } else {
+      window.addEventListener("scroll", onScrollSettleFallback, { passive: true });
+    }
+
+    return () => {
+      observer.disconnect();
+
+      if (supportsScrollEnd) {
+        window.removeEventListener("scrollend", snapToTopIfDominant);
+      } else {
+        window.removeEventListener("scroll", onScrollSettleFallback);
+      }
+
+      if (debounceTimer !== null) {
+        window.clearTimeout(debounceTimer);
+      }
+    };
   }, []);
 
   useEffect(() => {
@@ -307,13 +361,34 @@ export default function AboutExperience() {
           </div>
         </div>
 
-        <div className="aboutStatsRow">
-          <img
-            alt="160+ Film Production and Distribution. 55+ Television Programmes. 360 degree Entertainment Operations."
-            className="aboutStatsImg"
-            draggable={false}
-            src="/about/numbers.svg"
-          />
+        <div
+          className="aboutStatsRow"
+          aria-label="160+ Film Production Facilitation. 55+ Television Programmes. 360 degree Entertainment Operations."
+        >
+          <div className="aboutStat">
+            <strong>160+</strong>
+            <span>
+              Film Production
+              <br />
+              Facilitation
+            </span>
+          </div>
+          <div className="aboutStat">
+            <strong>55+</strong>
+            <span>
+              Television
+              <br />
+              Programmes
+            </span>
+          </div>
+          <div className="aboutStat">
+            <strong>360°</strong>
+            <span>
+              Entertainment
+              <br />
+              Operations
+            </span>
+          </div>
         </div>
       </div>
     </section>

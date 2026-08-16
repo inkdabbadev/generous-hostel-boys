@@ -58,24 +58,24 @@ const animationDuration = 560;
 
 const stageCopy = [
   {
-    eyebrow: "Title switch",
-    title: "Scroll to start the reveal",
-    body: "Use one scroll at a time to watch the poster title transform.",
+   // eyebrow: "Title switch",
+    title: "What is the current movie title?",
+    // body: "Use one scroll at a time to watch the poster title transform.",
   },
   {
-    eyebrow: "Genre recall",
-    title: "Hostel Boyz enters first",
-    body: "We begin with the familiar hostel-comedy space the youth audience already understands.",
+    //eyebrow: "Genre recall",
+    title: "What do you think we would ask ?",
+    //body: "We begin with the familiar hostel-comedy space the youth audience already understands.",
   },
   {
-    eyebrow: "Campaign hook",
+    // eyebrow: "Campaign hook",
     title: "Campa starts taking over",
-    body: "The title begins to shift from category recall into a sharper, ownable launch identity.",
+    // body: "The title begins to shift from category recall into a sharper, ownable launch identity.",
   },
   {
-    eyebrow: "Final positioning",
-    title: "Campa Boyz lands",
-    body: "Same hostel energy, but now reframed as a distinct Campa Boyz pitch for the audience.",
+    // eyebrow: "Final positioning",
+    title: "But what will actually make history?",
+    // body: "Same hostel energy, but now reframed as a distinct Campa Boyz pitch for the audience.",
   },
 ];
 
@@ -289,9 +289,9 @@ export default function TitleScrollAnimation() {
               key={stage}
               transition={{ duration: 0.34, ease: [0.2, 0.8, 0.2, 1] }}
             >
-              <span>{stageCopy[stage].eyebrow}</span>
+              {/* <span>{stageCopy[stage].eyebrow}</span> */}
               <h2>{stageCopy[stage].title}</h2>
-              <p>{stageCopy[stage].body}</p>
+              {/* <p>{stageCopy[stage].body}</p> */}
             </motion.div>
           </AnimatePresence>
         </div>

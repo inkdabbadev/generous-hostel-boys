@@ -455,7 +455,11 @@ function OnlineOverview({
   );
 }
 
-function OnlineDetails() {
+function OnlineDetails({
+  onOpenFrame,
+}: {
+  onOpenFrame: (url: string, title: string) => void;
+}) {
   return (
     <motion.div
       animate={{ opacity: 1, x: 0 }}
@@ -465,22 +469,43 @@ function OnlineDetails() {
       key="online-details"
       transition={{ duration: 0.42, ease: [0.16, 1, 0.3, 1] }}
     >
-      {onlineFeatureCards.map((card, index) => (
-        <motion.article
-          animate={{ opacity: 1, scale: 1, y: 0 }}
-          className="historyOnlineFeatureCard"
-          initial={{ opacity: 0, scale: 0.94, y: 42 }}
-          key={card.id}
-          transition={{
-            delay: 0.1 + index * 0.1,
-            duration: 0.56,
-            ease: [0.16, 1, 0.3, 1],
-          }}
-        >
-          <img alt="" aria-hidden="true" draggable={false} src={card.src} />
-          <span>{card.label}</span>
-        </motion.article>
-      ))}
+      {onlineFeatureCards.map((card, index) => {
+        const isPlayable = "videoUrl" in card && Boolean(card.videoUrl);
+
+        return (
+          <motion.article
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            className={`historyOnlineFeatureCard${isPlayable ? " historyOnlineFeatureCardPlayable" : ""}`}
+            initial={{ opacity: 0, scale: 0.94, y: 42 }}
+            key={card.id}
+            onClick={
+              isPlayable
+                ? () => onOpenFrame(card.videoUrl as string, card.label.replace("\n", " "))
+                : undefined
+            }
+            role={isPlayable ? "button" : undefined}
+            tabIndex={isPlayable ? 0 : undefined}
+            onKeyDown={
+              isPlayable
+                ? (event) => {
+                    if (event.key === "Enter" || event.key === " ") {
+                      event.preventDefault();
+                      onOpenFrame(card.videoUrl as string, card.label.replace("\n", " "));
+                    }
+                  }
+                : undefined
+            }
+            transition={{
+              delay: 0.1 + index * 0.1,
+              duration: 0.56,
+              ease: [0.16, 1, 0.3, 1],
+            }}
+          >
+            <img alt="" aria-hidden="true" draggable={false} src={card.src} />
+            <span>{card.label}</span>
+          </motion.article>
+        );
+      })}
     </motion.div>
   );
 }
@@ -592,7 +617,7 @@ function OfflinePopupSlides() {
                 }}
               />
             ))}
-            {["a1", "a2", "a3", "a4"].map((asset, index) => (
+            {["a1", "a2", "a3"].map((asset, index) => (
               <motion.img
                 alt=""
                 animate={{ opacity: 1, scale: 1 }}
@@ -609,6 +634,23 @@ function OfflinePopupSlides() {
                 }}
               />
             ))}
+            {/* Was image "/history/offline/slide1/a4.png" (01 / Fully Branded Metro Train).
+                Replaced with real text in the same spot, image kept unused above. */}
+            <motion.div
+              animate={{ opacity: 1, scale: 1 }}
+              aria-hidden="true"
+              className="historyOfflineAnimatedLayer historyOfflineMetroStat"
+              initial={{ opacity: 0, scale: 1.08 }}
+              key={`${slideOneReplayKey}-a4-text`}
+              transition={{
+                delay: slideOneLayerDelay + 3 * 0.28,
+                duration: 0.5,
+                ease: [0.16, 1, 0.3, 1],
+              }}
+            >
+              <strong>06-5</strong>
+              <span>Electric train wrap +1 metro Train</span>
+            </motion.div>
           </motion.div>
         ) : null}
         {currentSlide >= 1 ? (
@@ -816,7 +858,7 @@ function OfflinePopupSlides() {
                 src={`/history/offline/images/${asset}.png`}
                 transition={{ delay: 0.12, duration: 0.42, ease: [0.16, 1, 0.3, 1] }}
               />
-              <motion.div
+              {/* <motion.div
                 animate={{ opacity: 1, y: 0 }}
                 className="historyOfflineImageStats"
                 initial={{ opacity: 0, y: 28 }}
@@ -828,7 +870,7 @@ function OfflinePopupSlides() {
                     <span>{stat.label}</span>
                   </div>
                 ))}
-              </motion.div>
+              </motion.div> */}
             </motion.div>
           ) : null;
         })}
@@ -892,7 +934,7 @@ function IdeasPopupMain() {
                 alt: "Red Carpet Show",
                 label: "Red Carpet\nShow",
                 onClick: () => setIdeasView("red"),
-                src: "/history/theideas/card1.png",
+                src: "/history/theideas/card1.jpeg",
               },
               {
                 alt: "Game Night",
@@ -932,6 +974,7 @@ export function HistoryPanel({ activePanel, onClose }: HistoryPanelProps) {
   const isIdeasPanel = activePanel === "ideas";
   const [onlineView, setOnlineView] = useState<"overview" | "details">("overview");
   const [iframeUrl, setIframeUrl] = useState<string | null>(null);
+  const [iframeTitle, setIframeTitle] = useState("Meme pages manager");
   const [viewportSize, setViewportSize] = useState(getViewportSize);
   const isIframeOpen = Boolean(iframeUrl);
   const isStructuredPanel = isOnlinePanel || isOfflinePanel || isIdeasPanel;
@@ -1040,9 +1083,11 @@ export function HistoryPanel({ activePanel, onClose }: HistoryPanelProps) {
       </button>
       {isIframeOpen ? (
         <iframe
+          allow="autoplay; encrypted-media; picture-in-picture"
+          allowFullScreen
           className="historyOnlineIframe"
           src={iframeUrl ?? ""}
-          title="Meme pages manager"
+          title={iframeTitle}
         />
       ) : isOfflinePanel ? (
         <OfflinePopupSlides />
@@ -1069,7 +1114,12 @@ export function HistoryPanel({ activePanel, onClose }: HistoryPanelProps) {
                   onOpenFrame={setIframeUrl}
                 />
               ) : (
-                <OnlineDetails />
+                <OnlineDetails
+                  onOpenFrame={(url, title) => {
+                    setIframeUrl(url);
+                    setIframeTitle(title);
+                  }}
+                />
               )}
             </AnimatePresence>
           ) : (

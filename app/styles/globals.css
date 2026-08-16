@@ -1021,13 +1021,19 @@ section {
 }
 
 .aboutPartnerPanel {
+  --partner-panel-h: clamp(200px, 29svh, 380px);
   position: relative;
   z-index: 2;
   display: grid;
   place-items: center;
   justify-self: center;
   width: min(1280px, 78vw);
-  min-height: 0;
+  /* A definite height (not just auto/min-height:0) so the image below is
+     guaranteed to fit inside this grid row instead of overflowing into the
+     next row — at 1180px wide, the source images render ~305px tall, which
+     left only a ~6px margin before the title below it, overlapping at
+     slightly different viewport sizes/zoom. */
+  height: var(--partner-panel-h);
   padding: 0;
   border-radius: 0;
   background: transparent;
@@ -1037,10 +1043,23 @@ section {
 }
 
 .aboutPartnerPanel img {
+  /* An absolute `height` (not height:100% or width:auto alone): this panel
+     is a single-row, auto-sized grid with place-items:center (not
+     stretch), so a percentage height on the image can't resolve against
+     the row — the row's own size depends on the image's content, a
+     circular reference CSS resolves by falling back the image to its
+     natural intrinsic size, silently ignoring height:100%. And width:auto
+     with only a max-height cap never scales the image UP past its native
+     pixel size either — it only ever shrinks. Setting an explicit,
+     absolute height (shared via the panel's own --partner-panel-h) scales
+     the image to fill the available space in both directions;
+     object-fit:contain + max-width still guard against distortion or
+     overflow if that height would make it wider than the panel.
+  */
   display: block;
-  width: min(1180px, 100%);
-  height: auto;
-  max-height: none;
+  width: auto;
+  height: var(--partner-panel-h);
+  max-width: min(1180px, 100%);
   object-fit: contain;
   user-select: none;
 }
@@ -1218,7 +1237,7 @@ section {
 
 .aboutCenterBlock {
   grid-row: 2;
-  height: 100%;
+  height: 80%;
   display: grid;
   align-content: center;
   justify-items: center;
@@ -1273,18 +1292,51 @@ section {
 .aboutStatsRow {
   grid-row: 3;
   justify-self: center;
-  transform: translateY(clamp(-28px, -2.8svh, -10px));
-}
-
-.aboutStatsImg {
-  display: block;
-  width: min(760px, 46vw);
-  height: auto;
+  display: flex;
+  /* Matches the original baked numbers.svg's column spacing (measured
+     directly from its path geometry: ~83px gap at the image's former
+     760px rendered width). */
+  gap: clamp(82px, 7.4vw, 124px);
+  /* Baseline position nudge lives on position:relative + top, NOT margin
+     and NOT transform. Margin on a grid item changes the track's used
+     size, so the adjacent 1fr row (.aboutCenterBlock) grows to absorb it —
+     the row never visibly moves. Transform is already used below for the
+     entrance animation, and a second `transform` declaration would just
+     overwrite this one instead of composing with it. `top` on a
+     position:relative element is purely visual (like transform) and
+     doesn't feed back into grid sizing, so it's the one that actually
+     works here. */
+  position: relative;
+  top: clamp(-90px, -9svh, -50px);
   opacity: 0;
   transform: translate3d(0, 18px, 0) scale(0.96);
 }
 
-.aboutExperience.isVisible.aboutStepWho .aboutStatsImg {
+.aboutStat {
+  display: grid;
+  gap: clamp(6px, 0.8svh, 16px);
+}
+
+.aboutStat strong {
+  color: var(--gold);
+  font-family: var(--font-figtree), sans-serif;
+  font-weight: 1000;
+  font-size: clamp(2.2rem, 3.6vw, 4.8rem);
+  line-height: 1;
+  letter-spacing: 0;
+}
+
+.aboutStat span {
+  display: block;
+  color: white;
+  font-family: var(--font-figtree), sans-serif;
+  font-weight: 600;
+  font-size: clamp(0.95rem, 1.15vw, 1.6rem);
+  line-height: 1.18;
+  letter-spacing: 0;
+}
+
+.aboutExperience.isVisible.aboutStepWho .aboutStatsRow {
   animation: aboutStatsIn 760ms cubic-bezier(0.2, 1.35, 0.32, 1) 720ms forwards;
 }
 
@@ -1445,8 +1497,8 @@ section {
   }
 
   .aboutPartnerPanel {
+    --partner-panel-h: clamp(140px, 20svh, 240px);
     width: min(880px, 86vw);
-    min-height: 0;
     padding: 0;
   }
 
@@ -1457,8 +1509,9 @@ section {
   }
 
   .aboutPartnerPanel img {
-    width: min(820px, 100%);
-    max-height: none;
+    width: auto;
+    height: var(--partner-panel-h);
+    max-width: min(820px, 100%);
   }
 }
 
@@ -1552,7 +1605,7 @@ section {
 
   .aboutPartnerPanel {
     width: min(420px, 88vw);
-    min-height: 0;
+    height: clamp(80px, 16svh, 140px);
     border-radius: 0;
     padding: 0;
   }
@@ -1565,7 +1618,8 @@ section {
 
   .aboutPartnerPanel img {
     width: 100%;
-    max-height: none;
+    height: auto;
+    max-height: 100%;
   }
 }
 
@@ -1605,14 +1659,15 @@ section {
   }
 
   .aboutPartnerPanel {
-    min-height: 0;
+    --partner-panel-h: clamp(140px, 20svh, 260px);
     padding-top: 0;
     padding-bottom: 0;
   }
 
   .aboutPartnerPanel img {
-    width: min(800px, 100%);
-    max-height: none;
+    width: auto;
+    height: var(--partner-panel-h);
+    max-width: min(800px, 100%);
   }
 }
 
@@ -5261,7 +5316,9 @@ section {
   display: block;
   width: 100%;
   height: 100%;
-  object-fit: fill;
+  object-fit: contain;
+  object-position: center;
+  background: rgba(0, 0, 0, 0.15);
   clip-path: path("M 15 0 H 1645 Q 1660 0 1660 15 V 115 Q 1660 130 1675 130 H 1775 Q 1790 130 1790 145 V 935 Q 1790 950 1775 950 H 15 Q 0 950 0 935 V 15 Q 0 0 15 0 Z");
   pointer-events: none;
   user-select: none;
@@ -5278,13 +5335,14 @@ section {
   padding: 0;
   place-items: center;
   border: 0;
-  border-radius: 14px;
+  border-radius: 0;
   background: rgba(173, 0, 0, 0.78);
   box-shadow:
     inset 0 0 0 1px rgba(255, 255, 255, 0.08),
     0 14px 28px rgba(70, 0, 0, 0.18);
   backdrop-filter: blur(4px);
   cursor: pointer;
+  clip-path: polygon(0 18px, 18px 0, 100% 0, 100% 100%, 0 100%);
   transition: transform 170ms ease, filter 170ms ease;
 }
 
@@ -5456,7 +5514,7 @@ section {
   user-select: none;
 }
 
-.historyOfflineImageStats {
+/* .historyOfflineImageStats {
   position: absolute;
   left: 55px;
   bottom: 30px;
@@ -5504,7 +5562,7 @@ section {
   letter-spacing: 0;
   white-space: nowrap;
   text-shadow: 0 7px 0 rgba(0, 0, 0, 0.3);
-}
+} */
 
 .historyOfflineSlideThreeTitle {
   position: absolute;
@@ -6140,6 +6198,44 @@ section {
   user-select: none;
 }
 
+.historyOfflineMetroStat {
+  left: 770.67px;
+  top: 634px;
+  z-index: 5;
+  width: 280px;
+  height: 143.14px;
+}
+
+.historyOfflineMetroStat strong {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 280px;
+  height: 79px;
+  color: var(--gold);
+  font-family: var(--font-figtree), sans-serif;
+  font-weight: 900;
+  font-size: 77.16px;
+  line-height: 1.03;
+  letter-spacing: 0;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.historyOfflineMetroStat span {
+  position: absolute;
+  left: 0;
+  top: 83.14px;
+  width: 280px;
+  height: 60px;
+  color: white;
+  font-family: var(--font-figtree), sans-serif;
+  font-weight: 600;
+  font-size: 29.02px;
+  line-height: 1.03;
+  letter-spacing: 0;
+}
+
 .historyOfflinePanel > .tnd {
   width: 100%;
   height: 100%;
@@ -6157,8 +6253,9 @@ section {
   z-index: 100;
   width: 6.704%;
   height: 12.632%;
-  border-radius: var(--offline-shape-radius);
+  border-radius: 0;
   background: linear-gradient(249.36deg, #ff0000 -7.22%, #990000 86.7%);
+  clip-path: polygon(18px 0, 100% 0, 100% 100%, 0 100%, 0 18px);
   font-size: clamp(2.1rem, 2.8vw, 3.4rem);
 }
 
@@ -6557,6 +6654,33 @@ section {
   height: 42%;
   background: linear-gradient(180deg, transparent, rgba(14, 0, 0, 0.76));
   pointer-events: none;
+}
+
+.historyOnlineFeatureCardPlayable {
+  cursor: pointer;
+}
+
+.historyOnlineFeatureCardPlayable::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  width: clamp(52px, 4.4vw, 74px);
+  height: clamp(52px, 4.4vw, 74px);
+  margin: auto;
+  border-radius: 50%;
+  background:
+    linear-gradient(0deg, rgba(0, 0, 0, 0.28), rgba(0, 0, 0, 0.28)),
+    var(--gold);
+  clip-path: polygon(38% 28%, 38% 72%, 72% 50%);
+  opacity: 0.92;
+  transition: transform 220ms ease, opacity 220ms ease;
+}
+
+.historyOnlineFeatureCardPlayable:hover::before,
+.historyOnlineFeatureCardPlayable:focus-visible::before {
+  transform: scale(1.08);
+  opacity: 1;
 }
 
 .historyOnlineFeatureCard span {
@@ -6993,7 +7117,7 @@ section {
   gap: clamp(14px, 1.8vw, 24px);
 }
 
-.titleScrollCopy span {
+/* .titleScrollCopy span {
   width: fit-content;
   padding: 9px 13px;
   border: 1px solid rgba(255, 196, 0, 0.5);
@@ -7002,7 +7126,7 @@ section {
   font-size: clamp(0.78rem, 0.9vw, 0.98rem);
   font-weight: 1000;
   text-transform: uppercase;
-}
+} */
 
 .titleScrollCopy h2 {
   max-width: 760px;
@@ -7017,14 +7141,14 @@ section {
   text-wrap: balance;
 }
 
-.titleScrollCopy p {
+/* .titleScrollCopy p {
   max-width: 470px;
   margin: 0;
   color: rgba(255, 255, 255, 0.78);
   font-size: clamp(1rem, 1.25vw, 1.25rem);
   font-weight: 800;
   line-height: 1.45;
-}
+} */
 
 .titleScrollPosterPanel {
   min-height: calc(100vh - clamp(88px, 10vw, 164px));
@@ -8170,12 +8294,17 @@ body {
   --slot-gold: #e9c465;
   --slot-gold-bright: #fff0b5;
   position: relative;
-  min-height: 100vh;
-  min-height: 100svh;
+  /* Fixed (not min-) height: this section swaps its intro placeholder for
+     the full slot-machine scene ~1s after becoming visible. A min-height
+     would let the taller scene grow the container beyond one viewport,
+     shifting every section below it mid-scroll. Padding lives on
+     .premiumSlotIntro instead, since .premiumAssetScene already fills
+     exactly 100svh via its own internal layout and shouldn't be padded. */
+  height: 100vh;
+  height: 100svh;
   display: grid;
   place-items: center;
   overflow: hidden;
-  padding: clamp(28px, 5vw, 76px);
   color: #f7eccf;
   background:
     radial-gradient(circle at 50% 12%, rgba(255, 177, 73, 0.2), transparent 34%),
@@ -8423,7 +8552,7 @@ body {
 @keyframes premiumSlotAura { to { opacity: 0.58; scale: 1.12; } }
 
 @media (max-width: 760px) {
-  .premiumSlot { padding: 22px 12px; }
+  .premiumSlotIntro { padding: 22px 12px; }
   .premiumSlotCabinet { width: min(520px, 96vw); gap: 20px; padding: 32px 14px 26px; }
   .premiumSlotMachine { flex-direction: column; gap: 18px; }
   .premiumSlotReels { gap: 7px; padding: 10px; }
@@ -8551,6 +8680,8 @@ body {
   grid-template-columns: auto auto;
   align-items: center;
   column-gap: clamp(22px, 3vw, 52px);
+  padding: clamp(28px, 5vw, 76px);
+  box-sizing: border-box;
   color: white;
   font-family: var(--font-figtree), sans-serif;
   font-weight: 1000;

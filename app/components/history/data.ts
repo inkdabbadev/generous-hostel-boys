@@ -140,14 +140,14 @@ export const onlineCards = [
     id: 6,
     href: "https://inkdabba-insta-profile-manager.vercel.app/chennai",
     label: "Chennai\nInfluencers",
-    note: "(Top 130)",
+    note: "(180+)",
     paperSrc: "/history/online/paper/6.png",
   },
   {
     id: 7,
     href: "https://inkdabba-insta-profile-manager.vercel.app/rotn",
     label: "Rest of TN\nInfluencer",
-    note: "(Top 110)",
+    note: "(350+)",
     paperSrc: "/history/online/paper/7.png",
   },
 ] satisfies Array<{
@@ -163,6 +163,7 @@ export const onlineFeatureCards = [
     id: "music-video",
     label: "Music\nVideo",
     src: "/history/online/1.png",
+    videoUrl: "https://www.youtube.com/embed/93Y_eCwdR5k?autoplay=1",
   },
   {
     id: "video-promo",
