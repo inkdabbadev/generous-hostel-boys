@@ -33,7 +33,7 @@ export default function Home() {
       <SponsorshipExperience />
       <PosterScroll />
       <BathroomExperience />
-      <GridSlideExperience />
+      {/* <GridSlideExperience /> */}
 
       {/* <section className="hero">
         <div className="heroImage" aria-hidden="true" />

@@ -51,9 +51,22 @@ export default function AboutExperience() {
 
     const observer = new IntersectionObserver(
       ([entry]) => {
-        setIsVisible(entry.isIntersecting);
+        const nextIsVisible = entry.isIntersecting;
+        setIsVisible(nextIsVisible);
+
+        if (nextIsVisible && entry.intersectionRatio >= 0.55) {
+          const rect = section.getBoundingClientRect();
+          const isNearlyActive = Math.abs(rect.top) <= window.innerHeight * 0.42;
+
+          if (isNearlyActive && Math.abs(rect.top) > 2) {
+            window.scrollTo({
+              top: section.offsetTop,
+              behavior: "auto",
+            });
+          }
+        }
       },
-      { threshold: 0.35 }
+      { threshold: [0.35, 0.55] }
     );
 
     observer.observe(section);
@@ -83,7 +96,7 @@ export default function AboutExperience() {
 
       window.scrollTo({
         top: section.offsetTop,
-        behavior: "smooth",
+        behavior: "auto",
       });
     };
 
