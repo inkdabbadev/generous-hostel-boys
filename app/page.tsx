@@ -55,7 +55,9 @@ export default function Home() {
           </h1>
         </div>
       </section> */}
-      <AboutExperience />
+      {/* AboutExperience (Who We Are / Infrastructure / Industry / Theatrical Distribution)
+          has moved to the standalone "who-we-are" project. Hidden here, not removed. */}
+      {/* <AboutExperience /> */}
       {/* <CoreCapabilities /> */}
       <RegionalAudience />
       <HostelGenreProof />
