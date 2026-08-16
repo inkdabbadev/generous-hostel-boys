@@ -5346,23 +5346,24 @@ section {
   user-select: none;
 }
 
+/* Matches the panel's close button / the Online panel's back button: a solid
+   red corner tile, not a small floating translucent square.
+   120px is in the 1790x950 canvas of .historyIdeasScaleWrap, which is scaled
+   by the same factor as the panel — so this renders at exactly the same size
+   as the close button's 6.704% x 12.632% of the panel. */
 .historyIdeasBackTile {
   position: absolute;
-  top: 30px;
-  left: 30px;
+  top: 0;
+  left: 0;
   z-index: 3;
   display: grid;
-  width: 92px;
-  height: 92px;
+  width: 120px;
+  height: 120px;
   padding: 0;
   place-items: center;
   border: 0;
-  border-radius: 14px;
-  background: rgba(173, 0, 0, 0.78);
-  box-shadow:
-    inset 0 0 0 1px rgba(255, 255, 255, 0.08),
-    0 14px 28px rgba(70, 0, 0, 0.18);
-  backdrop-filter: blur(4px);
+  border-radius: var(--offline-shape-radius);
+  background: linear-gradient(249.36deg, #ff0000 -7.22%, #990000 86.7%);
   cursor: pointer;
   transition: transform 170ms ease, filter 170ms ease;
 }
@@ -5375,11 +5376,11 @@ section {
 }
 
 .historyIdeasBackTile span {
-  width: 30px;
-  height: 30px;
-  border-bottom: 8px solid white;
-  border-left: 8px solid white;
-  transform: translateX(6px) rotate(45deg);
+  width: 34px;
+  height: 34px;
+  border-bottom: 9px solid white;
+  border-left: 9px solid white;
+  transform: translateX(7px) rotate(45deg);
 }
 
 .historyOfflineStack {
@@ -6560,25 +6561,52 @@ section {
   outline: none;
 }
 
-.historyOnlineFramePanel {
-  background: #080808;
-}
-
+/* The player layers OVER the panel rather than replacing it, so the panel
+   keeps its own background — this rule intentionally sets no background. */
 .historyOnlineFramePanel .historyOnlineClose {
-  z-index: 8;
+  /* Must outrank .historyOnlineFrameOverlay below, or the X becomes
+     unclickable while the video is playing. */
+  z-index: 40;
   color: white;
   text-shadow: 0 5px 0 rgba(0, 0, 0, 0.5);
 }
 
-.historyOnlineIframe {
+.historyOnlineFrameOverlay {
   position: absolute;
   inset: 0;
-  z-index: 2;
+  z-index: 20;
+  display: grid;
+  /* Explicit 1fr tracks (not just place-items:center): an auto-sized track
+     has no definite height, so the player's `height: 100%` below would be
+     circular and silently fall back to auto. */
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-rows: minmax(0, 1fr);
+  place-items: center;
+  padding: clamp(28px, 4vw, 78px);
+  background: rgba(8, 3, 1, 0.82);
+  backdrop-filter: blur(8px);
+  animation: historyFrameOverlayIn 260ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@keyframes historyFrameOverlayIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.historyOnlineIframe {
+  /* Sized from HEIGHT, not width: `max-height` does not constrain an
+     aspect-ratio box whose width is 100%, so a width-driven player
+     overflowed the overlay's padding. The panel's canvas is 1790:950
+     (1.88), always wider than 16:9, so height is the binding constraint. */
   display: block;
-  width: 100%;
   height: 100%;
+  width: auto;
+  max-width: 100%;
+  aspect-ratio: 16 / 9;
   border: 0;
-  background: white;
+  border-radius: clamp(8px, 0.8vw, 16px);
+  background: #000;
+  box-shadow: 0 30px 70px rgba(0, 0, 0, 0.55);
 }
 
 .historyOnlineDetailPanel {
@@ -6829,11 +6857,11 @@ section {
 }
 
 .mediaPlanDetailShell {
-  width: min(1660px, calc(100% - clamp(34px, 4.2vw, 82px)));
+  width: min(calc(1660*var(--u)), calc(100% - clamp(calc(34*var(--u)), 4.2vw, calc(82*var(--u)))));
   min-height: 100svh;
   grid-template-rows: auto minmax(0, 1fr);
-  gap: clamp(14px, 1.6svh, 24px);
-  padding: clamp(20px, 2.6svh, 34px) 0;
+  gap: clamp(calc(14*var(--u)), 1.6svh, calc(24*var(--u)));
+  padding: clamp(calc(20*var(--u)), 2.6svh, calc(34*var(--u))) 0;
   place-items: stretch;
   align-content: center;
 }
@@ -7022,7 +7050,15 @@ section {
  * rhythm shrinks step by step so every row stays inside the section instead
  * of being clipped by `overflow: hidden`.
  */
-@media (max-height: 940px) {
+/* Compact layout for genuinely short screens.
+   NOTE: this threshold is deliberately below 826px. A 1080p monitor at 125%
+   Windows scaling reports a CSS viewport of only ~826px (windowed) / 864px
+   (fullscreen) — it is NOT a short screen, but a normal one scaled up. At the
+   old 940px threshold it wrongly got this compact treatment: the header
+   shrank from 150px to 42px and the section grew to 905px, overflowing an
+   864px viewport. Real short screens (<=800px, e.g. 1366x768 laptops) still
+   land here and in the 780/680 blocks below. */
+@media (max-height: 800px) {
   .mediaPlanDetail {
     padding-top: clamp(calc(18*var(--u)), 2.4svh, calc(34*var(--u)));
     padding-bottom: clamp(calc(18*var(--u)), 2.4svh, calc(34*var(--u)));

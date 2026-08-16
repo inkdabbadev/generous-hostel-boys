@@ -1012,13 +1012,13 @@ export function HistoryPanel({ activePanel, onClose }: HistoryPanelProps) {
       })()
     : null;
   const structuredPanelClassName = `historyOnlinePanel historyOfflinePanel${isOnlinePanel ? " historyOnlineStructuredPanel" : ""}${isOnlinePanel && onlineView === "details" ? " historyOnlineDetailPanel" : ""}${isIdeasPanel ? " historyIdeasPanel" : ""}`;
-  const panelClassName =
-    isIframeOpen
-      ? "historyOnlinePanel historyOnlineFramePanel"
-      : isStructuredPanel
-        ? structuredPanelClassName
-        : "historyOnlinePanel";
-  const panelStyle = isStructuredPanel && !isIframeOpen
+  // The video plays as an overlay layered ON TOP of the panel, so the panel
+  // keeps its normal class and card sizing while it's open — it must not
+  // swap to a differently-sized layout underneath the player.
+  const panelClassName = `${isStructuredPanel ? structuredPanelClassName : "historyOnlinePanel"}${
+    isIframeOpen ? " historyOnlineFramePanel" : ""
+  }`;
+  const panelStyle = isStructuredPanel
     ? structuredPanelMetrics
       ? ({
           "--history-panel-scale": String(structuredPanelMetrics.scale),
@@ -1095,14 +1095,17 @@ export function HistoryPanel({ activePanel, onClose }: HistoryPanelProps) {
         <span aria-hidden="true">X</span>
       </button>
       {isIframeOpen ? (
-        <iframe
-          allow="autoplay; encrypted-media; picture-in-picture"
-          allowFullScreen
-          className="historyOnlineIframe"
-          src={iframeUrl ?? ""}
-          title={iframeTitle}
-        />
-      ) : isOfflinePanel ? (
+        <div className="historyOnlineFrameOverlay">
+          <iframe
+            allow="autoplay; encrypted-media; picture-in-picture"
+            allowFullScreen
+            className="historyOnlineIframe"
+            src={iframeUrl ?? ""}
+            title={iframeTitle}
+          />
+        </div>
+      ) : null}
+      {isOfflinePanel ? (
         <OfflinePopupSlides />
       ) : isIdeasPanel ? (
         <IdeasPopupMain />
