@@ -55,7 +55,6 @@ export default function Home() {
           </h1>
         </div>
       </section> */}
-      <AboutExperience />
       {/* <CoreCapabilities /> */}
       <RegionalAudience />
       <HostelGenreProof />
@@ -71,6 +70,7 @@ export default function Home() {
       <MarketingMediaPlan />
       <HistorySection />
       <PremiumSlot />
+      <AboutExperience />
       <MarketingMediaPlanTable />
       <ThankYou />
     </main>

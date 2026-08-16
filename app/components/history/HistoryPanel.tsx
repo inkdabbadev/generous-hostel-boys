@@ -21,18 +21,21 @@ type OnlineTextControl = {
   y: string;
   z: string;
   hoverZ: string;
+  width: string;
 };
 
 const defaultOnlineTextControl: OnlineTextControl = {
   hoverZ: "54px",
+  width: "82%",
   x: "-50%",
   y: "-43%",
   z: "46px",
 };
 
 const onlineTextControls: Record<number, Partial<OnlineTextControl>> = {
-  4: { x: "-54%" },
-  6: { x: "-50.8%", y: "-43.5%" },
+  4: { width: "92%" },
+  6: { width: "92%", y: "-43.5%" },
+  7: { width: "92%" },
 };
 
 const offlineSlideOneMapLayers = [
@@ -150,6 +153,12 @@ const offlineSlideThreeChooseFourImages = [
 const offlineSlideFourImages = ["a1", "a2", "a3", "a4", "a5", "a6", "a7"] as const;
 
 const offlineImageSlides = ["img1", "img2", "img3", "img4", "img5"] as const;
+const offlineImageStats = [
+  { label: "Days", value: "60" },
+  { label: "Hoardings", value: "500+" },
+  { label: "Visibility", value: "10M+" },
+  { label: "Viewership", value: "10M+" },
+] as const;
 const structuredPanelBaseWidth = 1790;
 const structuredPanelBaseHeight = 950;
 const structuredPanelAspect = structuredPanelBaseWidth / structuredPanelBaseHeight;
@@ -399,6 +408,7 @@ function OnlinePaperCard({
           className="historyOnlineCardText"
           style={{
             "--online-text-hover-z": textControl.hoverZ,
+            "--online-text-width": textControl.width,
             "--online-text-x": textControl.x,
             "--online-text-y": textControl.y,
             "--online-text-z": textControl.z,
@@ -806,6 +816,19 @@ function OfflinePopupSlides() {
                 src={`/history/offline/images/${asset}.png`}
                 transition={{ delay: 0.12, duration: 0.42, ease: [0.16, 1, 0.3, 1] }}
               />
+              <motion.div
+                animate={{ opacity: 1, y: 0 }}
+                className="historyOfflineImageStats"
+                initial={{ opacity: 0, y: 28 }}
+                transition={{ delay: 0.28, duration: 0.46, ease: [0.16, 1, 0.3, 1] }}
+              >
+                {offlineImageStats.map((stat) => (
+                  <div className="historyOfflineImageStat" key={stat.label}>
+                    <strong>{stat.value}</strong>
+                    <span>{stat.label}</span>
+                  </div>
+                ))}
+              </motion.div>
             </motion.div>
           ) : null;
         })}
