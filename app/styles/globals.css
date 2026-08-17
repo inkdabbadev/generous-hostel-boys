@@ -3720,9 +3720,12 @@ section {
 .hostelGenreProof {
   position: relative;
   min-height: 100vh;
+  min-height: 100svh;
+  height: 100vh;
+  height: 100svh;
   display: grid;
   align-items: center;
-  padding: clamp(calc(24*var(--u)), 2.8vw, calc(40*var(--u))) clamp(calc(34*var(--u)), 5.5vw, calc(96*var(--u)));
+  padding: clamp(calc(18*var(--u)), 2.2svh, calc(32*var(--u))) clamp(calc(34*var(--u)), 5.5vw, calc(96*var(--u)));
   background:
     linear-gradient(90deg, rgba(68, 8, 3, 0.2), rgba(19, 15, 12, 0.24)),
     url("/background.png") center / 100% 100% no-repeat;
@@ -3745,9 +3748,11 @@ section {
   position: relative;
   z-index: 1;
   width: min(calc(1540*var(--u)), 100%);
+  height: 100%;
   margin: 0 auto;
   display: grid;
-  gap: clamp(calc(12*var(--u)), 1.45vw, calc(20*var(--u)));
+  grid-template-rows: min-content minmax(0, 1fr);
+  gap: clamp(calc(8*var(--u)), 1.2svh, calc(18*var(--u)));
 }
 
 .hostelGenreCopy h2 {
@@ -3756,7 +3761,7 @@ section {
   gap: 0.02em;
   color: white;
   font-family: var(--font-figtree), sans-serif;
-  font-size: clamp(3.1rem, 5.25vw, 6.45rem);
+  font-size: clamp(3rem, 4.9vw, 5.95rem);
   line-height: 0.88;
   letter-spacing: 0;
   text-transform: uppercase;
@@ -3789,20 +3794,22 @@ section {
 
 .hostelProofBay {
   position: relative;
-  height: min(56vh, calc(540*var(--u)));
-  min-height: calc(440*var(--u));
+  height: 100%;
+  min-height: 0;
   display: grid;
   place-items: center;
   padding: 0;
   background: transparent;
-  overflow: visible;
+  overflow: hidden;
 }
 
 .hostelPrimaryProof {
   position: relative;
   z-index: 2;
-  width: min(calc(820*var(--u)), 52vw);
-  display: block;
+  width: 100%;
+  height: 100%;
+  display: grid;
+  place-items: center;
   margin: 0 auto;
   padding: 0;
   border: 0;
@@ -3818,19 +3825,21 @@ section {
 .hostelTvStage {
   position: relative;
   display: block;
-  width: 100%;
+  width: auto;
+  height: min(100%, calc(760*var(--u)));
+  max-width: min(96vw, calc(1180*var(--u)));
   aspect-ratio: 1024 / 768;
 }
 
 .hostelTvDarkScreen,
 .hostelTvScreen {
   position: absolute;
-  left: 8.6%;
-  top: 18%;
+  left: 6.9%;
+  top: 14.8%;
   display: block;
-  width: 66.5%;
-  height: 58.5%;
-  transform: perspective(calc(900*var(--u))) rotateX(0.6deg) scale(1.02);
+  width: 70.4%;
+  height: 64.2%;
+  transform: perspective(calc(900*var(--u))) rotateX(0.6deg) scale(1.035);
 }
 
 .hostelTvDarkScreen {
@@ -3846,17 +3855,17 @@ section {
 .hostelTvScreen {
   z-index: 2;
   object-fit: cover;
-  object-position: center;
+  object-position: top center;
   transform-origin: center center;
 }
 
 .hostelTvPowerFlash {
   position: absolute;
-  left: 8.6%;
-  top: 46%;
+  left: 6.9%;
+  top: 46.9%;
   z-index: 4;
   display: block;
-  width: 66.5%;
+  width: 70.4%;
   height: calc(3*var(--u));
   background: rgba(255, 255, 255, 0.95);
   box-shadow:
@@ -3878,14 +3887,13 @@ section {
 
 .hostelAlumbFinal {
   position: absolute;
-  left: 50%;
-  top: 50%;
+  inset: 0;
   z-index: 5;
-  width: min(calc(1480*var(--u)), 94vw);
-  max-height: min(88vh, calc(860*var(--u)));
+  width: 100%;
+  height: 100%;
   display: grid;
   place-items: center;
-  translate: -50% -50%;
+  overflow: hidden;
   pointer-events: none;
   filter:
     drop-shadow(0 calc(18*var(--u)) 0 rgba(74, 11, 2, 0.22))
@@ -3895,9 +3903,11 @@ section {
 .hostelAlumbGif {
   display: block;
   width: 100%;
-  max-height: min(88vh, calc(860*var(--u)));
-  object-fit: contain;
-  object-position: center;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 18%;
+  transform: translateY(-9%) scale(1);
+  transform-origin: center center;
   user-select: none;
 }
 
