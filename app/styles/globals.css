@@ -4543,7 +4543,9 @@ section {
 
 .actualAskIntroShell {
   position: relative;
-  z-index: 2;
+  /* Above .actualAskClockWrap (z-index 6) so the headline can never be
+     painted over by the clock at any viewport size. */
+  z-index: 7;
   width: min(calc(1500*var(--u)), 100%);
   margin-top: clamp(calc(70*var(--u)), 9vh, calc(120*var(--u)));
 }
@@ -4591,7 +4593,12 @@ section {
 .actualAskClockWrap {
   position: absolute;
   left: 50%;
-  top: 58%;
+  /* clock.gif is SQUARE (1472x1472) with the device artwork occupying only
+     rows 23.9%-73.8% of it. object-fit:contain fits it by height, so this
+     box is far taller than the visible device and its top edge sits well
+     above where the device appears. At 58% the device's top edge landed at
+     y=340 while the headline ran to y=377 - a 37px collision. */
+  top: 66%;
   width: min(calc(2120*var(--u)), 128vw);
   max-height: 96vh;
   z-index: 6;
