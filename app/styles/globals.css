@@ -5356,6 +5356,21 @@ section {
   user-select: none;
 }
 
+.historyIdeasRedCarpetPhoto {
+  position: absolute;
+  top: 220px;
+  left: 1026px;
+  z-index: 2;
+  display: block;
+  width: 683px;
+  height: 646px;
+  border-radius: 14px;
+  object-fit: cover;
+  object-position: center;
+  pointer-events: none;
+  user-select: none;
+}
+
 /* Matches the panel's close button / the Online panel's back button: a solid
    red corner tile, not a small floating translucent square.
    120px is in the 1790x950 canvas of .historyIdeasScaleWrap, which is scaled

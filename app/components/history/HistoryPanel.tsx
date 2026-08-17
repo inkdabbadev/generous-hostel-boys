@@ -918,6 +918,14 @@ function IdeasPopupMain() {
             src={ideasView === "red" ? "/history/theideas/red/whole.png" : "/history/theideas/game/whole.png"}
             transition={{ delay: 0.1, duration: 0.46, ease: [0.16, 1, 0.3, 1] }}
           />
+          {ideasView === "red" && (
+            <img
+              alt="Generous Entertainments"
+              className="historyIdeasRedCarpetPhoto"
+              draggable={false}
+              src="/images.jpg"
+            />
+          )}
         </motion.div>
       ) : (
         <motion.div
